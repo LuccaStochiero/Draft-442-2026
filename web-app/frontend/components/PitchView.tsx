@@ -41,21 +41,21 @@ export function PitchView({ team }: PitchViewProps) {
     }
 
     const renderPlayerDot = (p: Player) => (
-        <div key={p.Nome} className="flex flex-col items-center group relative z-10 cursor-pointer">
-            {/* Player Dot */}
+        <div key={p.Nome} className="flex flex-col items-center group relative z-10 cursor-pointer m-1">
+            {/* Player Dot - Smaller */}
             <div
-                className="w-14 h-14 rounded-full border-[3px] border-white shadow-[0_4px_6px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform flex items-center justify-center relative overflow-hidden"
+                className="w-11 h-11 rounded-full border-2 border-white shadow-[0_4px_6px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform flex items-center justify-center relative overflow-hidden"
                 style={{ backgroundColor: getColor(p['Posição']) }}
             >
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent"></div>
-                <span className="text-sm font-black text-white/90 drop-shadow-md z-10">
+                <span className="text-xs font-black text-white/90 drop-shadow-md z-10">
                     {getAcronym(p['Posição'])}
                 </span>
             </div>
 
-            {/* Name Label - High Contrast */}
-            <div className="mt-1.5 bg-black/90 px-4 py-1.5 rounded-full border border-white/20 shadow-lg backdrop-blur-sm">
-                <div className="text-xs font-black text-white uppercase tracking-wider whitespace-nowrap">
+            {/* Name Label - Smaller */}
+            <div className="mt-1 bg-black/90 px-3 py-1 rounded-full border border-white/20 shadow-lg backdrop-blur-sm">
+                <div className="text-[10px] font-black text-white uppercase tracking-wider whitespace-nowrap">
                     {p.Nome}
                 </div>
             </div>
@@ -63,7 +63,7 @@ export function PitchView({ team }: PitchViewProps) {
     );
 
     return (
-        <div className="h-full w-full bg-[#1a4a1c] rounded-xl relative overflow-hidden border border-white/10 shadow-inner flex flex-col justify-between p-4 bg-[url('https://www.transparenttextures.com/patterns/grass.png')]">
+        <div className="h-full w-full bg-[#1a4a1c] rounded-xl relative overflow-hidden border border-white/10 shadow-inner flex flex-col justify-between p-2 bg-[url('https://www.transparenttextures.com/patterns/grass.png')]">
 
             {/* Position Indicators Overlay - Larger */}
             <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
@@ -91,24 +91,25 @@ export function PitchView({ team }: PitchViewProps) {
             </div>
 
             {/* Forwards (ATA) - Top */}
-            <div className="flex justify-center gap-8 relative z-10 flex-1 items-start pt-4">
+            <div className="flex justify-center flex-wrap gap-x-2 gap-y-1 relative z-10 flex-1 content-start pt-4 px-8">
                 {fwds.map(renderPlayerDot)}
             </div>
 
             {/* Midfielders (MEI) */}
-            <div className="flex justify-center gap-8 relative z-10 flex-1 items-center">
+            <div className="flex justify-center flex-wrap gap-x-2 gap-y-1 relative z-10 flex-1 content-center px-8">
                 {mids.map(renderPlayerDot)}
             </div>
 
             {/* Defenders (DEF) */}
-            <div className="flex justify-center gap-8 relative z-10 flex-1 items-center">
+            <div className="flex justify-center flex-wrap gap-x-2 gap-y-1 relative z-10 flex-1 content-center px-8">
                 {defs.map(renderPlayerDot)}
             </div>
 
             {/* Goalkeepers (GOL) - Bottom */}
-            <div className="flex justify-center gap-8 relative z-10 flex-1 items-end pb-4">
+            <div className="flex justify-center flex-wrap gap-x-2 gap-y-1 relative z-10 flex-1 content-end pb-4 px-8">
                 {gks.map(renderPlayerDot)}
             </div>
         </div>
+
     );
 }
