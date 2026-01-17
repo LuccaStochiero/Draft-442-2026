@@ -1,0 +1,780 @@
+Posição,Número,Nome,Nacionalidade,Altura,Nascimento,Team,Valor de Mercado,player_id
+Forward,33,Erick,BRA,173.0,10/12/1997,Vitoria,1.6,https://www.sofascore.com/football/player/erick/895650
+Forward,79,Renato Kayzer,BRA,178.0,17/02/1996,Vitoria,0.915,https://www.sofascore.com/football/player/renato-kayzer/814723
+Forward,17,Aitor Cantalapiedra,ESP,178.0,10/02/1996,Vitoria,0.0,https://www.sofascore.com/football/player/aitor-cantalapiedra/823831
+Forward,23,Fabrício Santos,BRA,186.0,08/10/2000,Vitoria,1.0,https://www.sofascore.com/football/player/fabricio-santos/975351
+Forward,31,Renzo López,URU,190.0,16/04/1994,Vitoria,0.72,https://www.sofascore.com/football/player/renzo-lopez/926513
+Forward,50,Paulo Roberto,BRA,177.0,13/11/2005,Vitoria,0.0,https://www.sofascore.com/football/player/paulo-roberto-dos-santos-almeida/2112480
+Forward,16,Gustavo Sobral Alves Pereira,-,,01/05/2004,Vitoria,1.2,https://www.sofascore.com/football/player/gustavo-sobral-alves-pereira/2440222
+Midfielder,10,Matheuzinho,BRA,165.0,18/10/1997,Vitoria,0.0,https://www.sofascore.com/football/player/matheuzinho/795266
+Midfielder,44,Gabriel Baralhas,BRA,178.0,10/10/1998,Vitoria,1.6,https://www.sofascore.com/football/player/gabriel-baralhas/922575
+Midfielder,6,Pepê,BRA,183.0,06/01/1998,Vitoria,0.27,https://www.sofascore.com/football/player/pepe/946945
+Midfielder,11,Osvaldo,BRA,170.0,11/04/1987,Vitoria,0.205,https://www.sofascore.com/football/player/osvaldo/90468
+Midfielder,21,Dudu,BRA,186.0,05/06/1999,Vitoria,0.465,https://www.sofascore.com/football/player/dudu/1124220
+Midfielder,22,Lucas Braga,BRA,184.0,10/11/1996,Vitoria,0.97,https://www.sofascore.com/football/player/lucas-braga/934801
+Midfielder,8,Ronald,BRA,171.0,18/06/1997,Vitoria,0.335,https://www.sofascore.com/football/player/ronald/931521
+Midfielder,19,Kike Saverio,ECU,178.0,19/06/1999,Vitoria,0.47,https://www.sofascore.com/football/player/kike-saverio/1032938
+Midfielder,8,Filipe Machado,BRA,174.0,20/01/1996,Vitoria,0.335,https://www.sofascore.com/football/player/filipe-machado/844601
+Midfielder,95,Caique Gonçalves,BRA,178.0,10/10/1995,Vitoria,0.485,https://www.sofascore.com/football/player/caique-goncalves/871032
+Midfielder,20,Rúben Rodrigues,POR,181.0,01/08/1996,Vitoria,0.0,https://www.sofascore.com/football/player/ruben-rodrigues/946563
+Midfielder,11,Felipe Cardoso,BRA,178.0,04/03/2003,Vitoria,0.205,https://www.sofascore.com/football/player/felipe-cardoso/1652635
+Midfielder,8,Dudu Miraíma,BRA,173.0,15/06/2000,Vitoria,0.335,https://www.sofascore.com/football/player/eduardo/1017251
+Midfielder,16,Rúben Ramos Ismael,POR,184.0,25/03/1999,Vitoria,1.2,https://www.sofascore.com/football/player/ruben-ramos-ismael/1469058
+Midfielder,10,Pablo Santos,BRA,175.0,03/08/2003,Vitoria,0.0,https://www.sofascore.com/football/player/pablo/1841330
+Midfielder,50,Wanderson Papaterra Matos,BRA,172.0,27/07/2005,Vitoria,0.0,https://www.sofascore.com/football/player/wanderson-papaterra-matos/2025531
+Midfielder,17,Ítalo Machado,BRA,,26/02/2008,Vitoria,0.0,https://www.sofascore.com/football/player/italo-machado/1857960
+Midfielder,24,Bernardo,BRA,180.0,10/06/2005,Vitoria,0.0,https://www.sofascore.com/football/player/bernardo/2442387
+Defender,13,Ramon,BRA,176.0,13/03/2001,Vitoria,0.0,https://www.sofascore.com/football/player/ramon/980761
+Defender,2,Claudinho,BRA,180.0,24/09/2000,Vitoria,1.8,https://www.sofascore.com/football/player/claudinho/992791
+Defender,4,Camutanga,BRA,189.0,27/09/1993,Vitoria,0.0,https://www.sofascore.com/football/player/camutanga/931759
+Defender,83,Jamerson,BRA,177.0,09/09/1998,Vitoria,0.95,https://www.sofascore.com/football/player/jamerson/972373
+Defender,3,Zé Marcos,BRA,188.0,01/02/1998,Vitoria,0.99,https://www.sofascore.com/football/player/ze-marcos/901700
+Defender,77,Neris,BRA,190.0,17/06/1992,Vitoria,0.32,https://www.sofascore.com/football/player/neris/840247
+Defender,43,Edu,BRA,188.0,16/06/2000,Vitoria,0.73,https://www.sofascore.com/football/player/edu/989715
+Defender,98,Mateusinho,BRA,175.0,07/10/1998,Vitoria,0.775,https://www.sofascore.com/football/player/mateusinho/1107069
+Defender,5,Riccieli,BRA,184.0,17/09/1998,Vitoria,1.9,https://www.sofascore.com/football/player/riccieli/927166
+Defender,6,Felipe Vieira,BRA,177.0,04/05/1999,Vitoria,0.27,https://www.sofascore.com/football/player/felipe-vieira/892875
+Defender,57,Pedro Henrique Pinheiro de Jesus,BRA,,23/07/2005,Vitoria,0.0,https://www.sofascore.com/football/player/pedro-henrique-pinheiro-de-jesus/1633653
+Defender,18,Kauan,BRA,189.0,15/03/2007,Vitoria,0.0,https://www.sofascore.com/football/player/kauan-santos-neves/2025518
+Defender,13,João Gabriel Queiroz Marques,BRA,,25/06/2008,Vitoria,0.0,https://www.sofascore.com/football/player/joao-gabriel-queiroz-marques/2081316
+Defender,4,Ivan Henrique,BRA,191.0,29/06/2006,Vitoria,0.0,https://www.sofascore.com/football/player/ivan-henrique/2442382
+Defender,15,Guilherme Inácio Cavalcante da Silva,BRA,,14/04/2008,Vitoria,0.0,https://www.sofascore.com/football/player/guilherme-inacio-cavalcante-da-silva/2442343
+Goalkeeper,1,Lucas Arcanjo,BRA,190.0,08/08/1998,Vitoria,0.045,https://www.sofascore.com/football/player/lucas-arcanjo/982558
+Goalkeeper,1,Gabriel Vasconcelos,BRA,193.0,27/09/1992,Vitoria,0.045,https://www.sofascore.com/football/player/gabriel-vasconcelos/147467
+Goalkeeper,35,Alexandre Fintelman,BRA,194.0,20/07/2001,Vitoria,0.105,https://www.sofascore.com/football/player/alexandre-fintelman/1017274
+Goalkeeper,1,Yuri Sena,BRA,190.0,03/01/2001,Vitoria,0.045,https://www.sofascore.com/football/player/yuri-sena/905464
+Goalkeeper,42,Davi Barbosa da Silva Novaes,BRA,,02/03/2006,Vitoria,0.0,https://www.sofascore.com/football/player/davi-barbosa-da-silva-novaes/1633877
+Goalkeeper,20,Kevin,-,,-,Vitoria,0.0,https://www.sofascore.com/football/player/kevin/2440232
+Goalkeeper,-,Marques,-,,-,Vitoria,0.0,https://www.sofascore.com/football/player/marques/2440233
+Forward,12,Willian José,BRA,189.0,23/11/1991,Bahia,0.0,https://www.sofascore.com/football/player/willian-jose/123223
+Forward,89,Dell,BRA,174.0,09/06/2008,Bahia,0.0,https://www.sofascore.com/football/player/dell/2050427
+Forward,7,Ademir,BRA,172.0,16/02/1995,Bahia,1.5,https://www.sofascore.com/football/player/ademir/922546
+Forward,77,Tiago Souza,BRA,178.0,08/04/2005,Bahia,3.3,https://www.sofascore.com/football/player/tiago-souza/1469531
+Forward,57,Kaue Furquim,BRA,173.0,27/02/2009,Bahia,0.0,https://www.sofascore.com/football/player/kaue-furquim/2297112
+Forward,-,Caio Suassuna Gonçalves Ferreira,BRA,184.0,22/03/2007,Bahia,0.0,https://www.sofascore.com/football/player/caio-suassuna-goncalves-ferreira/1831095
+Midfielder,10,Everton Ribeiro,BRA,174.0,10/04/1989,Bahia,1.2,https://www.sofascore.com/football/player/everton-ribeiro/145063
+Midfielder,16,Erick Pulga,BRA,169.0,01/10/2000,Bahia,11.7,https://www.sofascore.com/football/player/erick-pulga/1104070
+Midfielder,6,Jean Lucas,BRA,181.0,22/06/1998,Bahia,11.6,https://www.sofascore.com/football/player/jean-lucas/927975
+Midfielder,37,Kayky,BRA,175.0,10/06/2003,Bahia,5.7,https://www.sofascore.com/football/player/kayky/1106151
+Midfielder,8,Cauly,BRA,175.0,15/09/1995,Bahia,4.7,https://www.sofascore.com/football/player/cauly/255873
+Midfielder,11,Rodrigo Nestor,BRA,174.0,09/08/2000,Bahia,7.4,https://www.sofascore.com/football/player/rodrigo-nestor/905461
+Midfielder,99,Cristian Olivera,URU,170.0,17/04/2002,Bahia,5.4,https://www.sofascore.com/football/player/cristian-olivera/1068987
+Midfielder,19,Caio Alexandre,BRA,174.0,24/02/1999,Bahia,7.2,https://www.sofascore.com/football/player/caio-alexandre/1008832
+Midfielder,15,Michel Araújo,URU,178.0,28/09/1996,Bahia,2.6,https://www.sofascore.com/football/player/michel-araujo/924857
+Midfielder,52,Ruan Pablo,BRA,183.0,22/07/2008,Bahia,4.5,https://www.sofascore.com/football/player/ruan-pablo-barbosa-sousa/1633616
+Midfielder,14,Erick,BRA,176.0,14/11/1997,Bahia,4.1,https://www.sofascore.com/football/player/erick/874063
+Midfielder,26,Nicolás Acevedo,URU,173.0,14/04/1999,Bahia,3.7,https://www.sofascore.com/football/player/nicolas-acevedo/959620
+Midfielder,23,Mateo  Sanabria,ARG,178.0,30/03/2004,Bahia,0.62,https://www.sofascore.com/football/player/mateo-sanabria/1182233
+Midfielder,68,Jota,BRA,183.0,06/02/2004,Bahia,0.0,https://www.sofascore.com/football/player/jota/1200993
+Midfielder,71,Lyan Araujo,BRA,,17/02/2009,Bahia,0.0,https://www.sofascore.com/football/player/lyan-araujo/2076565
+Midfielder,63,David Martins,BRA,,15/09/2007,Bahia,0.0,https://www.sofascore.com/football/player/almeida-de-lira-david-martins/2399661
+Midfielder,-,Victor Hugo Oliveira de Carvalho,BRA,,14/02/2007,Bahia,0.0,https://www.sofascore.com/football/player/victor-hugo-oliveira-de-carvalho/1634969
+Midfielder,-,Pedrinho,-,,19/01/2006,Bahia,0.0,https://www.sofascore.com/football/player/pedrinho/2442965
+Defender,46,Luciano Juba,BRA,176.0,29/08/1999,Bahia,10.7,https://www.sofascore.com/football/player/luciano-juba/1017264
+Defender,21,Santiago Ramos Mingo,ARG,185.0,21/11/2001,Bahia,11.3,https://www.sofascore.com/football/player/ramos-mingo-santiago/989843
+Defender,2,Gilberto,BRA,181.0,07/03/1993,Bahia,2.6,https://www.sofascore.com/football/player/gilberto/261687
+Defender,3,Gabriel Xavier,BRA,190.0,06/05/2001,Bahia,4.4,https://www.sofascore.com/football/player/gabriel-xavier/1117710
+Defender,4,Kanu,BRA,186.0,07/03/1997,Bahia,1.4,https://www.sofascore.com/football/player/kanu/871705
+Defender,44,Luiz Gustavo,BRA,188.0,12/04/2006,Bahia,0.47,https://www.sofascore.com/football/player/gustavo-luiz/1634148
+Defender,25,Iago Borduchi,BRA,181.0,23/03/1997,Bahia,3.7,https://www.sofascore.com/football/player/iago/869644
+Defender,33,David Duarte,BRA,192.0,24/01/1995,Bahia,1.1,https://www.sofascore.com/football/player/david-duarte/810715
+Defender,5,Rezende,BRA,186.0,02/01/1995,Bahia,0.825,https://www.sofascore.com/football/player/rezende/868030
+Defender,79,Matheus Bahia,BRA,181.0,11/08/1999,Bahia,3.1,https://www.sofascore.com/football/player/matheus-bahia/1047204
+Defender,44,Marcos Victor,BRA,184.0,26/12/2001,Bahia,0.47,https://www.sofascore.com/football/player/marcos-victor/1174196
+Defender,66,José Guilherme,BRA,181.0,16/03/2005,Bahia,0.38,https://www.sofascore.com/football/player/jose-guilherme/1476894
+Defender,4,Román Gómez,ARG,181.0,14/07/2004,Bahia,1.4,https://www.sofascore.com/football/player/gomez-roman/1807816
+Defender,-,Roger Ruan,BRA,,12/01/2005,Bahia,0.0,https://www.sofascore.com/football/player/roger-ruan-pereira-santos/1589573
+Defender,83,Frederico Lippert Neto Gomes,BRA,,23/05/2006,Bahia,0.0,https://www.sofascore.com/football/player/lippert-neto-gomes-frederico/2399662
+Goalkeeper,34,João Paulo,BRA,188.0,29/06/1995,Bahia,1.9,https://www.sofascore.com/football/player/joao-paulo/795177
+Goalkeeper,96,Ronaldo,BRA,193.0,22/08/1996,Bahia,1.7,https://www.sofascore.com/football/player/ronaldo/840106
+Goalkeeper,12,Victor Nascimento,BRA,,03/05/2006,Bahia,0.0,https://www.sofascore.com/football/player/joao-victor-nascimento-da-silva/2077503
+Forward,99,André Luis,BRA,182.0,09/03/1994,Mirassol,1.3,https://www.sofascore.com/football/player/andre-luis/904297
+Forward,77,Alesson,BRA,173.0,16/02/1999,Mirassol,1.5,https://www.sofascore.com/football/player/alesson/871015
+Forward,96,Carlos Eduardo,BRA,173.0,10/10/1996,Mirassol,0.54,https://www.sofascore.com/football/player/carlos-eduardo/795295
+Forward,78,Renato Marques,BRA,180.0,09/12/2003,Mirassol,0.73,https://www.sofascore.com/football/player/marques-renato/1194689
+Forward,95,Edson Carioca,BRA,180.0,04/06/1998,Mirassol,1.5,https://www.sofascore.com/football/player/edson-carioca/1048612
+Forward,9,Nathan Fogaça,BRA,178.0,09/06/1999,Mirassol,0.875,https://www.sofascore.com/football/player/nathan-fogaca/934638
+Midfielder,33,Eduardo,BRA,184.0,17/10/1989,Mirassol,0.725,https://www.sofascore.com/football/player/eduardo/76507
+Midfielder,27,Antonio Galeano,PAR,169.0,22/03/2000,Mirassol,3.9,https://www.sofascore.com/football/player/antonio-galeano/883207
+Midfielder,29,Lucas Oliveira,BRA,187.0,02/02/1996,Mirassol,1.1,https://www.sofascore.com/football/player/lucas-oliveira/867907
+Midfielder,11,Negueba,BRA,175.0,03/12/1999,Mirassol,3.3,https://www.sofascore.com/football/player/negueba/872007
+Midfielder,26,Lucas Mugni,ARG,184.0,12/01/1992,Mirassol,0.235,https://www.sofascore.com/football/player/lucas-mugni/249881
+Midfielder,7,Shaylon,BRA,180.0,27/04/1997,Mirassol,1.0,https://www.sofascore.com/football/player/shaylon/874723
+Midfielder,25,Neto Moura,BRA,176.0,06/08/1996,Mirassol,2.2,https://www.sofascore.com/football/player/neto-moura/559034
+Midfielder,8,Denilson,BRA,180.0,23/03/2001,Mirassol,2.1,https://www.sofascore.com/football/player/denilson/1175760
+Midfielder,21,José Aldo,BRA,174.0,25/07/1998,Mirassol,0.735,https://www.sofascore.com/football/player/jose-aldo/988851
+Midfielder,5,Yuri Lara,BRA,173.0,20/04/1994,Mirassol,0.62,https://www.sofascore.com/football/player/yuri-lara/809536
+Defender,6,Reinaldo,BRA,178.0,28/09/1989,Mirassol,0.415,https://www.sofascore.com/football/player/reinaldo/243109
+Defender,3,Willian Machado,BRA,185.0,13/11/1996,Mirassol,1.1,https://www.sofascore.com/football/player/willian-machado/925871
+Defender,16,Felipe Jonatan,BRA,176.0,15/02/1998,Mirassol,1.9,https://www.sofascore.com/football/player/felipe-jonatan/931574
+Defender,14,Igor Cariús,BRA,183.0,01/05/1993,Mirassol,0.245,https://www.sofascore.com/football/player/igor-carius/874195
+Defender,19,Lucas Ramon,BRA,178.0,07/03/1994,Mirassol,0.52,https://www.sofascore.com/football/player/lucas-ramon/797225
+Defender,34,João Victor,BRA,188.0,02/09/1997,Mirassol,1.5,https://www.sofascore.com/football/player/joao-victor/863297
+Defender,44,Gabriel,BRA,185.0,18/10/2003,Mirassol,0.72,https://www.sofascore.com/football/player/gabriel/1465498
+Defender,20,Daniel Borges,BRA,174.0,23/03/1993,Mirassol,0.325,https://www.sofascore.com/football/player/daniel-borges/794874
+Defender,4,Luiz Otávio,BRA,194.0,09/10/1992,Mirassol,0.55,https://www.sofascore.com/football/player/luiz-otavio/874778
+Defender,40,Ramires,BRA,,21/03/2006,Mirassol,0.0,https://www.sofascore.com/football/player/ramires/2408576
+Goalkeeper,22,Walter,BRA,188.0,18/11/1987,Mirassol,0.18,https://www.sofascore.com/football/player/walter/329055
+Goalkeeper,23,Alex Muralha,BRA,188.0,10/11/1989,Mirassol,0.105,https://www.sofascore.com/football/player/alex-muralha/340113
+Goalkeeper,90,Thomazella,BRA,191.0,15/08/1990,Mirassol,0.205,https://www.sofascore.com/football/player/thomazella/870929
+Forward,9,Pedro,BRA,186.0,20/06/1997,Flamengo,17.5,https://www.sofascore.com/football/player/pedro/840219
+Forward,27,Bruno Henrique,BRA,184.0,30/12/1990,Flamengo,0.825,https://www.sofascore.com/football/player/bruno-henrique/795291
+Forward,64,Wallace Yan,BRA,182.0,08/02/2005,Flamengo,6.2,https://www.sofascore.com/football/player/wallace/1466084
+Forward,81,Douglas Costa Telles,BRA,177.0,01/06/2007,Flamengo,0.0,https://www.sofascore.com/football/player/douglas-costa-telles/1883297
+Forward,59,Pedro Leão,BRA,183.0,28/06/2006,Flamengo,0.0,https://www.sofascore.com/football/player/pedro-henrique-leao-alves-lopes/1641243
+Forward,80,Joao Camargo,BRA,186.0,12/04/2007,Flamengo,0.0,https://www.sofascore.com/football/player/camargo-joao/2408644
+Midfielder,10,Giorgian De Arrascaeta,URU,173.0,01/06/1994,Flamengo,14.5,https://www.sofascore.com/football/player/giorgian-de-arrascaeta/333587
+Midfielder,21,Jorginho,ITA,180.0,20/12/1991,Flamengo,5.4,https://www.sofascore.com/football/player/jorginho/132874
+Midfielder,16,Samuel Lino,BRA,178.0,23/12/1999,Flamengo,21.0,https://www.sofascore.com/football/player/samuel-lino/874705
+Midfielder,50,Gonzalo Plata,ECU,178.0,01/11/2000,Flamengo,8.6,https://www.sofascore.com/football/player/gonzalo-plata/937937
+Midfielder,18,Nicolás de la Cruz,URU,167.0,01/06/1997,Flamengo,8.4,https://www.sofascore.com/football/player/nicolas-de-la-cruz/877513
+Midfielder,7,Luiz Araújo,BRA,175.0,02/06/1996,Flamengo,7.2,https://www.sofascore.com/football/player/luiz-araujo/840451
+Midfielder,15,Jorge Carrascal,COL,179.0,25/05/1998,Flamengo,8.3,https://www.sofascore.com/football/player/jorge-carrascal/590392
+Midfielder,8,Saúl Ñíguez,ESP,184.0,21/11/1994,Flamengo,2.4,https://www.sofascore.com/football/player/saul-niguez/116955
+Midfielder,11,Everton,BRA,174.0,22/03/1996,Flamengo,6.4,https://www.sofascore.com/football/player/everton/386198
+Midfielder,5,Erick Pulgar,CHI,186.0,15/01/1994,Flamengo,5.4,https://www.sofascore.com/football/player/erick-pulgar/590262
+Midfielder,30,Michael,BRA,166.0,12/03/1996,Flamengo,3.1,https://www.sofascore.com/football/player/michael/878084
+Midfielder,29,Allan,BRA,172.0,03/03/1997,Flamengo,2.7,https://www.sofascore.com/football/player/allan/828839
+Midfielder,52,Evertton Araujo,BRA,185.0,28/02/2003,Flamengo,5.4,https://www.sofascore.com/football/player/evertton/1145106
+Defender,13,Danilo,BRA,184.0,15/07/1991,Flamengo,2.6,https://www.sofascore.com/football/player/danilo/124992
+Defender,26,Alex Sandro,BRA,181.0,26/01/1991,Flamengo,1.5,https://www.sofascore.com/football/player/alex-sandro/84854
+Defender,3,Léo Ortiz,BRA,185.0,03/01/1996,Flamengo,14.6,https://www.sofascore.com/football/player/leo-ortiz/869643
+Defender,22,Emerson Royal,BRA,183.0,14/01/1999,Flamengo,8.6,https://www.sofascore.com/football/player/emerson-royal/856123
+Defender,4,Léo Pereira,BRA,189.0,31/01/1996,Flamengo,10.6,https://www.sofascore.com/football/player/leo-pereira/358548
+Defender,2,Guillermo Varela,URU,171.0,24/03/1993,Flamengo,1.3,https://www.sofascore.com/football/player/guillermo-varela/311456
+Defender,6,Ayrton Lucas,BRA,180.0,19/06/1997,Flamengo,4.7,https://www.sofascore.com/football/player/ayrton-lucas/818473
+Defender,57,Iago Silva,BRA,188.0,18/04/2005,Flamengo,0.94,https://www.sofascore.com/football/player/iago/1647585
+Defender,4,Vitão,BRA,185.0,02/02/2000,Flamengo,10.6,https://www.sofascore.com/football/player/vitao/876625
+Defender,61,João Victor,BRA,187.0,02/01/2007,Flamengo,0.775,https://www.sofascore.com/football/player/joao-cunha/1602833
+Defender,67,Kaio Júnior,BRA,186.0,22/01/2007,Flamengo,0.0,https://www.sofascore.com/football/player/kaio-junior/2028687
+Goalkeeper,1,Agustín Rossi,ARG,193.0,21/08/1995,Flamengo,10.3,https://www.sofascore.com/football/player/agustin-rossi/1140986
+Goalkeeper,49,Dyogo Alves,BRA,188.0,09/01/2004,Flamengo,0.41,https://www.sofascore.com/football/player/dyogo-alves/1514629
+Goalkeeper,42,Andrew,BRA,189.0,01/07/2001,Flamengo,7.2,https://www.sofascore.com/football/player/andrew/947893
+Goalkeeper,84,Gabriel Werneck,BRA,,14/02/2009,Flamengo,0.0,https://www.sofascore.com/football/player/werneck/2408578
+Goalkeeper,71,Pedro Batista,BRA,,18/07/2008,Flamengo,0.0,https://www.sofascore.com/football/player/pedro-batista/2440991
+Forward,99,Carlinhos,BRA,195.0,12/02/1997,Remo,0.925,https://www.sofascore.com/football/player/carlinhos/852534
+Forward,-,Alef Manga,BRA,190.0,29/11/1994,Remo,0.36,https://www.sofascore.com/football/player/manga-alef/954719
+Forward,45,João Pedro Silva,GBS,185.0,13/11/1996,Remo,2.9,https://www.sofascore.com/football/player/joao-pedro-silva/362966
+Forward,39,Eduardo Melo,BRA,186.0,13/05/2001,Remo,0.077,https://www.sofascore.com/football/player/eduardo-melo/1018777
+Midfielder,-,Yago Pikachu,BRA,170.0,05/06/1992,Remo,0.36,https://www.sofascore.com/football/player/yago-pikachu/363688
+Midfielder,45,Patrick de Paula,BRA,180.0,08/09/1999,Remo,2.9,https://www.sofascore.com/football/player/patrick-de-paula/1015291
+Midfielder,20,Víctor Cantillo,COL,182.0,15/10/1993,Remo,0.39,https://www.sofascore.com/football/player/victor-cantillo/355802
+Midfielder,88,Patrick,BRA,176.0,29/07/1992,Remo,0.077,https://www.sofascore.com/football/player/patrick/594428
+Midfielder,8,Nathan,BRA,177.0,13/03/1996,Remo,0.555,https://www.sofascore.com/football/player/nathan/358538
+Midfielder,26,Marrony,BRA,188.0,05/02/1999,Remo,0.67,https://www.sofascore.com/football/player/marrony/926871
+Midfielder,10,Jaderson,BRA,170.0,12/08/2000,Remo,0.325,https://www.sofascore.com/football/player/jaderson/869639
+Midfielder,77,Panagiotis Tachtsidis,GRE,193.0,15/02/1991,Remo,0.335,https://www.sofascore.com/football/player/panagiotis-tachtsidis/32985
+Midfielder,22,Régis,BRA,170.0,30/11/1992,Remo,0.32,https://www.sofascore.com/football/player/regis/335365
+Midfielder,31,Dodô,BRA,171.0,05/09/1994,Remo,0.082,https://www.sofascore.com/football/player/dodo/338839
+Midfielder,7,Giovanni Pavani,BRA,178.0,22/11/1996,Remo,0.43,https://www.sofascore.com/football/player/giovanni-pavani/1176815
+Midfielder,11,Nicolás Ferreira,URU,170.0,07/02/2002,Remo,0.65,https://www.sofascore.com/football/player/nicolas-ferreira/1190330
+Midfielder,6,Zé Ricardo,BRA,180.0,03/02/1999,Remo,0.39,https://www.sofascore.com/football/player/ze-ricardo/943044
+Midfielder,56,Henrique Vigia,BRA,178.0,20/01/2002,Remo,0.047,https://www.sofascore.com/football/player/henrique-vigia/1122853
+Midfielder,15,Ronald,BRA,167.0,10/08/2002,Remo,0.097,https://www.sofascore.com/football/player/ronald/1048963
+Midfielder,23,Guty,BRA,173.0,26/06/2003,Remo,0.0,https://www.sofascore.com/football/player/guty/1487118
+Defender,2,João Lucas,BRA,181.0,03/09/1998,Remo,1.6,https://www.sofascore.com/football/player/joao-lucas/981019
+Defender,6,Jorge,BRA,184.0,28/03/1996,Remo,0.39,https://www.sofascore.com/football/player/jorge/759428
+Defender,27,Kayky Almeida,BRA,185.0,01/05/2005,Remo,0.775,https://www.sofascore.com/football/player/kayky-almeida/1464528
+Defender,29,Reynaldo,BRA,186.0,03/01/1997,Remo,1.1,https://www.sofascore.com/football/player/reynaldo/877470
+Defender,6,Thalisson Gabriel,BRA,190.0,20/01/2002,Remo,0.39,https://www.sofascore.com/football/player/thalisson-gabriel/1109577
+Defender,4,William Klaus,BRA,187.0,11/01/1994,Remo,0.285,https://www.sofascore.com/football/player/william-klaus/866721
+Defender,16,Sávio,BRA,175.0,27/05/1995,Remo,0.43,https://www.sofascore.com/football/player/savio/866369
+Defender,79,Marcelinho,BRA,169.0,20/07/1998,Remo,0.555,https://www.sofascore.com/football/player/marcelinho/986868
+Defender,17,Cristian Tassano,URU,185.0,23/07/1996,Remo,0.39,https://www.sofascore.com/football/player/cristian-tassano/790099
+Defender,-,Léo,BRA,190.0,18/04/1998,Remo,0.36,https://www.sofascore.com/football/player/leo/903027
+Goalkeeper,88,Marcelo Rangel,BRA,186.0,17/05/1988,Remo,0.077,https://www.sofascore.com/football/player/marcelo-rangel/870902
+Goalkeeper,94,Ygor Vinhas,BRA,192.0,15/04/1994,Remo,0.052,https://www.sofascore.com/football/player/ygor-vinhas/922569
+Forward,19,Rafael Borré,COL,174.0,15/09/1995,Internacional,0.73,https://www.sofascore.com/football/player/rafael-borre/560116
+Forward,7,Johan Carbonero,COL,170.0,20/07/1999,Internacional,4.3,https://www.sofascore.com/football/player/carbonero-johan/925125
+Forward,49,João Bezerra,BRA,190.0,29/06/2009,Internacional,0.0,https://www.sofascore.com/football/player/joao-bezerra/2429684
+Midfielder,10,Alan Patrick,BRA,177.0,13/05/1991,Internacional,2.7,https://www.sofascore.com/football/player/alan-patrick/124997
+Midfielder,-,Paulinho Paula,BRA,173.0,08/01/1997,Internacional,0.385,https://www.sofascore.com/football/player/paulinho-paula/879902
+Midfielder,29,Thiago Maia,BRA,179.0,23/03/1997,Internacional,2.9,https://www.sofascore.com/football/player/thiago-maia/358550
+Midfielder,17,Bruno Tabata,BRA,175.0,30/03/1997,Internacional,2.2,https://www.sofascore.com/football/player/bruno-tabata/845433
+Midfielder,13,Vitinho,BRA,181.0,01/04/1999,Internacional,0.55,https://www.sofascore.com/football/player/vitinho/982405
+Midfielder,-,Bruno Henrique,BRA,180.0,21/10/1989,Internacional,0.385,https://www.sofascore.com/football/player/bruno-henrique/345113
+Midfielder,47,Gustavo Prado,BRA,179.0,06/06/2005,Internacional,2.8,https://www.sofascore.com/football/player/gustavo-prado/1485220
+Midfielder,16,Ronaldo,BRA,175.0,23/10/1996,Internacional,1.1,https://www.sofascore.com/football/player/ronaldo/824152
+Midfielder,14,Alan Rodríguez,URU,170.0,25/01/2000,Internacional,2.2,https://www.sofascore.com/football/player/alan-rodriguez/874576
+Midfielder,19,Hyoran,BRA,174.0,25/05/1993,Internacional,0.73,https://www.sofascore.com/football/player/hyoran/551348
+Midfielder,39,Luis Otávio,BRA,181.0,12/04/2007,Internacional,2.7,https://www.sofascore.com/football/player/luis-otavio/1835768
+Midfielder,37,Yago Noal,BRA,171.0,05/02/2007,Internacional,0.485,https://www.sofascore.com/football/player/yago/1835793
+Midfielder,36,Richard Cândido,BRA,191.0,18/02/1994,Internacional,0.72,https://www.sofascore.com/football/player/richard-candido/897617
+Midfielder,33,Benjamin Arhin,GHA,168.0,28/05/2006,Internacional,0.0,https://www.sofascore.com/football/player/benjamin-arhin/2027868
+Midfielder,30,Alisson Rodrigues de Melo,BRA,,31/07/2008,Internacional,0.0,https://www.sofascore.com/football/player/alisson-rodrigues-de-melo/1890696
+Midfielder,50,Gustavo dos Santos,BRA,,28/08/2006,Internacional,0.0,https://www.sofascore.com/football/player/dos-santos-gustavo/2111049
+Midfielder,31,Allex,BRA,164.0,04/05/2006,Internacional,0.0,https://www.sofascore.com/football/player/allex/1485191
+Midfielder,51,Kempes,BRA,,25/04/2009,Internacional,0.0,https://www.sofascore.com/football/player/joao-gabriel-kempes-goncalves/2173264
+Defender,26,Alexandro Bernabei,ARG,169.0,24/09/2000,Internacional,5.6,https://www.sofascore.com/football/player/alexandro-bernabei/989200
+Defender,25,Gabriel Mercado,ARG,180.0,18/03/1987,Internacional,0.16,https://www.sofascore.com/football/player/gabriel-mercado/128376
+Defender,15,Bruno Gomes,BRA,175.0,04/04/2001,Internacional,5.2,https://www.sofascore.com/football/player/bruno-gomes/995071
+Defender,35,Braian Aguirre,ARG,174.0,28/07/2000,Internacional,2.4,https://www.sofascore.com/football/player/braian-aguirre/1084963
+Defender,41,Victor Gabriel,BRA,185.0,28/04/2004,Internacional,4.7,https://www.sofascore.com/football/player/victor-gabriel/1106487
+Defender,18,Juninho,BRA,186.0,01/02/1995,Internacional,0.825,https://www.sofascore.com/football/player/juninho/799947
+Defender,2,Alan Benítez,PAR,177.0,25/01/1994,Internacional,0.475,https://www.sofascore.com/football/player/alan-benitez/312824
+Defender,20,Clayton Sampaio,BRA,187.0,04/04/2000,Internacional,0.745,https://www.sofascore.com/football/player/clayton/1394242
+Defender,42,Pablo Pereira da Costa,BRA,,01/07/2006,Internacional,0.0,https://www.sofascore.com/football/player/pereira-da-costa-pablo/2040091
+Defender,45,Yan Henrique,BRA,,04/11/2005,Internacional,0.0,https://www.sofascore.com/football/player/yan-henrique/1465212
+Defender,40,Lazáro,BRA,,08/09/2007,Internacional,0.0,https://www.sofascore.com/football/player/lazaro/2152088
+Goalkeeper,1,Sergio Rochet,URU,190.0,23/03/1993,Internacional,1.9,https://www.sofascore.com/football/player/sergio-rochet/581060
+Goalkeeper,12,Ivan Quaresma,BRA,195.0,02/07/1997,Internacional,1.2,https://www.sofascore.com/football/player/ivan-quaresma/795029
+Goalkeeper,24,Anthoni,BRA,191.0,23/01/2002,Internacional,3.7,https://www.sofascore.com/football/player/anthoni/1106134
+Goalkeeper,13,Keiller,BRA,193.0,29/10/1996,Internacional,0.55,https://www.sofascore.com/football/player/keiller/840082
+Goalkeeper,22,Kauan,BRA,192.0,27/04/2003,Internacional,0.0,https://www.sofascore.com/football/player/kauan/1485233
+Forward,9,Vitor Roque,BRA,174.0,28/02/2005,Palmeiras,36.0,https://www.sofascore.com/football/player/vitor-roque/1150391
+Forward,42,José López,ARG,188.0,06/12/2000,Palmeiras,21.0,https://www.sofascore.com/football/player/jose-lopez/1094179
+Forward,10,Paulinho,BRA,175.0,15/07/2000,Palmeiras,0.0,https://www.sofascore.com/football/player/paulinho/885179
+Forward,19,Ramón Sosa,PAR,178.0,31/08/1999,Palmeiras,11.3,https://www.sofascore.com/football/player/ramon-sosa/1015733
+Forward,31,Luighi Hanri,BRA,182.0,30/04/2006,Palmeiras,5.2,https://www.sofascore.com/football/player/luighi/1597267
+Forward,11,Bruno Rodrigues,BRA,177.0,07/03/1997,Palmeiras,1.6,https://www.sofascore.com/football/player/bruno-rodrigues/817650
+Forward,37,Riquelme Fillipi,BRA,176.0,15/09/2006,Palmeiras,0.0,https://www.sofascore.com/football/player/fillipi-riquelme/1485294
+Forward,47,Vitinho,BRA,181.0,25/03/2003,Palmeiras,0.27,https://www.sofascore.com/football/player/vitinho/1174927
+Midfielder,23,Raphael Veiga,BRA,176.0,19/06/1995,Palmeiras,9.6,https://www.sofascore.com/football/player/raphael-veiga/840020
+Midfielder,8,Andreas Pereira,BRA,177.0,01/01/1996,Palmeiras,14.5,https://www.sofascore.com/football/player/andreas-pereira/285949
+Midfielder,17,Facundo Torres,URU,177.0,13/04/2000,Palmeiras,12.6,https://www.sofascore.com/football/player/facundo-torres/874572
+Midfielder,7,Felipe Anderson,BRA,175.0,15/04/1993,Palmeiras,2.4,https://www.sofascore.com/football/player/felipe-anderson/152276
+Midfielder,18,Mauricio,BRA,174.0,22/06/2001,Palmeiras,12.6,https://www.sofascore.com/football/player/mauricio/986233
+Midfielder,40,Allan,BRA,175.0,19/04/2004,Palmeiras,10.8,https://www.sofascore.com/football/player/allan/1835889
+Midfielder,32,Emiliano Martínez,URU,184.0,17/08/1999,Palmeiras,9.3,https://www.sofascore.com/football/player/emiliano-martinez/973533
+Midfielder,30,Lucas Evangelista,BRA,181.0,06/05/1995,Palmeiras,4.3,https://www.sofascore.com/football/player/lucas-evangelista/331397
+Midfielder,27,Marlon Freitas,BRA,185.0,27/03/1995,Palmeiras,5.8,https://www.sofascore.com/football/player/marlon-freitas/840202
+Midfielder,10,Vitor Figueiredo,BRA,178.0,03/03/2006,Palmeiras,0.0,https://www.sofascore.com/football/player/vitor-figueiredo/1942460
+Midfielder,48,Larson,BRA,183.0,10/07/2005,Palmeiras,0.0,https://www.sofascore.com/football/player/larson/2057364
+Defender,15,Gustavo Gómez,PAR,185.0,06/05/1993,Palmeiras,3.8,https://www.sofascore.com/football/player/gustavo-gomez/220833
+Defender,22,Joaquín Piquerez,URU,183.0,24/08/1998,Palmeiras,13.1,https://www.sofascore.com/football/player/joaquin-piquerez/881110
+Defender,4,Agustín Giay,ARG,180.0,16/01/2004,Palmeiras,11.3,https://www.sofascore.com/football/player/agustin-giay/1106603
+Defender,26,Murilo,BRA,188.0,27/03/1997,Palmeiras,5.4,https://www.sofascore.com/football/player/murilo/874729
+Defender,3,Bruno Fuchs,BRA,190.0,01/04/1999,Palmeiras,4.7,https://www.sofascore.com/football/player/bruno-fuchs/973737
+Defender,43,Luis Benedetti,BRA,197.0,07/06/2006,Palmeiras,4.4,https://www.sofascore.com/football/player/luis-benedetti/1485284
+Defender,12,Khellven,BRA,176.0,25/02/2001,Palmeiras,6.2,https://www.sofascore.com/football/player/khellven/984896
+Defender,13,Micael,BRA,190.0,12/08/2000,Palmeiras,3.9,https://www.sofascore.com/football/player/micael/1105341
+Defender,6,Jefté,BRA,183.0,21/12/2003,Palmeiras,4.4,https://www.sofascore.com/football/player/jefte/1116665
+Goalkeeper,1,Carlos Miguel,BRA,204.0,09/10/1998,Palmeiras,4.4,https://www.sofascore.com/football/player/carlos-miguel/973738
+Goalkeeper,14,Marcelo Lomba,BRA,187.0,18/12/1986,Palmeiras,0.09,https://www.sofascore.com/football/player/marcelo-lomba/34141
+Goalkeeper,24,Aranha,BRA,190.0,07/02/2005,Palmeiras,0.0,https://www.sofascore.com/football/player/aranha/1587799
+Forward,10,Memphis Depay,NED,176.0,13/02/1994,Corinthians,8.3,https://www.sofascore.com/football/player/memphis-depay/138833
+Forward,9,Yuri Alberto,BRA,183.0,18/03/2001,Corinthians,23.0,https://www.sofascore.com/football/player/yuri-alberto/905463
+Forward,18,Pedro Raul,BRA,191.0,05/11/1996,Corinthians,3.9,https://www.sofascore.com/football/player/pedro-raul/866911
+Forward,56,Gui Negão,BRA,179.0,06/02/2007,Corinthians,7.6,https://www.sofascore.com/football/player/guilherme-silva-inacio/1922597
+Forward,11,Vitinho,BRA,178.0,09/10/1993,Corinthians,0.915,https://www.sofascore.com/football/player/vitinho/242054
+Forward,22,Héctor Hernández,ESP,180.0,14/09/1995,Corinthians,0.88,https://www.sofascore.com/football/player/hector-hernandez/352448
+Forward,31,Kayke Ferrari,BRA,179.0,28/04/2004,Corinthians,0.72,https://www.sofascore.com/football/player/kayke-ferrari/1411152
+Midfielder,8,Rodrigo Garro,ARG,174.0,04/01/1998,Corinthians,11.6,https://www.sofascore.com/football/player/rodrigo-garro/994454
+Midfielder,19,André Carrillo,PER,180.0,14/06/1991,Corinthians,0.845,https://www.sofascore.com/football/player/andre-carrillo/115182
+Midfielder,7,Breno Bidon,BRA,174.0,20/02/2005,Corinthians,12.9,https://www.sofascore.com/football/player/breno-bidon/1199261
+Midfielder,70,José Martínez,VEN,177.0,07/08/1994,Corinthians,1.9,https://www.sofascore.com/football/player/jose-martinez/979325
+Midfielder,14,Raniele,BRA,184.0,31/12/1996,Corinthians,3.2,https://www.sofascore.com/football/player/raniele/866392
+Midfielder,35,Charles,BRA,187.0,19/06/1996,Corinthians,0.97,https://www.sofascore.com/football/player/charles/845178
+Midfielder,37,Ryan Gustavo,BRA,170.0,15/07/2003,Corinthians,2.4,https://www.sofascore.com/football/player/ryan-gustavo/1170779
+Midfielder,80,Alex Santana,BRA,182.0,13/05/1995,Corinthians,1.2,https://www.sofascore.com/football/player/alex-santana/358166
+Midfielder,61,Dieguinho,BRA,170.0,16/09/2007,Corinthians,1.5,https://www.sofascore.com/football/player/diego-da-cruz-lopes/1916131
+Midfielder,49,André Luiz,BRA,181.0,20/06/2006,Corinthians,0.0,https://www.sofascore.com/football/player/andre-luiz/1647612
+Midfielder,54,Bahia,BRA,178.0,02/01/2006,Corinthians,0.0,https://www.sofascore.com/football/player/luiz-gustavo-bahia/1482358
+Defender,2,Matheuzinho,BRA,171.0,08/09/2000,Corinthians,6.2,https://www.sofascore.com/football/player/matheuzinho/931540
+Defender,21,Matheus Bidu,BRA,172.0,04/05/1999,Corinthians,3.1,https://www.sofascore.com/football/player/matheus-bidu/981703
+Defender,3,Félix Torres,ECU,187.0,11/01/1997,Corinthians,1.1,https://www.sofascore.com/football/player/felix-torres/881848
+Defender,5,André Ramalho,BRA,182.0,16/02/1992,Corinthians,1.2,https://www.sofascore.com/football/player/andre-ramalho/148155
+Defender,13,Gustavo Henrique,BRA,195.0,24/03/1993,Corinthians,0.48,https://www.sofascore.com/football/player/gustavo-henrique/243181
+Defender,26,Fabrizio Angileri,ARG,185.0,15/03/1994,Corinthians,0.755,https://www.sofascore.com/football/player/fabrizio-angileri/311462
+Defender,25,Cacá,BRA,185.0,25/04/1999,Corinthians,1.8,https://www.sofascore.com/football/player/caca/929200
+Defender,-,Gabriel Paulista,BRA,187.0,26/11/1990,Corinthians,0.73,https://www.sofascore.com/football/player/gabriel-paulista/124737
+Defender,47,João Pedro Tchoca,BRA,192.0,31/12/2003,Corinthians,1.9,https://www.sofascore.com/football/player/joao-pedro/1411150
+Defender,46,Hugo,BRA,179.0,29/08/1997,Corinthians,1.1,https://www.sofascore.com/football/player/hugo/1017827
+Defender,15,Léo Mana,BRA,179.0,06/04/2004,Corinthians,0.635,https://www.sofascore.com/football/player/leo-mana/1170769
+Defender,13,Renato Santos,BRA,188.0,11/10/2004,Corinthians,0.48,https://www.sofascore.com/football/player/renato-santos/1411159
+Defender,20,Rafael Venâncio,BRA,,18/03/2006,Corinthians,0.0,https://www.sofascore.com/football/player/rafael-venancio/2270857
+Goalkeeper,1,Hugo Souza,BRA,199.0,31/01/1999,Corinthians,9.7,https://www.sofascore.com/football/player/hugo-souza/950454
+Goalkeeper,32,Matheus Donelli,BRA,187.0,17/05/2002,Corinthians,1.5,https://www.sofascore.com/football/player/matheus-donelli/1002609
+Goalkeeper,40,Felipe Longo,BRA,189.0,05/03/2005,Corinthians,0.475,https://www.sofascore.com/football/player/felipe-longo/1485272
+Goalkeeper,51,Kauê,BRA,190.0,08/02/2004,Corinthians,0.0,https://www.sofascore.com/football/player/kaue/1382923
+Forward,99,Rodrigo Rodrigues,BRA,190.0,18/06/1996,Coritiba,0.645,https://www.sofascore.com/football/player/rodrigo-rodrigues/989091
+Forward,19,Joaquín Lavega,URU,172.0,03/02/2005,Coritiba,1.4,https://www.sofascore.com/football/player/joaquin-lavega/1122737
+Forward,32,Pedro Rocha,BRA,178.0,01/10/1994,Coritiba,1.5,https://www.sofascore.com/football/player/pedro-rocha/794930
+Forward,77,Iury Castilho,BRA,185.0,06/09/1995,Coritiba,0.775,https://www.sofascore.com/football/player/iury-castilho/795020
+Forward,33,David da Hora,BRA,179.0,09/01/2000,Coritiba,0.48,https://www.sofascore.com/football/player/david/1104714
+Forward,20,Ruan Lucas de Assis,BRA,183.0,20/04/2004,Coritiba,0.0,https://www.sofascore.com/football/player/ruan-assis/1495892
+Forward,14,Enzo Vagner Moraes de Souza,BRA,,28/07/2006,Coritiba,0.0,https://www.sofascore.com/football/player/enzo-vagner-moraes-de-souza/1634871
+Forward,18,Brayan Gravelo,BRA,,03/02/2006,Coritiba,0.0,https://www.sofascore.com/football/player/brayan-gravelo/2433419
+Forward,22,Ruan Lima,BRA,,26/12/2005,Coritiba,0.0,https://www.sofascore.com/football/player/ruan-lima/1464672
+Midfielder,10,Josué,POR,172.0,17/09/1990,Coritiba,0.365,https://www.sofascore.com/football/player/josue/77726
+Midfielder,11,Lucas Ronier,BRA,165.0,26/11/2004,Coritiba,2.6,https://www.sofascore.com/football/player/lucas-ronier/1172056
+Midfielder,88,Fernando Sobral,BRA,178.0,18/12/1994,Coritiba,1.7,https://www.sofascore.com/football/player/fernando-sobral/931479
+Midfielder,19,Sebastian Gomez,COL,172.0,03/06/1996,Coritiba,1.4,https://www.sofascore.com/football/player/sebastian-gomez/925142
+Midfielder,29,Willian Oliveira,BRA,179.0,16/05/1993,Coritiba,0.105,https://www.sofascore.com/football/player/willian-oliveira/295167
+Midfielder,25,Clayson,BRA,166.0,19/03/1995,Coritiba,0.825,https://www.sofascore.com/football/player/clayson/811308
+Midfielder,28,Fabinho,BRA,181.0,18/11/1999,Coritiba,1.0,https://www.sofascore.com/football/player/fabinho/995294
+Midfielder,39,Gustavo,BRA,178.0,11/09/2002,Coritiba,0.465,https://www.sofascore.com/football/player/gustavo/1099747
+Midfielder,55,Jacy Maranhão,BRA,192.0,11/07/1997,Coritiba,0.97,https://www.sofascore.com/football/player/jacy-maranhao/880204
+Midfielder,70,Wallisson Luiz,BRA,184.0,23/09/1997,Coritiba,0.83,https://www.sofascore.com/football/player/wallisson-luiz/922601
+Midfielder,15,Khensane Mpusane Eustaquio Machel,BRA,,30/01/2009,Coritiba,0.0,https://www.sofascore.com/football/player/khensane-mpusane-eustaquio-machel/2080527
+Midfielder,36,Vini Paulista,BRA,179.0,22/03/2001,Coritiba,0.705,https://www.sofascore.com/football/player/paulista-vini/1111139
+Midfielder,17,Jean Gabriel,BRA,,15/02/2003,Coritiba,0.26,https://www.sofascore.com/football/player/jean-gabriel/1507611
+Midfielder,8,Matheus Dalsasso Dias,BRA,,09/08/2007,Coritiba,0.0,https://www.sofascore.com/football/player/dias-matheus/1836073
+Midfielder,5,Vitor Gonçalves Tissi,BRA,,22/04/2007,Coritiba,0.0,https://www.sofascore.com/football/player/vitor-goncalves-tissi/1864296
+Midfielder,23,Renatinho Conceição Santos da Silva,BRA,,09/05/2005,Coritiba,0.43,https://www.sofascore.com/football/player/renato-conceicao-santos-da-silva/2030892
+Defender,29,Thiago Santos,BRA,181.0,05/09/1989,Coritiba,0.105,https://www.sofascore.com/football/player/thiago-santos/378590
+Defender,3,Maicon,BRA,191.0,14/09/1988,Coritiba,0.097,https://www.sofascore.com/football/player/maicon/44691
+Defender,2,Tinga,BRA,179.0,01/09/1993,Coritiba,0.0,https://www.sofascore.com/football/player/tinga/330057
+Defender,4,Rodrigo Moledo,BRA,188.0,27/10/1987,Coritiba,0.097,https://www.sofascore.com/football/player/rodrigo-moledo/72080
+Defender,26,Bruno Melo,BRA,183.0,26/10/1992,Coritiba,0.275,https://www.sofascore.com/football/player/bruno-melo/870851
+Defender,23,Tiago,BRA,189.0,16/01/2004,Coritiba,0.43,https://www.sofascore.com/football/player/tiago/1124329
+Defender,6,Rodrigo Gelado,BRA,182.0,28/09/2003,Coritiba,0.31,https://www.sofascore.com/football/player/rodrigo-gelado/1465499
+Defender,16,João Almeida,BRA,178.0,16/01/2006,Coritiba,0.36,https://www.sofascore.com/football/player/joao-vitor-da-silva-almeida/1588318
+Defender,17,Diogo Batista de Souza,BRA,173.0,29/08/2003,Coritiba,0.26,https://www.sofascore.com/football/player/diogo-batista-de-souza/1588320
+Defender,15,Guilherme Aquino,BRA,194.0,13/01/2004,Coritiba,0.0,https://www.sofascore.com/football/player/guilherme-aquino/1845365
+Defender,22,Felipe Guimarães,BRA,,08/04/2004,Coritiba,0.0,https://www.sofascore.com/football/player/felipe-guimaraes/1871902
+Defender,13,João Pedro Santos Oliveira,BRA,,01/12/2005,Coritiba,0.0,https://www.sofascore.com/football/player/joao-pedro-santos-oliveira/1589464
+Defender,2,Lucas Taverna,BRA,,08/05/2007,Coritiba,0.0,https://www.sofascore.com/football/player/lucas-taverna/1864297
+Defender,14,Kauan Noveli,BRA,,03/04/2007,Coritiba,0.0,https://www.sofascore.com/football/player/kauan-noveli/2440264
+Goalkeeper,1,Pedro Morisco,BRA,191.0,10/01/2004,Coritiba,0.046,https://www.sofascore.com/football/player/pedro-morisco/1507616
+Goalkeeper,12,Pedro Rangel,BRA,192.0,29/06/2000,Coritiba,0.0,https://www.sofascore.com/football/player/pedro-rangel/1092614
+Goalkeeper,1,Benassi,BRA,195.0,17/12/2003,Coritiba,0.046,https://www.sofascore.com/football/player/benassi/1174621
+Goalkeeper,87,Gabriel Leite,BRA,187.0,28/12/1987,Coritiba,0.024,https://www.sofascore.com/football/player/gabriel-leite/870928
+Goalkeeper,12,Lucas de Mello Soares,BRA,,-,Coritiba,0.0,https://www.sofascore.com/football/player/lucas-de-mello-soares/2440263
+Goalkeeper,21,Dani Gruber,-,,31/01/2007,Coritiba,0.0,https://www.sofascore.com/football/player/dani-gruber/2438960
+Goalkeeper,-,Lucas Perez,-,185.0,02/03/2007,Coritiba,0.0,https://www.sofascore.com/football/player/lucas-perez/2438957
+Goalkeeper,-,Crepaldi,-,,16/06/2007,Coritiba,0.0,https://www.sofascore.com/football/player/crepaldi/2438958
+Forward,9,Isidro Pitta,PAR,183.0,14/08/1999,Red Bull Bragantino,7.7,https://www.sofascore.com/football/player/isidro-pitta/979861
+Forward,8,Eduardo Sasha,BRA,173.0,24/02/1992,Red Bull Bragantino,1.3,https://www.sofascore.com/football/player/eduardo-sasha/143846
+Forward,11,Fernando,BRA,176.0,01/03/1999,Red Bull Bragantino,1.4,https://www.sofascore.com/football/player/fernando/911195
+Forward,30,Henry Mosquera,COL,175.0,15/11/2001,Red Bull Bragantino,1.1,https://www.sofascore.com/football/player/henry-mosquera/1170680
+Forward,39,Arthur Sousa,BRA,183.0,12/03/2003,Red Bull Bragantino,0.825,https://www.sofascore.com/football/player/arthur-sousa/1170780
+Forward,17,Vinicinho,BRA,174.0,20/02/2004,Red Bull Bragantino,3.6,https://www.sofascore.com/football/player/vinicinho/1587965
+Forward,30,Bruno Goncalves De Jesus,BRA,174.0,14/03/2003,Red Bull Bragantino,1.1,https://www.sofascore.com/football/player/goncalves-de-jesus-bruno/1868441
+Forward,19,Gabriel Novaes,BRA,182.0,05/04/1999,Red Bull Bragantino,0.73,https://www.sofascore.com/football/player/gabriel-novaes/882854
+Forward,98,Werik Popó,BRA,190.0,17/10/2001,Red Bull Bragantino,0.3,https://www.sofascore.com/football/player/werik-popo/1186631
+Midfielder,10,Jhon Jhon,BRA,178.0,09/09/2002,Red Bull Bragantino,11.4,https://www.sofascore.com/football/player/jhon-jhon/1167069
+Midfielder,5,Fabinho,BRA,178.0,09/04/2002,Red Bull Bragantino,4.7,https://www.sofascore.com/football/player/fabinho/1117513
+Midfielder,35,Matheus Fernandes,BRA,183.0,30/06/1998,Red Bull Bragantino,1.9,https://www.sofascore.com/football/player/matheus-fernandes/840150
+Midfielder,21,Lucas Barbosa,BRA,193.0,22/02/2001,Red Bull Bragantino,5.2,https://www.sofascore.com/football/player/lucas-barbosa/1067641
+Midfielder,33,Ignacio Laquintana,URU,177.0,01/02/1999,Red Bull Bragantino,1.9,https://www.sofascore.com/football/player/ignacio-laquintana/948004
+Midfielder,6,Gabriel Girotto,BRA,171.0,10/07/1992,Red Bull Bragantino,0.43,https://www.sofascore.com/football/player/gabriel-girotto/242052
+Midfielder,25,Bruno Praxedes,BRA,186.0,08/02/2002,Red Bull Bragantino,1.4,https://www.sofascore.com/football/player/bruno-praxedes/1018093
+Midfielder,15,Ignacio Sosa,URU,175.0,31/08/2003,Red Bull Bragantino,3.7,https://www.sofascore.com/football/player/ignacio-sosa/1112896
+Midfielder,7,Eric Ramires,BRA,172.0,10/08/2000,Red Bull Bragantino,4.6,https://www.sofascore.com/football/player/eric-ramires/950545
+Midfielder,6,Vitinho,BRA,175.0,24/03/1998,Red Bull Bragantino,0.43,https://www.sofascore.com/football/player/vitinho/840210
+Midfielder,22,Gustavo Neves,BRA,176.0,23/04/2004,Red Bull Bragantino,2.4,https://www.sofascore.com/football/player/gustavo-neves/1463904
+Midfielder,80,João Neto,BRA,187.0,21/05/2003,Red Bull Bragantino,0.13,https://www.sofascore.com/football/player/joao-neto/990454
+Midfielder,27,Davi Gomes,BRA,177.0,06/06/2005,Red Bull Bragantino,0.39,https://www.sofascore.com/football/player/davi-gomes/2032806
+Defender,12,Vanderlan,BRA,183.0,07/09/2002,Red Bull Bragantino,3.2,https://www.sofascore.com/football/player/vanderlan/1067640
+Defender,29,Juninho Capixaba,BRA,176.0,06/07/1997,Red Bull Bragantino,4.6,https://www.sofascore.com/football/player/juninho-capixaba/870556
+Defender,36,Luan Cândido,BRA,187.0,02/02/2001,Red Bull Bragantino,3.1,https://www.sofascore.com/football/player/luan-candido/905459
+Defender,34,José Andrés Hurtado,ECU,178.0,23/12/2001,Red Bull Bragantino,3.2,https://www.sofascore.com/football/player/andres-hurtado/987589
+Defender,2,Guzmán Rodríguez,URU,185.0,08/02/2000,Red Bull Bragantino,4.1,https://www.sofascore.com/football/player/guzman-rodriguez/997239
+Defender,14,Pedro Henrique,BRA,188.0,02/10/1995,Red Bull Bragantino,3.8,https://www.sofascore.com/football/player/pedro-henrique/551774
+Defender,4,Alix Vinicius,BRA,196.0,06/11/1999,Red Bull Bragantino,1.5,https://www.sofascore.com/football/player/alix-vinicius/1117597
+Defender,16,Gustavo Marques,BRA,189.0,09/10/2001,Red Bull Bragantino,1.4,https://www.sofascore.com/football/player/gustavo-marques/1174764
+Defender,23,Agustin Sant'Anna,URU,170.0,27/09/1997,Red Bull Bragantino,2.9,https://www.sofascore.com/football/player/agustin-santanna/869726
+Defender,45,Nathan Mendes,BRA,182.0,19/08/2002,Red Bull Bragantino,1.0,https://www.sofascore.com/football/player/nathan-mendes/1116955
+Defender,13,Sergio Palacios,COL,195.0,14/02/2005,Red Bull Bragantino,0.94,https://www.sofascore.com/football/player/palacios-sergio/1525493
+Defender,4,Lucas Cunha,BRA,186.0,23/01/1997,Red Bull Bragantino,1.5,https://www.sofascore.com/football/player/lucas-cunha/794139
+Defender,3,Eduardo Santos,BRA,196.0,28/11/1997,Red Bull Bragantino,0.875,https://www.sofascore.com/football/player/eduardo-santos/925189
+Goalkeeper,1,Cleiton,BRA,190.0,19/08/1997,Red Bull Bragantino,2.9,https://www.sofascore.com/football/player/cleiton/844576
+Goalkeeper,40,Lucão,BRA,190.0,26/02/2001,Red Bull Bragantino,1.3,https://www.sofascore.com/football/player/lucao/981586
+Goalkeeper,37,Fabrício,BRA,190.0,15/06/2000,Red Bull Bragantino,0.096,https://www.sofascore.com/football/player/fabricio/1047208
+Goalkeeper,24,Fernando Costa,BRA,191.0,01/02/2004,Red Bull Bragantino,0.0,https://www.sofascore.com/football/player/pires-costa-fernando-henrique/2140167
+Forward,99,Pablo Vegetti,ARG,187.0,15/10/1988,Vasco Da Gama,0.68,https://www.sofascore.com/football/player/pablo-vegetti/583974
+Forward,9,Matheus França,BRA,184.0,01/04/2004,Vasco Da Gama,9.3,https://www.sofascore.com/football/player/matheus-franca/1116593
+Forward,19,Gabriel Souza,BRA,190.0,05/01/2005,Vasco Da Gama,3.1,https://www.sofascore.com/football/player/gabriel-souza-gb/1444693
+Forward,-,Diego Campos Minete,BRA,183.0,27/01/2009,Vasco Da Gama,0.052,https://www.sofascore.com/football/player/minete-diego-campos/2337474
+Midfielder,10,Philippe Coutinho,BRA,172.0,12/06/1992,Vasco Da Gama,3.7,https://www.sofascore.com/football/player/philippe-coutinho/119159
+Midfielder,77,Rayan,BRA,185.0,03/08/2006,Vasco Da Gama,24.0,https://www.sofascore.com/football/player/rayan/1464966
+Midfielder,17,Nuno Moreira,POR,173.0,16/06/1999,Vasco Da Gama,4.5,https://www.sofascore.com/football/player/nuno-moreira/851285
+Midfielder,11,Andrés Gómez,COL,172.0,12/09/2002,Vasco Da Gama,4.9,https://www.sofascore.com/football/player/andres-gomez/1160386
+Midfielder,3,Tchê Tchê,BRA,175.0,30/08/1992,Vasco Da Gama,0.95,https://www.sofascore.com/football/player/tche-tche/840398
+Midfielder,7,David,BRA,179.0,17/10/1995,Vasco Da Gama,1.6,https://www.sofascore.com/football/player/david/840291
+Midfielder,28,Adson,BRA,171.0,06/10/2000,Vasco Da Gama,2.3,https://www.sofascore.com/football/player/adson/1105970
+Midfielder,25,Hugo Moura,BRA,177.0,03/01/1998,Vasco Da Gama,1.3,https://www.sofascore.com/football/player/hugo-moura/973293
+Midfielder,88,Cauan Barros,BRA,183.0,06/05/2004,Vasco Da Gama,3.2,https://www.sofascore.com/football/player/barros-cauan/1444694
+Midfielder,8,Jair,BRA,178.0,26/08/1994,Vasco Da Gama,1.7,https://www.sofascore.com/football/player/jair/268419
+Midfielder,6,Juan Sforza,ARG,179.0,14/02/2002,Vasco Da Gama,6.6,https://www.sofascore.com/football/player/juan-sforza/1003013
+Midfielder,14,Guilherme Estrella,BRA,185.0,22/04/2005,Vasco Da Gama,0.094,https://www.sofascore.com/football/player/estrella-guilherme/1634144
+Midfielder,23,Thiago Mendes,BRA,176.0,15/03/1992,Vasco Da Gama,1.2,https://www.sofascore.com/football/player/thiago-mendes/329303
+Midfielder,15,Benjamín Garré,ARG,171.0,11/07/2000,Vasco Da Gama,4.1,https://www.sofascore.com/football/player/benjamin-garre/904847
+Midfielder,85,Mateus Carvalho,BRA,180.0,18/03/2002,Vasco Da Gama,1.5,https://www.sofascore.com/football/player/mateus-carvalho/1391962
+Midfielder,21,Johan Rojas,COL,180.0,20/09/2002,Vasco Da Gama,3.7,https://www.sofascore.com/football/player/johan-rojas/1173373
+Midfielder,98,,BRA,182.0,19/04/2005,Vasco Da Gama,2.2,https://www.sofascore.com/football/player/joao-pedro/1641124
+Midfielder,66,Leandrinho,BRA,170.0,17/03/2005,Vasco Da Gama,1.9,https://www.sofascore.com/football/player/leandrinho/1589416
+Midfielder,23,Maxime Dominguez,SUI,172.0,01/02/1996,Vasco Da Gama,1.2,https://www.sofascore.com/football/player/maxime-dominguez/282233
+Midfielder,58,Lucas Eduardo,BRA,173.0,13/01/2004,Vasco Da Gama,0.049,https://www.sofascore.com/football/player/lucas-eduardo/1463560
+Defender,96,Paulo Henrique,BRA,175.0,25/07/1996,Vasco Da Gama,5.8,https://www.sofascore.com/football/player/paulo-henrique/1021721
+Defender,46,Carlos Cuesta,COL,179.0,09/03/1999,Vasco Da Gama,7.4,https://www.sofascore.com/football/player/carlos-cuesta/839095
+Defender,6,Lucas Piton,BRA,176.0,09/10/2000,Vasco Da Gama,6.6,https://www.sofascore.com/football/player/lucas-piton/982174
+Defender,30,Robert Renan,BRA,186.0,11/10/2003,Vasco Da Gama,9.6,https://www.sofascore.com/football/player/robert-renan/1191278
+Defender,2,Puma Rodríguez,URU,183.0,14/03/1997,Vasco Da Gama,1.5,https://www.sofascore.com/football/player/puma-rodriguez/877591
+Defender,43,Lucas Freitas,BRA,184.0,20/01/2001,Vasco Da Gama,1.0,https://www.sofascore.com/football/player/lucas-freitas/1069729
+Defender,12,Victor Luis,BRA,180.0,23/06/1993,Vasco Da Gama,0.38,https://www.sofascore.com/football/player/victor-luis/252781
+Defender,25,Riquelme,BRA,173.0,28/08/2002,Vasco Da Gama,1.3,https://www.sofascore.com/football/player/riquelme/1016905
+Defender,4,Alan Saldivia,URU,180.0,06/04/2002,Vasco Da Gama,1.1,https://www.sofascore.com/football/player/alan-saldivia/1112908
+Defender,18,Paulinho,BRA,172.0,23/05/2005,Vasco Da Gama,0.365,https://www.sofascore.com/football/player/paulinho/1464309
+Defender,14,Lyncon,BRA,186.0,07/05/2005,Vasco Da Gama,0.094,https://www.sofascore.com/football/player/lyncon/1463561
+Defender,-,Renan,BRA,,29/02/2008,Vasco Da Gama,0.052,https://www.sofascore.com/football/player/renan/2443056
+Goalkeeper,1,Léo Jardim,BRA,188.0,20/03/1995,Vasco Da Gama,6.4,https://www.sofascore.com/football/player/leo-jardim/595598
+Goalkeeper,13,Daniel Fuzato,BRA,190.0,04/07/1997,Vasco Da Gama,0.875,https://www.sofascore.com/football/player/daniel-fuzato/863276
+Goalkeeper,-,Pablo,BRA,188.0,11/02/2003,Vasco Da Gama,0.052,https://www.sofascore.com/football/player/pablo/1652393
+Forward,10,Neymar,BRA,175.0,05/02/1992,Santos,10.6,https://www.sofascore.com/football/player/neymar/124712
+Forward,9,Gabriel Barbosa,BRA,178.0,30/08/1996,Santos,0.245,https://www.sofascore.com/football/player/gabriel-barbosa/358554
+Forward,9,Tiquinho Soares,BRA,187.0,17/01/1991,Santos,0.245,https://www.sofascore.com/football/player/tiquinho-soares/789100
+Forward,14,Billal Brahimi,ALG,183.0,14/03/2000,Santos,0.83,https://www.sofascore.com/football/player/billal-brahimi/948250
+Forward,9,Alfredo Morelos,COL,177.0,21/06/1996,Santos,0.245,https://www.sofascore.com/football/player/alfredo-morelos/831085
+Forward,19,Lautaro Díaz,ARG,181.0,21/05/1998,Santos,1.5,https://www.sofascore.com/football/player/lautaro-diaz/992093
+Forward,9,Enzo Monteiro,BOL,182.0,27/05/2004,Santos,0.245,https://www.sofascore.com/football/player/enzo-monteiro/1525129
+Midfielder,7,Robinho Júnior,BRA,170.0,17/12/2007,Santos,5.5,https://www.sofascore.com/football/player/robson-junior/2191860
+Midfielder,30,Miguelito,BOL,177.0,25/04/2004,Santos,3.2,https://www.sofascore.com/football/player/miguel-terceros/1159656
+Midfielder,32,Benjamín Rollheiser,ARG,175.0,24/03/2000,Santos,6.3,https://www.sofascore.com/football/player/benjamin-rollheiser/922454
+Midfielder,11,Guilherme,BRA,178.0,13/04/1995,Santos,2.6,https://www.sofascore.com/football/player/guilherme/844605
+Midfielder,29,Victor Hugo,BRA,184.0,11/05/2004,Santos,3.6,https://www.sofascore.com/football/player/victor-hugo/1170954
+Midfielder,8,Tomás Rincón,VEN,175.0,13/01/1988,Santos,0.16,https://www.sofascore.com/football/player/tomas-rincon/46798
+Midfielder,22,Álvaro Barreal,ARG,172.0,17/08/2000,Santos,7.7,https://www.sofascore.com/football/player/alvaro-barreal/949687
+Midfielder,25,Gabriel Menino,BRA,176.0,29/09/2000,Santos,6.2,https://www.sofascore.com/football/player/gabriel-menino/974556
+Midfielder,6,Zé Rafael,BRA,175.0,16/06/1993,Santos,2.6,https://www.sofascore.com/football/player/ze-rafael/329069
+Midfielder,15,Willian Arão,BRA,181.0,12/03/1992,Santos,1.1,https://www.sofascore.com/football/player/willian-arao/242213
+Midfielder,16,Thaciano,BRA,182.0,12/05/1995,Santos,1.2,https://www.sofascore.com/football/player/thaciano/872039
+Midfielder,49,Gabriel Bontempo,BRA,181.0,16/01/2005,Santos,4.9,https://www.sofascore.com/football/player/gabriel-bontempo/1656036
+Midfielder,5,João Schmidt,BRA,183.0,19/05/1993,Santos,0.825,https://www.sofascore.com/football/player/joao-schmidt/244591
+Midfielder,17,Gustavo Caballero,PAR,186.0,21/09/2001,Santos,0.44,https://www.sofascore.com/football/player/caballero-gustavo/988656
+Midfielder,47,Mateus Xavier de Sousa,BRA,172.0,28/06/2007,Santos,0.0,https://www.sofascore.com/football/player/mateus-xavier/1884605
+Midfielder,35,Pedro Padula,BRA,,13/03/2007,Santos,0.0,https://www.sofascore.com/football/player/pedro-padula-tobias/1888795
+Midfielder,17,Vinicius Balieiro,BRA,177.0,28/05/1999,Santos,0.44,https://www.sofascore.com/football/player/vinicius-balieiro/1065976
+Midfielder,-,Ed Carlos,BRA,187.0,19/03/2001,Santos,0.435,https://www.sofascore.com/football/player/ed-carlos/1066714
+Defender,12,Mayke,BRA,178.0,10/11/1992,Santos,2.2,https://www.sofascore.com/football/player/mayke/273329
+Defender,33,Souza,BRA,179.0,16/06/2006,Santos,5.2,https://www.sofascore.com/football/player/souza/1482340
+Defender,18,Igor Vinícius,BRA,173.0,02/04/1997,Santos,1.9,https://www.sofascore.com/football/player/igor-vinicius/840119
+Defender,44,João Pedro Chermont,BRA,181.0,18/01/2006,Santos,3.2,https://www.sofascore.com/football/player/joao-pedro-chermont/1482361
+Defender,27,Zé Ivaldo,BRA,185.0,21/02/1997,Santos,2.4,https://www.sofascore.com/football/player/ze-ivaldo/844602
+Defender,31,Gonzalo Escobar,ARG,171.0,16/03/1997,Santos,1.0,https://www.sofascore.com/football/player/gonzalo-escobar/840500
+Defender,14,Luan Peres,BRA,190.0,19/07/1994,Santos,0.83,https://www.sofascore.com/football/player/luan-peres/842098
+Defender,4,Alexis Duarte,PAR,185.0,12/03/2000,Santos,1.9,https://www.sofascore.com/football/player/alexis-duarte/883205
+Defender,13,João Basso,BRA,189.0,13/01/1997,Santos,0.91,https://www.sofascore.com/football/player/joao-basso/850955
+Defender,3,Vinicius Rodrigues Lira,BRA,187.0,12/10/2007,Santos,0.87,https://www.sofascore.com/football/player/vinicius-lira/2039241
+Defender,98,Adonis Frías,ARG,189.0,17/03/1998,Santos,2.8,https://www.sofascore.com/football/player/adonis-frias/940699
+Defender,23,Nathan,BRA,183.0,05/09/2001,Santos,1.4,https://www.sofascore.com/football/player/nathan/1016912
+Defender,3,Kevyson,BRA,174.0,29/03/2004,Santos,0.87,https://www.sofascore.com/football/player/kevyson/1389980
+Defender,2,Alex Nascimento,BRA,189.0,10/05/1999,Santos,0.42,https://www.sofascore.com/football/player/alex-nascimento/931556
+Goalkeeper,77,Gabriel Brazão,BRA,191.0,05/10/2000,Santos,11.7,https://www.sofascore.com/football/player/gabriel-brazao/905448
+Goalkeeper,1,Diogenes,BRA,190.0,06/01/2001,Santos,0.185,https://www.sofascore.com/football/player/diogenes/1128754
+Forward,14,Germán Cano,ARG,176.0,02/01/1988,Fluminense,0.62,https://www.sofascore.com/football/player/german-cano/33238
+Forward,99,John Kennedy,BRA,173.0,18/05/2002,Fluminense,5.8,https://www.sofascore.com/football/player/john-kennedy/1087399
+Forward,9,Everaldo,BRA,181.0,05/07/1991,Fluminense,0.435,https://www.sofascore.com/football/player/everaldo/386212
+Forward,18,Lelê,BRA,189.0,01/10/1997,Fluminense,1.0,https://www.sofascore.com/football/player/lele/1173457
+Midfielder,7,Yeferson Soteldo,VEN,160.0,30/06/1997,Fluminense,3.7,https://www.sofascore.com/football/player/yeferson-soteldo/789960
+Midfielder,8,Matheus Martinelli,BRA,176.0,05/10/2001,Fluminense,14.4,https://www.sofascore.com/football/player/martinelli-matheus/1067671
+Midfielder,10,Ganso,BRA,184.0,12/10/1989,Fluminense,0.335,https://www.sofascore.com/football/player/ganso/116853
+Midfielder,90,Kevin Serna,COL,181.0,22/12/1997,Fluminense,5.2,https://www.sofascore.com/football/player/serna-kevin/981374
+Midfielder,32,Luciano Acosta,ARG,160.0,31/05/1994,Fluminense,4.8,https://www.sofascore.com/football/player/luciano-acosta/548030
+Midfielder,35,Hércules,BRA,178.0,20/10/2000,Fluminense,12.4,https://www.sofascore.com/football/player/hercules/1104068
+Midfielder,17,Agustín Canobbio,URU,175.0,01/10/1998,Fluminense,6.2,https://www.sofascore.com/football/player/agustin-canobbio/846413
+Midfielder,11,Keno,BRA,174.0,10/09/1989,Fluminense,0.39,https://www.sofascore.com/football/player/keno/787607
+Midfielder,5,Facundo Bernal,URU,187.0,21/08/2003,Fluminense,5.8,https://www.sofascore.com/football/player/bernal-facundo/1177404
+Midfielder,16,Nonato,BRA,174.0,03/03/1998,Fluminense,1.1,https://www.sofascore.com/football/player/nonato/922566
+Midfielder,45,Lima,BRA,181.0,11/06/1996,Fluminense,2.3,https://www.sofascore.com/football/player/lima/807850
+Midfielder,19,Rubén Lezcano,PAR,175.0,09/02/2004,Fluminense,3.4,https://www.sofascore.com/football/player/ruben-lezcano/1393308
+Midfielder,94,Otávio,BRA,173.0,04/05/1994,Fluminense,1.9,https://www.sofascore.com/football/player/otavio/552686
+Midfielder,28,Riquelme Felipe,BRA,175.0,13/03/2007,Fluminense,5.6,https://www.sofascore.com/football/player/riquelme-felipe-silva/1884803
+Midfielder,30,Santiago Moreno,COL,171.0,21/04/2000,Fluminense,3.1,https://www.sofascore.com/football/player/santiago-moreno/100203
+Midfielder,80,David Terans,URU,176.0,11/08/1994,Fluminense,0.92,https://www.sofascore.com/football/player/david-terans/586662
+Midfielder,55,Wallace Davi,BRA,185.0,10/05/2007,Fluminense,0.0,https://www.sofascore.com/football/player/wallace-davi-nunes/1884816
+Defender,13,Guilherme Arana,BRA,176.0,14/04/1997,Fluminense,7.4,https://www.sofascore.com/football/player/guilherme-arana/1127439
+Defender,4,Ignácio,BRA,192.0,01/12/1996,Fluminense,2.1,https://www.sofascore.com/football/player/ignacio/958382
+Defender,2,Samuel Xavier,BRA,166.0,06/06/1990,Fluminense,0.23,https://www.sofascore.com/football/player/xavier-samuel/795773
+Defender,12,Gabriel Fuentes,COL,180.0,09/02/1997,Fluminense,1.8,https://www.sofascore.com/football/player/gabriel-fuentes/927551
+Defender,6,Renê,BRA,174.0,14/09/1992,Fluminense,0.515,https://www.sofascore.com/football/player/rene/243113
+Defender,22,Juan Freytes,ARG,182.0,11/01/2000,Fluminense,5.2,https://www.sofascore.com/football/player/juan-freytes/962187
+Defender,23,Guga,BRA,173.0,29/08/1998,Fluminense,1.9,https://www.sofascore.com/football/player/guga/928134
+Defender,21,Igor Rabello,BRA,190.0,28/04/1995,Fluminense,1.5,https://www.sofascore.com/football/player/igor-rabello/753662
+Defender,3,Jemmes,BRA,187.0,09/04/2000,Fluminense,1.5,https://www.sofascore.com/football/player/ribeiro-da-silva-jemmes-bruno/1527129
+Defender,36,Felipe Andrade,BRA,182.0,29/05/2002,Fluminense,1.4,https://www.sofascore.com/football/player/felipe-andrade/1586575
+Defender,66,Leonardo de Oliveira Jance,BRA,175.0,23/03/2005,Fluminense,0.0,https://www.sofascore.com/football/player/leonardo-de-oliveira-jance/1631686
+Defender,40,Davi Duarte,BRA,183.0,26/04/2004,Fluminense,0.26,https://www.sofascore.com/football/player/davi-duarte-schuindt/1631679
+Defender,56,Miguel Sampaio,BRA,,19/01/2005,Fluminense,0.0,https://www.sofascore.com/football/player/miguel-sampaio/2441798
+Goalkeeper,1,Fábio,BRA,188.0,30/09/1980,Fluminense,0.079,https://www.sofascore.com/football/player/fabio/17785
+Goalkeeper,27,Marcelo Pitaluga,BRA,192.0,20/12/2002,Fluminense,0.21,https://www.sofascore.com/football/player/marcelo-pitaluga/1093974
+Goalkeeper,98,Vitor Eudes,BRA,195.0,21/10/1998,Fluminense,0.37,https://www.sofascore.com/football/player/vitor-eudes/927666
+Goalkeeper,-,Lucas,BRA,,25/05/2008,Fluminense,0.0,https://www.sofascore.com/football/player/lucas/2441797
+Goalkeeper,-,Lucas Emanuel,BRA,,25/05/2008,Fluminense,0.0,https://www.sofascore.com/football/player/lucas-emanuel/2441800
+Forward,19,Kaio Jorge,BRA,182.0,24/01/2002,Cruzeiro,21.0,https://www.sofascore.com/football/player/kaio-jorge/954888
+Forward,17,Luis Sinisterra,COL,176.0,17/06/1999,Cruzeiro,11.6,https://www.sofascore.com/football/player/luis-sinisterra/836070
+Forward,-,Néiser Villarreal,COL,186.0,24/04/2005,Cruzeiro,0.44,https://www.sofascore.com/football/player/neyser-villareal/1539599
+Forward,91,Chico da Costa,BRA,184.0,04/05/1995,Cruzeiro,1.2,https://www.sofascore.com/football/player/francisco-da-costa/866847
+Forward,-,Tevis Alves Santos,BRA,180.0,28/01/2006,Cruzeiro,0.44,https://www.sofascore.com/football/player/tevis-alves-santos/1633609
+Midfielder,9,Gerson,BRA,185.0,20/05/1997,Cruzeiro,18.5,https://www.sofascore.com/football/player/gerson/611876
+Midfielder,10,Matheus Pereira,BRA,175.0,05/05/1996,Cruzeiro,13.5,https://www.sofascore.com/football/player/matheus-pereira/377238
+Midfielder,11,Keny Arroyo,ECU,176.0,14/02/2006,Cruzeiro,8.7,https://www.sofascore.com/football/player/arroyo-keny/1482431
+Midfielder,7,Marquinhos,BRA,175.0,07/04/2003,Cruzeiro,3.9,https://www.sofascore.com/football/player/marquinhos/1116954
+Midfielder,8,Matheus Henrique,BRA,175.0,19/12/1997,Cruzeiro,4.1,https://www.sofascore.com/football/player/matheus-henrique/912786
+Midfielder,29,Lucas Romero,ARG,167.0,18/04/1994,Cruzeiro,2.7,https://www.sofascore.com/football/player/lucas-romero/263477
+Midfielder,16,Lucas Silva,BRA,182.0,16/02/1993,Cruzeiro,0.45,https://www.sofascore.com/football/player/lucas-silva/245159
+Midfielder,94,Wanderson,BRA,175.0,06/10/1994,Cruzeiro,3.4,https://www.sofascore.com/football/player/wanderson/247483
+Midfielder,88,Christian,BRA,178.0,19/12/2000,Cruzeiro,10.7,https://www.sofascore.com/football/player/christian/981733
+Midfielder,5,Walace,BRA,188.0,04/04/1995,Cruzeiro,4.6,https://www.sofascore.com/football/player/walace/553686
+Midfielder,70,Kaique Kenji,BRA,178.0,30/01/2006,Cruzeiro,1.1,https://www.sofascore.com/football/player/kenji/1647579
+Midfielder,77,Japa,BRA,186.0,02/01/2004,Cruzeiro,0.46,https://www.sofascore.com/football/player/joao-wellington-japa/1459623
+Midfielder,75,Rodriguinho,BRA,170.0,05/06/2003,Cruzeiro,0.58,https://www.sofascore.com/football/player/rodriguinho/1174770
+Midfielder,27,Vitinho,BRA,173.0,18/02/2004,Cruzeiro,0.455,https://www.sofascore.com/football/player/amorim-de-assis-vitor-hugo/1836052
+Midfielder,35,Murilo Rhikman,BRA,188.0,13/03/2006,Cruzeiro,0.26,https://www.sofascore.com/football/player/murilo-rhikman-alves-pimentel/1589354
+Midfielder,20,Ryan Guilherme,BRA,185.0,07/12/2002,Cruzeiro,0.63,https://www.sofascore.com/football/player/ryan/1105850
+Midfielder,21,Jhosefer,BRA,170.0,08/03/2004,Cruzeiro,0.365,https://www.sofascore.com/football/player/januario-jhosefer-raphael/1868440
+Midfielder,25,Ian Luccas,BRA,187.0,11/02/2003,Cruzeiro,1.9,https://www.sofascore.com/football/player/ian-luccas/1046496
+Midfielder,57,Rayan Lelis,BRA,,19/01/2007,Cruzeiro,0.0,https://www.sofascore.com/football/player/rayan-lelis/2409599
+Defender,15,Fabrício Bruno,BRA,192.0,12/02/1996,Cruzeiro,13.2,https://www.sofascore.com/football/player/fabricio-bruno/840220
+Defender,23,Fagner,BRA,168.0,11/06/1989,Cruzeiro,0.24,https://www.sofascore.com/football/player/fagner/25554
+Defender,12,William,BRA,176.0,03/04/1995,Cruzeiro,4.1,https://www.sofascore.com/football/player/william/604274
+Defender,6,Kaiki,BRA,172.0,08/03/2003,Cruzeiro,10.6,https://www.sofascore.com/football/player/kaiki/1112484
+Defender,25,Lucas Villalba,ARG,177.0,19/08/1994,Cruzeiro,1.9,https://www.sofascore.com/football/player/lucas-villalba/260077
+Defender,43,João Marcelo,BRA,189.0,13/06/2000,Cruzeiro,4.6,https://www.sofascore.com/football/player/joao-marcelo/978638
+Defender,34,Jonathan Jesus,BRA,187.0,27/05/2004,Cruzeiro,2.4,https://www.sofascore.com/football/player/jonathan/1498670
+Defender,36,Kauã Prates,BRA,182.0,11/08/2008,Cruzeiro,6.2,https://www.sofascore.com/football/player/kaua-prates-de-almeida/1887796
+Defender,2,Kauã Moraes,BRA,178.0,29/09/2006,Cruzeiro,1.6,https://www.sofascore.com/football/player/kaua-moraes/2057367
+Defender,33,José Janderson,BRA,189.0,31/08/2005,Cruzeiro,0.0,https://www.sofascore.com/football/player/jose-janderson-da-silva-marques/1588663
+Defender,44,Bruno Alves,BRA,186.0,04/08/2005,Cruzeiro,0.27,https://www.sofascore.com/football/player/bruno-ferreira-alves/1589355
+Defender,42,Nicolas Pontes,BRA,,14/01/2006,Cruzeiro,0.0,https://www.sofascore.com/football/player/nicolas-pontes/1647577
+Defender,48,Kaiquy Luiz,BRA,,17/05/2006,Cruzeiro,0.0,https://www.sofascore.com/football/player/kaiquy-luiz/2437587
+Defender,56,William Fernando,BRA,,11/02/2006,Cruzeiro,0.0,https://www.sofascore.com/football/player/william-fernando/2437584
+Goalkeeper,25,Matheus Cunha,BRA,193.0,24/05/2001,Cruzeiro,1.9,https://www.sofascore.com/football/player/matheus-cunha/1105835
+Goalkeeper,1,Cássio,BRA,195.0,06/06/1987,Cruzeiro,0.29,https://www.sofascore.com/football/player/cassio/27756
+Goalkeeper,81,Otávio Costa,BRA,192.0,27/12/2005,Cruzeiro,0.315,https://www.sofascore.com/football/player/otavio-eleodoro-rezende-costa/1589358
+Forward,30,Joaquín Correa,ARG,188.0,13/08/1994,Botafogo,2.8,https://www.sofascore.com/football/player/joaquin-correa/249929
+Forward,98,Arthur Cabral,BRA,186.0,25/04/1998,Botafogo,9.3,https://www.sofascore.com/football/player/arthur-cabral/870762
+Forward,11,Matheus Martins,BRA,179.0,16/07/2003,Botafogo,5.8,https://www.sofascore.com/football/player/matheus-martins/1106779
+Forward,9,Chris Ramos,ESP,193.0,18/01/1997,Botafogo,2.4,https://www.sofascore.com/football/player/chris-ramos/914819
+Forward,9,Matheus Nascimento,BRA,185.0,03/03/2004,Botafogo,2.4,https://www.sofascore.com/football/player/matheus-nascimento/1047683
+Forward,16,Nathan Fernandes,BRA,178.0,16/02/2005,Botafogo,1.6,https://www.sofascore.com/football/player/nathan-fernandes/1494695
+Forward,37,Kadir Barría,PAN,183.0,18/07/2007,Botafogo,0.0,https://www.sofascore.com/football/player/jose-kadir/2282985
+Midfielder,10,Jefferson Savarino,VEN,169.0,11/11/1996,Botafogo,8.3,https://www.sofascore.com/football/player/jefferson-savarino/874739
+Midfielder,35,Danilo,BRA,177.0,29/04/2001,Botafogo,23.0,https://www.sofascore.com/football/player/danilo/1064039
+Midfielder,8,Álvaro Montoro,ARG,169.0,17/04/2007,Botafogo,10.5,https://www.sofascore.com/football/player/alvaro-montoro/1650770
+Midfielder,25,Allan,BRA,175.0,08/01/1991,Botafogo,1.4,https://www.sofascore.com/football/player/allan/158277
+Midfielder,7,Artur,BRA,168.0,15/02/1998,Botafogo,6.7,https://www.sofascore.com/football/player/artur/841128
+Midfielder,14,Jordan Barrera,COL,175.0,11/04/2006,Botafogo,0.94,https://www.sofascore.com/football/player/jordan-andres-barrera-herrera/1899902
+Midfielder,23,Santiago Rodríguez,URU,172.0,08/01/2000,Botafogo,5.3,https://www.sofascore.com/football/player/santiago-rodriguez/975216
+Midfielder,28,Newton,BRA,188.0,12/03/2000,Botafogo,3.2,https://www.sofascore.com/football/player/newton/1463909
+Midfielder,16,Lucas Villalba,URU,182.0,11/05/2001,Botafogo,1.6,https://www.sofascore.com/football/player/villalba-lucas/1109864
+Defender,13,Alex Telles,BRA,181.0,15/12/1992,Botafogo,2.9,https://www.sofascore.com/football/player/alex-telles/312110
+Defender,2,Vitinho,BRA,175.0,23/07/1999,Botafogo,8.7,https://www.sofascore.com/football/player/vitinho/914477
+Defender,15,Bastos,ANG,184.0,27/03/1991,Botafogo,0.63,https://www.sofascore.com/football/player/bastos/215956
+Defender,20,Alexander Barboza,ARG,193.0,16/03/1995,Botafogo,5.3,https://www.sofascore.com/football/player/alexander-barboza/801044
+Defender,4,Mateo Ponte,URU,183.0,24/05/2003,Botafogo,1.9,https://www.sofascore.com/football/player/mateo-ponte/1099163
+Defender,21,Marçal,BRA,178.0,19/02/1989,Botafogo,0.24,https://www.sofascore.com/football/player/marcal/143593
+Defender,57,David Ricardo,BRA,188.0,21/12/2002,Botafogo,7.2,https://www.sofascore.com/football/player/david-ricardo/1186587
+Defender,5,Lucas Halter,BRA,187.0,02/05/2000,Botafogo,1.9,https://www.sofascore.com/football/player/lucas-halter/905450
+Defender,31,Kaio Pantaleão,BRA,186.0,08/09/1995,Botafogo,1.7,https://www.sofascore.com/football/player/kaio/990193
+Defender,58,Ythallo,BRA,,22/07/2004,Botafogo,0.145,https://www.sofascore.com/football/player/ythallo/1512551
+Defender,36,Gabriel Da Silva Abdias,BRA,177.0,19/06/2006,Botafogo,0.0,https://www.sofascore.com/football/player/gabriel-da-silva-abdias/2084595
+Defender,34,Gabriel Justino,BRA,,16/04/2006,Botafogo,0.0,https://www.sofascore.com/football/player/gabriel-justino/1631268
+Goalkeeper,22,Neto,BRA,190.0,19/07/1989,Botafogo,1.1,https://www.sofascore.com/football/player/neto/84844
+Goalkeeper,24,Léo Linck,BRA,194.0,03/03/2001,Botafogo,3.1,https://www.sofascore.com/football/player/leo-linck/1119887
+Goalkeeper,40,Cristhian Loor,ECU,189.0,09/03/2006,Botafogo,0.34,https://www.sofascore.com/football/player/cristhian-loor/1470452
+Goalkeeper,1,Raúl,BRA,189.0,28/07/1997,Botafogo,0.097,https://www.sofascore.com/football/player/raul/866736
+Goalkeeper,32,Rhyan,BRA,,03/01/2006,Botafogo,0.0,https://www.sofascore.com/football/player/rhyan/1819829
+Goalkeeper,62,Cleber Lucas,BRA,192.0,22/02/2007,Botafogo,0.0,https://www.sofascore.com/football/player/cleber-lucas/2358135
+Forward,9,Gonzalo Mastriani,URU,180.0,28/04/1993,Athletico,0.0,https://www.sofascore.com/football/player/gonzalo-mastriani/345847
+Forward,9,Kevin Viveros,COL,180.0,04/04/2000,Athletico,0.0,https://www.sofascore.com/football/player/kevin-viveros/925124
+Forward,21,Leozinho,BRA,173.0,05/12/1998,Athletico,0.515,https://www.sofascore.com/football/player/leonardo-caetano-silva/1546647
+Forward,27,Alan Kardec,BRA,185.0,12/01/1989,Athletico,3.1,https://www.sofascore.com/football/player/alan-kardec/39656
+Forward,20,Julimar,BRA,188.0,25/01/2001,Athletico,0.65,https://www.sofascore.com/football/player/julimar/1167536
+Forward,17,Renan Viana,BRA,189.0,31/01/2003,Athletico,0.73,https://www.sofascore.com/football/player/renan-viana/1459787
+Forward,70,Renan Peixoto Nepomuceno,BRA,185.0,21/02/2000,Athletico,0.0,https://www.sofascore.com/football/player/renan-peixoto-nepomuceno/2436885
+Forward,9,Sorriso,BRA,,15/04/2006,Athletico,0.0,https://www.sofascore.com/football/player/sorriso/1631240
+Forward,9,Walace dos Santos França,BRA,187.0,24/08/2005,Athletico,0.0,https://www.sofascore.com/football/player/walace-dos-santos-franca/2436887
+Forward,17,Kauê Sestrem,BRA,,05/08/2006,Athletico,0.73,https://www.sofascore.com/football/player/kaue-sestrem/1804705
+Forward,18,Lucas Guimarães Amorim,BRA,,05/06/2006,Athletico,0.0,https://www.sofascore.com/football/player/lucas-guimaraes-amorim/2436884
+Forward,-,Benjamin dos Santos,BRA,,-,Athletico,0.0,https://www.sofascore.com/football/player/benjamin-dos-santos/2441561
+Midfielder,10,Bruno Zapelli,ARG,181.0,16/05/2002,Athletico,0.0,https://www.sofascore.com/football/player/bruno-zapelli/1092354
+Midfielder,27,Camilo Portilla,COL,183.0,12/09/1998,Athletico,3.1,https://www.sofascore.com/football/player/portilla-camilo/980580
+Midfielder,8,Giuliano,BRA,172.0,31/05/1990,Athletico,0.875,https://www.sofascore.com/football/player/giuliano/90862
+Midfielder,17,Steven Mendoza,COL,171.0,27/06/1992,Athletico,0.73,https://www.sofascore.com/football/player/steven-mendoza/354510
+Midfielder,19,Luiz Fernando,BRA,178.0,16/10/1996,Athletico,1.9,https://www.sofascore.com/football/player/luiz-fernando/874143
+Midfielder,53,Dudu,BRA,177.0,01/01/2006,Athletico,1.9,https://www.sofascore.com/football/player/dudu/1482354
+Midfielder,16,Jádson,BRA,171.0,30/08/1993,Athletico,0.0,https://www.sofascore.com/football/player/jadson/243651
+Midfielder,57,João Cruz,BRA,172.0,12/05/2006,Athletico,1.3,https://www.sofascore.com/football/player/joao-cruz/1485226
+Midfielder,11,Isaac,BRA,177.0,24/04/2004,Athletico,0.0,https://www.sofascore.com/football/player/isaac/1464519
+Midfielder,5,Felipinho,BRA,183.0,18/10/2001,Athletico,0.0,https://www.sofascore.com/football/player/felipinho/1107060
+Midfielder,15,Raul,BRA,180.0,11/07/1996,Athletico,1.0,https://www.sofascore.com/football/player/raul/870760
+Midfielder,20,Alejandro García,COL,185.0,28/02/2001,Athletico,0.65,https://www.sofascore.com/football/player/alejandro-garcia/912291
+Midfielder,11,Bruninho Braga Ramos,BRA,175.0,16/08/2008,Athletico,0.0,https://www.sofascore.com/football/player/bruninho-braga-ramos/2436878
+Midfielder,5,Diogo Riquelme,BRA,,23/04/2005,Athletico,0.0,https://www.sofascore.com/football/player/diogo-riquelme/1635772
+Midfielder,10,Guilherme Back,BRA,,23/09/2006,Athletico,0.0,https://www.sofascore.com/football/player/guilherme-back/1631228
+Midfielder,18,Lucas Marezi,BRA,,18/01/2006,Athletico,0.0,https://www.sofascore.com/football/player/lucas-marezi/1804713
+Midfielder,16,Kauan Augusto Stabelini,BRA,,13/05/2007,Athletico,0.0,https://www.sofascore.com/football/player/kauan-augusto-stabelini/2025640
+Defender,2,Gilberto Junior,BRA,165.0,27/03/2005,Athletico,0.455,https://www.sofascore.com/football/player/gilberto-junior/1941312
+Defender,37,Lucas Esquivel,ARG,183.0,14/10/2001,Athletico,3.6,https://www.sofascore.com/football/player/lucas-esquivel/1087079
+Defender,3,Léo,BRA,183.0,06/03/1996,Athletico,0.0,https://www.sofascore.com/football/player/leo/360940
+Defender,33,Juan Felipe Aguirre,COL,186.0,29/08/1996,Athletico,0.88,https://www.sofascore.com/football/player/juan-felipe-aguirre/925173
+Defender,13,Carlos Teran,COL,188.0,24/09/2000,Athletico,0.0,https://www.sofascore.com/football/player/carlos-teran/974512
+Defender,65,Arthur Dias,BRA,183.0,10/04/2007,Athletico,0.62,https://www.sofascore.com/football/player/arthur-dias/2063956
+Defender,14,Lucas Belezi,BRA,186.0,08/05/2003,Athletico,1.3,https://www.sofascore.com/football/player/belezi-lucas/1130040
+Defender,22,Madson,BRA,182.0,13/01/1992,Athletico,0.21,https://www.sofascore.com/football/player/madson/243439
+Defender,29,Gastón Benavídez,ARG,175.0,23/10/1995,Athletico,2.7,https://www.sofascore.com/football/player/gaston-benavidez/981452
+Defender,61,Leonardo Derik,BRA,168.0,24/07/2005,Athletico,0.85,https://www.sofascore.com/football/player/leonardo-derik/1199277
+Defender,8,Dudu,BRA,175.0,30/05/1997,Athletico,0.875,https://www.sofascore.com/football/player/dudu/859083
+Defender,4,Habraão,BRA,184.0,26/06/2001,Athletico,0.775,https://www.sofascore.com/football/player/habraao/1167540
+Defender,3,Fábio Ferreira,BRA,194.0,29/10/2006,Athletico,0.0,https://www.sofascore.com/football/player/fabio-ferreira/1631220
+Defender,13,Murilo Camargo,BRA,,20/02/2009,Athletico,0.0,https://www.sofascore.com/football/player/murilo-camargo/1882409
+Goalkeeper,23,Santos,BRA,188.0,17/03/1990,Athletico,0.0,https://www.sofascore.com/football/player/santos/166491
+Goalkeeper,1,Mycael,BRA,191.0,12/03/2004,Athletico,2.4,https://www.sofascore.com/football/player/mycael/1128850
+Goalkeeper,12,Matheus Soares,BRA,193.0,09/01/2005,Athletico,0.0,https://www.sofascore.com/football/player/matheus-rocha/1485244
+Goalkeeper,23,Carlos Eduardo Souza de Barros,BRA,187.0,10/03/2006,Athletico,0.0,https://www.sofascore.com/football/player/carlos-eduardo-souza-de-barros/2436848
+Goalkeeper,-,Guilherme Felipe Martins,BRA,,27/03/2008,Athletico,0.0,https://www.sofascore.com/football/player/guilherme-felipe-martins/1882393
+Goalkeeper,-,Maksym,UKR,,09/04/2006,Athletico,0.0,https://www.sofascore.com/football/player/maksym/2442956
+Forward,7,Hulk,BRA,180.0,25/07/1986,Atletico Mineiro,1.9,https://www.sofascore.com/football/player/hulk/34705
+Forward,19,Reinier,BRA,185.0,19/01/2002,Atletico Mineiro,1.4,https://www.sofascore.com/football/player/reinier/978562
+Forward,92,Dudu,BRA,167.0,07/01/1992,Atletico Mineiro,0.97,https://www.sofascore.com/football/player/dudu/147464
+Forward,33,Rony,BRA,167.0,11/05/1995,Atletico Mineiro,5.3,https://www.sofascore.com/football/player/rony/835260
+Forward,11,Alan Minda,ECU,171.0,14/05/2003,Atletico Mineiro,0.775,https://www.sofascore.com/football/player/minda-alan/1122552
+Forward,77,Biel,BRA,169.0,01/04/2001,Atletico Mineiro,4.4,https://www.sofascore.com/football/player/biel/1106140
+Forward,37,Júnior Santos,BRA,188.0,11/10/1994,Atletico Mineiro,3.2,https://www.sofascore.com/football/player/junior-santos/922559
+Forward,42,Cadu,BRA,180.0,24/05/2004,Atletico Mineiro,0.48,https://www.sofascore.com/football/player/cadu/1199473
+Forward,29,Cauã Soares,BRA,,30/06/2008,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/caua-soares/2118857
+Forward,41,Murillo Fernandes,BRA,,21/07/2006,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/murillo-fernandes/2440352
+Midfielder,10,Gustavo Scarpa,BRA,177.0,05/01/1994,Atletico Mineiro,5.8,https://www.sofascore.com/football/player/gustavo-scarpa/559036
+Midfielder,7,Maycon,BRA,175.0,15/07/1997,Atletico Mineiro,1.9,https://www.sofascore.com/football/player/maycon/831778
+Midfielder,21,Alan Franco,ECU,174.0,21/08/1998,Atletico Mineiro,4.2,https://www.sofascore.com/football/player/alan-franco/822729
+Midfielder,11,Bernard,BRA,164.0,08/09/1992,Atletico Mineiro,0.775,https://www.sofascore.com/football/player/bernard/241488
+Midfielder,5,Alexsander,BRA,178.0,08/10/2003,Atletico Mineiro,6.2,https://www.sofascore.com/football/player/alexsander/1185617
+Midfielder,28,Tomás Cuello,ARG,176.0,05/03/2000,Atletico Mineiro,6.6,https://www.sofascore.com/football/player/tomas-cuello/871273
+Midfielder,17,Igor Gomes,BRA,182.0,17/03/1999,Atletico Mineiro,2.7,https://www.sofascore.com/football/player/igor-gomes/913598
+Midfielder,20,Patrick,BRA,187.0,19/03/2004,Atletico Mineiro,1.6,https://www.sofascore.com/football/player/patrick-silva/1485290
+Midfielder,48,Mateus Jose Iseppe,BRA,168.0,02/05/2006,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/iseppe-mateus-jose/2231192
+Midfielder,27,Paulo Vitor,BRA,185.0,26/08/2004,Atletico Mineiro,0.66,https://www.sofascore.com/football/player/vitor-paulo/1488136
+Midfielder,50,David Kauã,BRA,182.0,12/03/2005,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/david-kaua/1485268
+Midfielder,41,Wallyson Breno Freitas da Silva,BRA,,25/04/2008,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/wallyson-breno-freitas-da-silva/1829044
+Midfielder,38,Índio,BRA,,02/04/2008,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/hendel-dos-santos-nascimento/1829023
+Midfielder,35,Igor Toledo,BRA,183.0,03/02/2006,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/igor-toledo/1645891
+Midfielder,39,Mamady Cissé,GUI,,01/01/2007,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/mamady-cisse/2155474
+Midfielder,-,Pedro Alves,BRA,,26/08/2006,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/pedro-alves/2440353
+Defender,-,Renan Lodi,BRA,173.0,08/04/1998,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/renan-lodi/851150
+Defender,4,Lyanco,BRA,187.0,01/02/1997,Atletico Mineiro,5.3,https://www.sofascore.com/football/player/lyanco/797893
+Defender,23,Iván Román,CHI,183.0,12/07/2006,Atletico Mineiro,1.6,https://www.sofascore.com/football/player/ivan-roman/1464929
+Defender,6,Junior Alonso,PAR,185.0,09/02/1993,Atletico Mineiro,2.7,https://www.sofascore.com/football/player/junior-alonso/333275
+Defender,16,Ruan,BRA,187.0,07/06/1999,Atletico Mineiro,2.1,https://www.sofascore.com/football/player/ruan/914487
+Defender,2,Natanael,BRA,172.0,05/01/2002,Atletico Mineiro,5.4,https://www.sofascore.com/football/player/natanael/1046805
+Defender,14,Vitor Hugo,BRA,187.0,20/05/1991,Atletico Mineiro,0.555,https://www.sofascore.com/football/player/vitor-hugo/794838
+Defender,40,Vitor Fernandes Chaves Teixeira,BRA,194.0,05/03/2008,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/vitor-fernandes-chaves-teixeira/1829020
+Defender,36,Kauã Pascini Resende,BRA,,05/03/2008,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/kaua-pascini-resende/1829022
+Defender,34,Samuel Lima Barros,BRA,187.0,09/02/2006,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/lima-barros-samuel/1633611
+Defender,-,Pedro Tocantins,BRA,189.0,19/04/2006,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/pedro-tocantins/2270350
+Goalkeeper,22,Everson,BRA,193.0,22/07/1990,Atletico Mineiro,1.0,https://www.sofascore.com/football/player/everson/870748
+Goalkeeper,43,Kaio Assis,BRA,189.0,03/05/2008,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/kaio-assis/2033878
+Goalkeeper,1,Gabriel Delfim,BRA,192.0,10/07/2002,Atletico Mineiro,0.31,https://www.sofascore.com/football/player/gabriel-delfim/1117032
+Goalkeeper,31,Robert Alves,BRA,191.0,03/02/2005,Atletico Mineiro,0.0,https://www.sofascore.com/football/player/robert-pinto-alves-assuncao/1633621
+Forward,88,Willian,BRA,175.0,09/08/1988,Gremio,0.48,https://www.sofascore.com/football/player/willian/31417
+Forward,22,Martin Braithwaite,DEN,180.0,05/06/1991,Gremio,1.5,https://www.sofascore.com/football/player/martin-braithwaite/66471
+Forward,95,Carlos Vinícius,BRA,190.0,25/03/1995,Gremio,4.9,https://www.sofascore.com/football/player/carlos-vinicius/891920
+Forward,10,Tetê,BRA,175.0,15/02/2000,Gremio,1.9,https://www.sofascore.com/football/player/tete/980327
+Forward,77,André Henrique,BRA,189.0,17/12/2001,Gremio,3.2,https://www.sofascore.com/football/player/andre-henrique/1463912
+Midfielder,29,Arthur,BRA,172.0,12/08/1996,Gremio,4.2,https://www.sofascore.com/football/player/arthur/794927
+Midfielder,37,Gabriel Mec,BRA,173.0,11/04/2008,Gremio,0.0,https://www.sofascore.com/football/player/gabriel-mec/1895377
+Midfielder,16,Alexander Aravena,CHI,174.0,06/09/2002,Gremio,4.1,https://www.sofascore.com/football/player/alexander-aravena/1000502
+Midfielder,20,Mathias Villasanti,PAR,178.0,24/01/1997,Gremio,5.2,https://www.sofascore.com/football/player/mathias-villasanti/1139775
+Midfielder,7,Cristian Pavón,ARG,169.0,21/01/1996,Gremio,1.8,https://www.sofascore.com/football/player/cristian-pavon/358956
+Midfielder,10,Franco Cristaldo,ARG,175.0,15/08/1996,Gremio,1.9,https://www.sofascore.com/football/player/franco-cristaldo/558820
+Midfielder,11,Miguel Monsalve,COL,177.0,27/02/2004,Gremio,3.9,https://www.sofascore.com/football/player/miguel-monsalve/1066620
+Midfielder,6,Gustavo Cuéllar,COL,175.0,14/10/1992,Gremio,1.7,https://www.sofascore.com/football/player/gustavo-cuellar/180059
+Midfielder,9,Francis Amuzu,BEL,170.0,23/08/1999,Gremio,4.9,https://www.sofascore.com/football/player/amuzu-francis/901889
+Midfielder,10,José Enamorado,COL,167.0,13/01/1999,Gremio,1.9,https://www.sofascore.com/football/player/enamorado-jose/974558
+Midfielder,8,Edenilson,BRA,175.0,18/12/1989,Gremio,0.385,https://www.sofascore.com/football/player/edenilson/221636
+Midfielder,39,Tiaguinho,BRA,174.0,02/02/2008,Gremio,0.0,https://www.sofascore.com/football/player/tiaguinho/2010540
+Midfielder,17,Dodi,BRA,169.0,17/04/1996,Gremio,0.72,https://www.sofascore.com/football/player/dodi/870804
+Midfielder,33,Felipe Carballo,URU,177.0,04/10/1996,Gremio,3.7,https://www.sofascore.com/football/player/felipe-carballo/805038
+Midfielder,65,Riquelme Freitas,BRA,181.0,12/08/2006,Gremio,2.1,https://www.sofascore.com/football/player/riquelme-freitas-dos-santos/1634619
+Midfielder,2,Lucas Milla,BRA,176.0,28/01/2003,Gremio,1.4,https://www.sofascore.com/football/player/lucas-milla/1176212
+Midfielder,47,Roger,BRA,,29/04/2008,Gremio,0.0,https://www.sofascore.com/football/player/roger/1907757
+Midfielder,40,Jeferson Forneck,BRA,,14/12/2006,Gremio,0.0,https://www.sofascore.com/football/player/jeferson-forneck/1588363
+Defender,19,Erick Noriega,PER,185.0,22/10/2001,Gremio,3.6,https://www.sofascore.com/football/player/erick-noriega/1020375
+Defender,14,Marcos Rocha,BRA,176.0,11/12/1988,Gremio,0.23,https://www.sofascore.com/football/player/marcos-rocha/82576
+Defender,4,Walter Kannemann,ARG,183.0,14/03/1991,Gremio,0.435,https://www.sofascore.com/football/player/walter-kannemann/249647
+Defender,23,Marlon,BRA,178.0,20/05/1997,Gremio,3.9,https://www.sofascore.com/football/player/marlon/870787
+Defender,38,Caio Paulista,BRA,184.0,11/05/1998,Gremio,1.9,https://www.sofascore.com/football/player/caio-paulista/931591
+Defender,2,Fabián Balbuena,PAR,188.0,23/08/1991,Gremio,1.4,https://www.sofascore.com/football/player/fabian-balbuena/339447
+Defender,3,Wagner Leonardo,BRA,186.0,23/07/1999,Gremio,4.4,https://www.sofascore.com/football/player/wagner-leonardo/976235
+Defender,53,Gustavo Martins,BRA,191.0,11/08/2002,Gremio,3.1,https://www.sofascore.com/football/player/gustavo-martins/1105796
+Defender,18,João Pedro,BRA,179.0,15/11/1996,Gremio,1.9,https://www.sofascore.com/football/player/joao-pedro/605528
+Defender,25,Lucas Esteves,BRA,171.0,24/06/2000,Gremio,1.7,https://www.sofascore.com/football/player/lucas-esteves/1387272
+Defender,5,Rodrigo Ely,BRA,188.0,03/11/1993,Gremio,0.96,https://www.sofascore.com/football/player/rodrigo-ely/168745
+Defender,44,Viery,BRA,187.0,01/01/2005,Gremio,0.33,https://www.sofascore.com/football/player/viery/1907760
+Defender,43,Luis Guedes,BRA,188.0,16/01/2008,Gremio,0.0,https://www.sofascore.com/football/player/luis-eduardo-guedes-de-souza/1895389
+Defender,43,Luis Eduardo,BRA,188.0,16/01/2008,Gremio,0.0,https://www.sofascore.com/football/player/luis-eduardo/2352783
+Goalkeeper,21,Weverton,BRA,189.0,13/12/1987,Gremio,0.75,https://www.sofascore.com/football/player/weverton/243529
+Goalkeeper,1,Tiago Volpi,BRA,189.0,19/12/1990,Gremio,0.93,https://www.sofascore.com/football/player/tiago-volpi/243509
+Goalkeeper,12,Gabriel Grando,BRA,192.0,29/03/2000,Gremio,1.4,https://www.sofascore.com/football/player/gabriel-grando/1111770
+Goalkeeper,24,Thiago Beltrame,BRA,201.0,02/07/2003,Gremio,0.0,https://www.sofascore.com/football/player/thiago-beltrame/1607287
+Goalkeeper,-,Gabriel Menegon,BRA,,14/10/2008,Gremio,0.0,https://www.sofascore.com/football/player/gabriel-menegon/2152875
+Forward,9,Jonathan Calleri,ARG,181.0,23/09/1993,Sao Paulo,1.6,https://www.sofascore.com/football/player/jonathan-calleri/340519
+Forward,14,Gonzalo Tapia,CHI,178.0,22/02/2002,Sao Paulo,1.8,https://www.sofascore.com/football/player/tapia-gonzalo/1002947
+Forward,49,Ryan Francisco,BRA,175.0,21/11/2006,Sao Paulo,6.2,https://www.sofascore.com/football/player/ryan-francisco-rodrigues-dos-santos-silva/1631904
+Forward,17,André Silva,BRA,181.0,03/06/1997,Sao Paulo,4.1,https://www.sofascore.com/football/player/andre-silva/925072
+Forward,39,Paulo Sérgio,BRA,177.0,17/05/2005,Sao Paulo,0.0,https://www.sofascore.com/football/player/paulo-sergio-venuto-bezerra/1631905
+Forward,39,Paulo Sergio Venuto Bezerra,BRA,178.0,17/05/2005,Sao Paulo,0.0,https://www.sofascore.com/football/player/bezerra-paulo-sergio-venuto/2290345
+Midfielder,8,Oscar,BRA,179.0,09/09/1991,Sao Paulo,9.3,https://www.sofascore.com/football/player/oscar/39400
+Midfielder,7,Lucas Moura,BRA,172.0,13/08/1992,Sao Paulo,2.7,https://www.sofascore.com/football/player/lucas-moura/149710
+Midfielder,11,Ferreirinha,BRA,176.0,31/12/1997,Sao Paulo,6.7,https://www.sofascore.com/football/player/ferreira/998499
+Midfielder,10,Luciano,BRA,181.0,18/05/1993,Sao Paulo,1.6,https://www.sofascore.com/football/player/luciano/282557
+Midfielder,29,Pablo Maia,BRA,178.0,10/01/2002,Sao Paulo,6.8,https://www.sofascore.com/football/player/pablo-maia/1120721
+Midfielder,16,Damián Bobadilla,PAR,181.0,08/06/2001,Sao Paulo,4.2,https://www.sofascore.com/football/player/damian-bobadilla/1015261
+Midfielder,25,Alisson,BRA,174.0,25/06/1993,Sao Paulo,1.2,https://www.sofascore.com/football/player/alisson/291723
+Midfielder,21,Cédric Soares,POR,172.0,31/08/1991,Sao Paulo,0.74,https://www.sofascore.com/football/player/cedric-soares/44760
+Midfielder,8,Luan Santos,BRA,173.0,14/05/1999,Sao Paulo,9.3,https://www.sofascore.com/football/player/luan-santos/942426
+Midfielder,8,Marcos Antônio,BRA,166.0,13/06/2000,Sao Paulo,9.3,https://www.sofascore.com/football/player/marcos-antonio/905453
+Midfielder,15,Rodriguinho,BRA,185.0,16/03/2004,Sao Paulo,6.2,https://www.sofascore.com/football/player/rodriguinho/1200730
+Midfielder,45,Lucca,BRA,176.0,14/06/2007,Sao Paulo,1.9,https://www.sofascore.com/football/player/lucca/2162243
+Midfielder,30,Felipe Negrucci,BRA,180.0,14/05/2004,Sao Paulo,0.835,https://www.sofascore.com/football/player/felipe-negrucci/1485598
+Midfielder,94,Danielzinho,BRA,166.0,04/11/1994,Sao Paulo,0.83,https://www.sofascore.com/football/player/danielzinho/356514
+Midfielder,46,Pedrinho,BRA,175.0,24/04/2007,Sao Paulo,0.0,https://www.sofascore.com/football/player/pedro-henrique-ferreira-da-silva/2026233
+Midfielder,38,Hugo Leonardo,BRA,175.0,19/01/2004,Sao Paulo,0.0,https://www.sofascore.com/football/player/hugo-leonardo-nunes-fernandes-santos/1587927
+Midfielder,46,Pedro Henrique Ferreira da Silva,BRA,175.0,24/04/2007,Sao Paulo,0.0,https://www.sofascore.com/football/player/ferreira-da-silva-pedro-henrique/2290346
+Defender,5,Robert Arboleda,ECU,187.0,22/10/1991,Sao Paulo,1.6,https://www.sofascore.com/football/player/robert-arboleda/338937
+Defender,32,Nahuel Ferraresi,VEN,188.0,19/11/1998,Sao Paulo,4.2,https://www.sofascore.com/football/player/nahuel-ferraresi/881215
+Defender,18,Wendell,BRA,176.0,20/07/1993,Sao Paulo,2.7,https://www.sofascore.com/football/player/wendell/335033
+Defender,28,Alan Franco,ARG,183.0,11/10/1996,Sao Paulo,4.2,https://www.sofascore.com/football/player/alan-franco/875402
+Defender,13,Enzo Díaz,ARG,175.0,07/12/1995,Sao Paulo,2.4,https://www.sofascore.com/football/player/enzo-diaz/932937
+Defender,2,Rafael Tolói,ITA,185.0,10/10/1990,Sao Paulo,0.0,https://www.sofascore.com/football/player/rafael-toloi/82943
+Defender,35,Sabino,BRA,185.0,25/10/1996,Sao Paulo,0.825,https://www.sofascore.com/football/player/sabino/975118
+Defender,42,Maik,BRA,175.0,03/01/2005,Sao Paulo,1.9,https://www.sofascore.com/football/player/maik/2035326
+Defender,2,Igor Teixeira Felisberto,BRA,175.0,07/03/2007,Sao Paulo,0.0,https://www.sofascore.com/football/player/igor-teixeira-felisberto/1631911
+Defender,5,Dória,BRA,188.0,08/11/1994,Sao Paulo,1.6,https://www.sofascore.com/football/player/doria/243155
+Defender,56,Nicolas Bosshardt,BRA,176.0,08/04/2007,Sao Paulo,0.0,https://www.sofascore.com/football/player/nicolas-bosshardt/1892395
+Goalkeeper,23,Rafael,BRA,192.0,23/06/1989,Sao Paulo,0.37,https://www.sofascore.com/football/player/rafael/33132
+Goalkeeper,50,Young,BRA,201.0,07/03/2002,Sao Paulo,0.105,https://www.sofascore.com/football/player/young/1116957
+Goalkeeper,31,Carlos Coronel,PAR,190.0,29/12/1996,Sao Paulo,1.4,https://www.sofascore.com/football/player/carlos-coronel/800150
+Goalkeeper,52,Felipe Gabriel Preis,BRA,187.0,19/11/2005,Sao Paulo,0.0,https://www.sofascore.com/football/player/felipe-gabriel-preis/1631898
+Forward,-,Yannick Bolasie,COD,185.0,24/05/1989,Chapecoense,0.0,https://www.sofascore.com/football/player/yannick-bolasie/46620
+Forward,10,Giovanni Augusto,BRA,177.0,05/09/1989,Chapecoense,0.19,https://www.sofascore.com/football/player/giovanni-augusto/82680
+Forward,18,Neto Pessoa,BRA,181.0,16/05/1994,Chapecoense,0.325,https://www.sofascore.com/football/player/neto-pessoa/992025
+Forward,9,Perotti,BRA,185.0,22/11/1997,Chapecoense,0.62,https://www.sofascore.com/football/player/perotti/840076
+Forward,90,Mailson,BRA,178.0,11/05/2003,Chapecoense,0.185,https://www.sofascore.com/football/player/mailson/1652653
+Midfielder,27,Camilo,BRA,176.0,23/02/1999,Chapecoense,1.3,https://www.sofascore.com/football/player/camilo/975319
+Midfielder,8,Robert Santos,BRA,180.0,20/07/2003,Chapecoense,0.052,https://www.sofascore.com/football/player/robert-santos/1650085
+Midfielder,20,Jean Carlos,BRA,178.0,15/02/1992,Chapecoense,0.049,https://www.sofascore.com/football/player/jean-carlos/850475
+Midfielder,97,Ênio,BRA,168.0,03/03/2001,Chapecoense,0.88,https://www.sofascore.com/football/player/enio/1015935
+Midfielder,22,Higor Meritão,BRA,186.0,23/06/1994,Chapecoense,0.87,https://www.sofascore.com/football/player/higor-meritao/973845
+Midfielder,7,Marcinho,BRA,176.0,08/06/1995,Chapecoense,0.485,https://www.sofascore.com/football/player/marcinho/870329
+Midfielder,5,João Vitor,BRA,177.0,31/03/1998,Chapecoense,0.047,https://www.sofascore.com/football/player/joao-vitor/1465222
+Midfielder,99,Rafael Carvalheira,BRA,176.0,26/05/1999,Chapecoense,1.4,https://www.sofascore.com/football/player/rafael-carvalheira/1120738
+Midfielder,16,Bruno Matias,BRA,173.0,24/02/1999,Chapecoense,0.0,https://www.sofascore.com/football/player/bruno-matias/924131
+Midfielder,77,Italo,BRA,190.0,13/10/2002,Chapecoense,0.57,https://www.sofascore.com/football/player/italo/1546812
+Midfielder,70,Rubens Tadeu,BRA,,28/03/2003,Chapecoense,0.097,https://www.sofascore.com/football/player/rubens-tadeu/1470928
+Midfielder,5,Jorge Roa Jiménez,PAR,181.0,27/02/1993,Chapecoense,0.047,https://www.sofascore.com/football/player/jorge-roa-jimenez/877571
+Midfielder,30,Thomás,BRA,179.0,24/02/1993,Chapecoense,0.185,https://www.sofascore.com/football/player/thomas/221212
+Midfielder,8,Marlon,BRA,185.0,20/08/1997,Chapecoense,0.052,https://www.sofascore.com/football/player/marlon/1105832
+Midfielder,19,David Antunes da Silva,BRA,178.0,17/08/2005,Chapecoense,0.21,https://www.sofascore.com/football/player/david-antunes/2083032
+Defender,6,Bruno Pacheco,BRA,174.0,08/12/1991,Chapecoense,0.0,https://www.sofascore.com/football/player/bruno-pacheco/870691
+Defender,15,Rafael Thyere,BRA,190.0,17/05/1993,Chapecoense,0.0,https://www.sofascore.com/football/player/rafael-thyere/354894
+Defender,37,Walter Clar,PAR,180.0,27/09/1994,Chapecoense,0.515,https://www.sofascore.com/football/player/walter-clar/846362
+Defender,14,Bressan,BRA,185.0,14/01/1993,Chapecoense,0.24,https://www.sofascore.com/football/player/bressan/312114
+Defender,2,Marcos Vinícius,BRA,175.0,26/03/1997,Chapecoense,0.38,https://www.sofascore.com/football/player/marcos-vinicius/942054
+Defender,3,Eduardo Doma,BRA,186.0,29/08/1998,Chapecoense,0.65,https://www.sofascore.com/football/player/eduardo-doma/1122967
+Defender,33,Bruno Leonardo,BRA,187.0,02/06/1996,Chapecoense,0.385,https://www.sofascore.com/football/player/bruno-leonardo/840280
+Defender,6,Mancha,BRA,178.0,13/02/2001,Chapecoense,0.0,https://www.sofascore.com/football/player/mancha/1108007
+Defender,32,Jhonnathan,BRA,185.0,04/03/2001,Chapecoense,0.265,https://www.sofascore.com/football/player/jhonnathan/1067637
+Defender,20,Gustavo Talles,BRA,177.0,14/07/2003,Chapecoense,0.049,https://www.sofascore.com/football/player/gustavo-talles/1473223
+Defender,25,Victor Caetano,BRA,186.0,19/10/1997,Chapecoense,0.535,https://www.sofascore.com/football/player/victor-caetano/863292
+Defender,4,João Paulo,BRA,187.0,04/07/1997,Chapecoense,0.465,https://www.sofascore.com/football/player/joao-paulo/1019157
+Defender,26,Everton,BRA,181.0,01/04/1995,Chapecoense,0.285,https://www.sofascore.com/football/player/everton/1105058
+Defender,15,Arthur Vanzela,BRA,180.0,08/06/2003,Chapecoense,0.0,https://www.sofascore.com/football/player/arthur-vanzela/1167080
+Defender,21,Kauan Faria Gomes,BRA,191.0,07/04/2003,Chapecoense,0.0,https://www.sofascore.com/football/player/kauan-faria-gomes/1588001
+Defender,6,Mancha,-,,-,Chapecoense,0.0,https://www.sofascore.com/football/player/mancha/1125766
+Defender,-,Arthur Lanzarin,-,,-,Chapecoense,0.0,https://www.sofascore.com/football/player/lanzarin-arthur/1167074
+Defender,16,Carlos Eduardo Galvao Pires,BRA,,07/01/2005,Chapecoense,0.0,https://www.sofascore.com/football/player/carlos-eduardo-galvao-pires/1915450
+Goalkeeper,12,Anderson,BRA,190.0,05/03/1998,Chapecoense,0.054,https://www.sofascore.com/football/player/anderson/942061
+Goalkeeper,1,Rafael Santos,BRA,191.0,14/03/1989,Chapecoense,0.097,https://www.sofascore.com/football/player/rafael-santos/108480
+Goalkeeper,12,Léo Vieira,BRA,193.0,22/09/1990,Chapecoense,0.054,https://www.sofascore.com/football/player/leo-vieira/166279
