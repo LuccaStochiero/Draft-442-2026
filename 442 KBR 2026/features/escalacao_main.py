@@ -1,13 +1,6 @@
 import streamlit as st
 import pandas as pd
-import os
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-
-# --- CONFIG ---
-SERVICE_ACCOUNT_FILE = "service_account.json"
-SHEET_ID = "1mG0XiZwzTyDncD592_XcpFwKeUwR97Gi8-tEh_XPW50"
-PLAYERS_LOCAL_FILE = os.path.join("Dados", "Players.csv")
+from features.auth import get_client, get_players_file
 
 FORMATIONS = {
     '5-4-1': {'DEF': 5, 'MEI': 4, 'ATA': 1},
@@ -31,19 +24,16 @@ def clean_pos(p):
 
 @st.cache_data(ttl=60)
 def load_data():
-    if os.path.exists(PLAYERS_LOCAL_FILE):
-        df_players = pd.read_csv(PLAYERS_LOCAL_FILE)
+    players_file = get_players_file()
+    if players_file.exists():
+        df_players = pd.read_csv(players_file)
         df_players['player_id'] = df_players['player_id'].astype(str)
         df_players['SimplePos'] = df_players['Posição'].apply(clean_pos)
     else:
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
     try:
-        scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-                 "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
-        client = gspread.authorize(creds)
-        sh = client.open_by_key(SHEET_ID)
+        client, sh = get_client()
         
         # Load TEAM
         ws_team = sh.worksheet("TEAM")
@@ -69,11 +59,7 @@ def load_data():
 
 def save_lineup(team_id, rodada, formation, lineup_data):
     try:
-        scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-                 "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
-        client = gspread.authorize(creds)
-        sh = client.open_by_key(SHEET_ID)
+        client, sh = get_client()
 
         try:
             ws = sh.worksheet("TEAM_LINEUP")
