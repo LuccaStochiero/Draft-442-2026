@@ -1,20 +1,10 @@
 import streamlit as st
 import pandas as pd
 import os
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from features.auth import get_client
 
 # --- CONFIG ---
-SERVICE_ACCOUNT_FILE = "service_account.json"
-SHEET_ID = "1mG0XiZwzTyDncD592_XcpFwKeUwR97Gi8-tEh_XPW50"
 PLAYERS_LOCAL_FILE = os.path.join("Dados", "Players.csv")
-
-def get_client():
-    scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-             "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
-    client = gspread.authorize(creds)
-    return client, client.open_by_key(SHEET_ID)
 
 @st.cache_data(ttl=60)
 def load_data():
