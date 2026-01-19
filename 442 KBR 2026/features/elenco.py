@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
-import os
-from features.auth import get_client
-
-# --- CONFIG ---
-PLAYERS_LOCAL_FILE = os.path.join("Dados", "Players.csv")
+from features.auth import get_client, get_players_file
 
 POS_ORDER = ['GK', 'DEF', 'MEI', 'ATA']
 POS_MAPPING = {
@@ -19,8 +15,9 @@ def clean_pos(p):
 
 @st.cache_data(ttl=60)
 def load_data():
-    if os.path.exists(PLAYERS_LOCAL_FILE):
-        df_players = pd.read_csv(PLAYERS_LOCAL_FILE)
+    players_file = get_players_file()
+    if players_file.exists():
+        df_players = pd.read_csv(players_file)
         df_players['player_id'] = df_players['player_id'].astype(str)
     else:
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
