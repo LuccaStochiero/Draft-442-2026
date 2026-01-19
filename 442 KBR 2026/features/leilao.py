@@ -121,6 +121,13 @@ def process_auction():
                 if str(r.get('team_id')) == str(tid) and str(r.get('player_id')) == str(pid): return True
             return False
 
+        def get_roster_size(tid):
+            count = 0
+            for r in teams_rows:
+                if str(r.get('team_id')) == str(tid):
+                    count += 1
+            return count
+
         processed_bids = []
         valid_bids = []
 
@@ -137,38 +144,60 @@ def process_auction():
             if not is_free(p_free):
                 st.write(f"❌ {tid}: {p_free} não está livre (já vendido?).")
                 continue
-            if not owns_player(tid, p_drop):
-                st.write(f"❌ {tid}: Não possui {p_drop}.")
-                continue
+            
+            # Check for NENHUM (empty slot) case
+            is_empty_slot = p_drop == "NENHUM" or p_drop == ""
+            
+            if is_empty_slot:
+                # Verify team still has ≤17 players
+                if get_roster_size(tid) > 17:
+                    st.write(f"❌ {tid}: Elenco cheio (>17). Não pode usar vaga livre.")
+                    continue
+            else:
+                # Normal case - must own the player to drop
+                if not owns_player(tid, p_drop):
+                    st.write(f"❌ {tid}: Não possui {p_drop}.")
+                    continue
             
             # --- EXECUTE ---
-            st.write(f"✅ Lance Válido: {tid} leva {p_free} por {price}")
+            st.write(f"✅ Lance Válido: {tid} leva {p_free} por {price}" + (" (Vaga Livre)" if is_empty_slot else ""))
             
             # 1. Update Budget
             update_budget(tid, price)
             
-            # 2. Swap in TEAM
-            # Find row to remove
-            idx_rem = -1
-            for i, r in enumerate(teams_rows):
-                if str(r.get('team_id')) == tid and str(r.get('player_id')) == p_drop:
-                    idx_rem = i; break
-            
-            if idx_rem != -1:
-                old_row = teams_rows.pop(idx_rem)
-                new_row = old_row.copy()
-                new_row['player_id'] = p_free
+            # 2. Handle TEAM
+            if is_empty_slot:
+                # Just add the new player without removing anyone
+                # Create a new row (use first row as template for structure)
+                if teams_rows:
+                    new_row = {k: '' for k in teams_rows[0].keys()}
+                    new_row['team_id'] = tid
+                    new_row['player_id'] = p_free
+                else:
+                    new_row = {'team_id': tid, 'player_id': p_free}
                 teams_rows.append(new_row)
+            else:
+                # Swap: Find row to remove and replace player
+                idx_rem = -1
+                for i, r in enumerate(teams_rows):
+                    if str(r.get('team_id')) == tid and str(r.get('player_id')) == p_drop:
+                        idx_rem = i
+                        break
+                
+                if idx_rem != -1:
+                    old_row = teams_rows.pop(idx_rem)
+                    new_row = old_row.copy()
+                    new_row['player_id'] = p_free
+                    teams_rows.append(new_row)
+                
+                # Add dropped player to FREE
+                free_rows.append({'player_id': p_drop})
             
-            # 3. Update FREE
-            # Remove p_free
+            # 3. Remove p_free from FREE list
             idx_free = -1
             for i, r in enumerate(free_rows):
                  if str(r.get('player_id')) == p_free: idx_free = i; break
             if idx_free != -1: free_rows.pop(idx_free)
-            
-            # Add p_drop
-            free_rows.append({'player_id': p_drop})
             
             valid_bids.append(bid)
         
@@ -261,15 +290,29 @@ def app(is_admin=False):
     with c3:
         # Filter owned players
         own_ids = df_team[df_team['team_id'] == tid]['player_id'].tolist()
+        roster_size = len(own_ids)
         own_details = df_players[df_players['player_id'].isin(own_ids)].copy()
+        
+        # Show roster size
+        st.caption(f"Elenco: {roster_size} jogadores")
         
         if not own_details.empty:
             own_details['Label'] = own_details['Nome'] + " (" + own_details['Posição'] + ")"
-            drop_name = st.selectbox("Descarte (Meu)", own_details['Label'].unique())
-            pid_drop = own_details[own_details['Label'] == drop_name]['player_id'].iloc[0]
+            options = list(own_details['Label'].unique())
+            
+            # Add "Nenhum" option if roster ≤17
+            if roster_size <= 17:
+                options = ["Nenhum (Vaga Livre)"] + options
+            
+            drop_name = st.selectbox("Descarte (Meu)", options)
+            
+            if drop_name == "Nenhum (Vaga Livre)":
+                pid_drop = "NENHUM"
+            else:
+                pid_drop = own_details[own_details['Label'] == drop_name]['player_id'].iloc[0]
         else:
             st.warning("Elenco vazio.")
-            pid_drop = None
+            pid_drop = "NENHUM"  # Empty roster = can add without drop
             
     with c4:
         safe_budget = float(budget or 0.0)
@@ -283,8 +326,8 @@ def app(is_admin=False):
     if st.button("Enviar Lance"):
         if price > budget:
             st.error("Sem grana.")
-        elif not pid_free or not pid_drop:
-            st.error("Selecione jogadores.")
+        elif not pid_free:
+            st.error("Selecione o jogador alvo.")
         else:
             if save_bid(tid, rodada, pid_free, pid_drop, price):
                 st.success("Lance enviado!")
