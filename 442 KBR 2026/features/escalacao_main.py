@@ -65,7 +65,7 @@ def save_lineup(team_id, rodada, formation, lineup_data):
             ws = sh.worksheet("TEAM_LINEUP")
         except:
             ws = sh.add_worksheet("TEAM_LINEUP", 1000, 10)
-            ws.append_row(['team_id', 'player_id', 'rodada', 'formacao', 'lineup'])
+            ws.append_row(['team_id', 'player_id', 'rodada', 'formacao', 'lineup', 'posicao', 'cap'])
 
         # Read existing to remove old lineup for this team/round
         existing = ws.get_all_records()
@@ -73,20 +73,32 @@ def save_lineup(team_id, rodada, formation, lineup_data):
         
         new_rows = []
         for p in lineup_data:
-            new_rows.append([str(team_id), str(p['player_id']), int(rodada), formation, p['status']])
+            new_rows.append([str(team_id), str(p['player_id']), int(rodada), formation, p['status'], p.get('posicao', ''), p.get('cap', '')])
 
         if not df_ex.empty:
             df_ex['team_id'] = df_ex['team_id'].astype(str)
             df_ex['rodada'] = pd.to_numeric(df_ex['rodada'], errors='coerce').fillna(0).astype(int)
             mask_del = (df_ex['team_id'] == str(team_id)) & (df_ex['rodada'] == int(rodada))
             df_keep = df_ex[~mask_del]
-            final_data = df_keep[['team_id', 'player_id', 'rodada', 'formacao', 'lineup']].values.tolist()
+            # Handle existing data with or without posicao/cap columns
+            keep_cols = ['team_id', 'player_id', 'rodada', 'formacao', 'lineup']
+            if 'posicao' in df_keep.columns:
+                keep_cols.append('posicao')
+            else:
+                df_keep['posicao'] = ''
+                keep_cols.append('posicao')
+            if 'cap' in df_keep.columns:
+                keep_cols.append('cap')
+            else:
+                df_keep['cap'] = ''
+                keep_cols.append('cap')
+            final_data = df_keep[keep_cols].values.tolist()
         else:
             final_data = []
 
         # Write
         ws.clear()
-        ws.append_row(['team_id', 'player_id', 'rodada', 'formacao', 'lineup'])
+        ws.append_row(['team_id', 'player_id', 'rodada', 'formacao', 'lineup', 'posicao', 'cap'])
         ws.append_rows(final_data + new_rows)
         return True
     except Exception as e:
@@ -136,14 +148,26 @@ def app():
         
         # Lookup IDs
         for name in chosen:
-            pid = avail[avail['Nome'] == name]['player_id'].iloc[0]
+            row = avail[avail['Nome'] == name].iloc[0]
+            pid = row['player_id']
+            pos = row['SimplePos']
             used_ids.add(pid)
-            selected.append({'player_id': pid, 'status': 'TITULAR'})
+            selected.append({'player_id': pid, 'status': 'TITULAR', 'posicao': pos})
 
     with c_gk: select_players("Goleiro", 'GK', 1, st)
     with c_def: select_players("Defensores", 'DEF', fmt['DEF'], st)
     with c_mei: select_players("Meias", 'MEI', fmt['MEI'], st)
     with c_ata: select_players("Atacantes", 'ATA', fmt['ATA'], st)
+
+    # 3.5 Select Captain (from starters only)
+    starters = [p for p in selected if p['status'] == 'TITULAR']
+    if starters:
+        starter_pids = [p['player_id'] for p in starters]
+        starter_names = roster[roster['player_id'].isin(starter_pids)]['Nome'].tolist()
+        
+        st.markdown("#### 🏅 Capitão")
+        captain_name = st.selectbox("Escolha o Capitão", starter_names, key="captain_select")
+        captain_pid = roster[roster['Nome'] == captain_name]['player_id'].iloc[0] if captain_name else None
 
     # 4. Select Reserves
     st.divider()
@@ -167,9 +191,11 @@ def app():
         chosen = container.selectbox(f"Reserva {label}", options, key=f"res_{pos}")
         
         if chosen:
-            pid = avail[avail['Nome'] == chosen]['player_id'].iloc[0]
+            row = avail[avail['Nome'] == chosen].iloc[0]
+            pid = row['player_id']
+            pos = row['SimplePos']
             used_ids.add(pid)
-            selected.append({'player_id': pid, 'status': 'RESERVA'})
+            selected.append({'player_id': pid, 'status': 'RESERVA', 'posicao': pos})
 
     with r_gk: select_reserve("GK", 'GK', st)
     with r_def: select_reserve("DEF", 'DEF', st)
@@ -179,11 +205,19 @@ def app():
     # 5. Mark Rest as FORA
     remaining = roster[~roster['player_id'].isin(used_ids)]
     for _, row in remaining.iterrows():
-        selected.append({'player_id': row['player_id'], 'status': 'FORA'})
+        selected.append({'player_id': row['player_id'], 'status': 'FORA', 'posicao': row['SimplePos']})
 
     # 6. Save
     st.markdown("---")
     if st.button("💾 Salvar Escalação", type="primary"):
+        # Apply Captain Status
+        if starters and captain_pid:
+            for p in selected:
+                if p['player_id'] == captain_pid:
+                    p['cap'] = 'CAPITAO'
+                else:
+                    p['cap'] = ''
+        
         with st.spinner("Salvando..."):
             if save_lineup(team_id, rodada, formacao, selected):
                 st.success("Escalação salva com sucesso!")
