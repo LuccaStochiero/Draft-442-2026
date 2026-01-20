@@ -160,6 +160,7 @@ def app():
     with c_ata: select_players("Atacantes", 'ATA', fmt['ATA'], st)
 
     # 3.5 Select Captain (from starters only)
+    captain_pid = None
     starters = [p for p in selected if p['status'] == 'TITULAR']
     if starters:
         starter_pids = [p['player_id'] for p in starters]
@@ -221,3 +222,5 @@ def app():
         with st.spinner("Salvando..."):
             if save_lineup(team_id, rodada, formacao, selected):
                 st.success("Escalação salva com sucesso!")
+    
+    st.caption("v1.3 - Com Capitão e Posição")
