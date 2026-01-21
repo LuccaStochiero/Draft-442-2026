@@ -63,6 +63,17 @@ def save_bid(team_id, rodada, pid_free, pid_team, price):
         st.error(f"Erro ao salvar lance: {e}")
         return False
 
+def has_pending_bids():
+    try:
+        client, sh = get_client()
+        ws_lances = sh.worksheet("LEILAO_LANCES")
+        # Check if there is any data beyond headers
+        # fast check: get_all_values() and len > 1
+        vals = ws_lances.get_all_values()
+        return len(vals) > 1
+    except:
+        return False
+
 def process_auction():
     try:
         client, sh = get_client()
@@ -308,60 +319,87 @@ def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
         st.error(f"Erro ao processar troca: {e}")
         return False
 
+import time
+
+def get_time_remaining(target_ts):
+    if not target_ts: return "Indefinido"
+    now = time.time()
+    diff = target_ts - now
+    if diff <= 0: return "00h 00m"
+    
+    hours = int(diff // 3600)
+    minutes = int((diff % 3600) // 60)
+    return f"{hours}h {minutes:02d}m"
+
+def render_timer(label, time_str, color="#333", bg_color="#f0f2f6"):
+    st.markdown(
+        f"""
+        <div style="
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 20px; 
+            background-color: {bg_color}; 
+            border-radius: 8px; 
+            margin-bottom: 15px;
+            border: 1px solid {color};
+        ">
+            <span style="font-weight: bold; color: {color}; font-size: 1rem;">{label}</span>
+            <span style="font-weight: bold; color: {color}; font-size: 1.2rem; font-family: monospace;">⏱ {time_str}</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+from datetime import datetime, timedelta, timezone
+
+def format_deadline_ts(ts):
+    if not ts: return ""
+    # UTC to GMT-3
+    dt = datetime.fromtimestamp(ts, timezone.utc) - timedelta(hours=3)
+    day_name = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"][dt.weekday()]
+    return f"{day_name} {dt.strftime('%d/%m às %H:%M')}"
+
+def render_card_header(label, bg_color, text_color):
+    st.markdown(
+        f"""
+        <div style="
+            background-color: {bg_color};
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        ">
+            <h5 style="margin: 0; color: {text_color};">{label}</h5>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 def app(is_admin=False):
     st.title("💰 Leilão / Free Agency")
+    
+    # Auto-Refresh (5 mins = 300s)
+    st.markdown(
+        """
+        <meta http-equiv="refresh" content="300">
+        """,
+        unsafe_allow_html=True
+    )
     
     # --- GAME STATE BANNER ---
     state = calendar_utils.get_game_state()
     if state['status'] == 'ERROR':
         st.error(state['msg'])
-    else:
-        # Color coding
-        color = "green" if "ABERTO" in state['msg'] else "red"
-        if "FREE AGENCY" in state['msg']: color = "orange"
-        
-        st.info(f"📅 **Status do Mercado:** {state['msg']}")
-        if state.get('deadline_msg'):
-            # Emphasized Deadline with colored box
-            # Default Blue
-            box_color = "#e6f3ff" 
-            border_color = "#3366ff"
-            text_color = "#004d99"
-            
-            if "LEILÃO" in state['msg']:
-                # Greenish
-                box_color = "#e6fffa"
-                border_color = "#00cc99"
-                text_color = "#00664d"
-            elif "FREE" in state['msg']:
-                # Yellowish
-                box_color = "#fffbe6"
-                border_color = "#ffcc00"
-                text_color = "#997a00"
-                
-            st.markdown(
-                f"""
-                <div style="
-                    background-color: {box_color};
-                    border-left: 5px solid {border_color};
-                    padding: 15px;
-                    border-radius: 5px;
-                    margin-top: 10px;
-                    margin-bottom: 10px;
-                ">
-                    <h4 style="margin:0; color: {text_color}; font-size: 1.2rem;">🕒 {state['deadline_msg']}</h4>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            
-        # Optional: Show warnings if relevant
-        if not state['auction_open'] and not state['free_open']:
-            st.warning("Mercado fechado no momento.")
-            
-    st.divider()
 
     if is_admin:
+        # Auto-Process Check
+        if not state['auction_open']:
+             if has_pending_bids():
+                 st.success("✅ Verificando lances pendentes (Prazo encerrado)...")
+                 process_auction()
+                 st.divider()
+
         if st.button("👑 PROCESSAR RODADA ATUAL (Leilão)", type="primary"):
             process_auction()
         st.divider()
@@ -379,8 +417,15 @@ def app(is_admin=False):
 
     # --- TAB 1: AUCTION ---
     with tab_auction:
-        if not state['auction_open']:
-            st.warning("O Leilão está FECHADO.")
+        # Timer / Status Banner
+        if state['auction_open']:
+            trem = get_time_remaining(state.get('closing_ts'))
+            d_str = format_deadline_ts(state.get('closing_ts'))
+            final_str = f"{trem} (Fecha: {d_str})"
+            render_timer("🟢 Leilão Aberto", final_str, color="#00664d", bg_color="#e6fffa")
+        else:
+            # Auction Closed
+            render_timer("🔴 Leilão Fechado", "Aguarde a próxima janela", color="#990000", bg_color="#ffe6e6")
         
         # User Form (Auction)
         # 1. Inputs
@@ -396,49 +441,77 @@ def app(is_admin=False):
         with c20:
             rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="auc_round")
             
-        c2, c3, c4 = st.columns(3)
+        c_add, c_drop = st.columns(2)
         
-        # Target (Free)
-        with c2:
-            if not df_free_tab.empty:
-                free_ids = df_free_tab['player_id'].unique()
-                free_details_auc = df_players[df_players['player_id'].isin(free_ids)].copy()
-                free_details_auc['Label'] = free_details_auc['Nome'] + " (" + free_details_auc['Posição'] + ")"
-                
-                target_name = st.selectbox("Alvo (Livre)", free_details_auc['Label'].unique(), key="auc_target")
-                pid_free = free_details_auc[free_details_auc['Label'] == target_name]['player_id'].iloc[0]
-            else:
-                st.warning("Ninguem livre.")
-                pid_free = None
-                
-        # Drop (Own)
-        with c3:
-            own_ids = df_team[df_team['team_id'] == tid]['player_id'].tolist()
-            roster_size = len(own_ids)
-            own_details = df_players[df_players['player_id'].isin(own_ids)].copy()
-            st.caption(f"Elenco: {roster_size} jogadores")
-            
-            if not own_details.empty:
-                own_details['Label'] = own_details['Nome'] + " (" + own_details['Posição'] + ")"
-                options = list(own_details['Label'].unique())
-                if roster_size <= 17:
-                    options = ["Nenhum (Vaga Livre)"] + options
-                
-                drop_name = st.selectbox("Descarte (Meu)", options, key="auc_drop")
-                if drop_name == "Nenhum (Vaga Livre)":
-                    pid_drop = "NENHUM"
+        # --- COLUNA ADICIONAR ---
+        with c_add:
+            with st.container(border=True):
+                render_card_header("ADICIONAR 🟢", "#e6fffa", "#00664d")
+                if not df_free_tab.empty:
+                    free_ids = df_free_tab['player_id'].unique()
+                    free_details_auc = df_players[df_players['player_id'].isin(free_ids)].copy()
+                    free_details_auc['Label'] = free_details_auc['Nome'] + " (" + free_details_auc['Posição'] + ")"
+                    
+                    # --- FILTROS ---
+                    st.caption("Filtros")
+                    fc1, fc2 = st.columns(2)
+                    with fc1:
+                        f_nome = st.text_input("Nome", key="auc_f_nome", placeholder="Buscar...")
+                        all_pos = sorted(free_details_auc['Posição'].unique())
+                        f_pos = st.multiselect("Posição", all_pos, key="auc_f_pos", placeholder="Pos...")
+                    with fc2:
+                        all_teams = sorted(free_details_auc['Team'].dropna().unique())
+                        f_team = st.multiselect("Time Real", all_teams, key="auc_f_team", placeholder="Time...")
+
+                    # Apply
+                    if f_nome:
+                        free_details_auc = free_details_auc[free_details_auc['Nome'].str.contains(f_nome, case=False, na=False)]
+                    if f_pos:
+                        free_details_auc = free_details_auc[free_details_auc['Posição'].isin(f_pos)]
+                    if f_team:
+                        free_details_auc = free_details_auc[free_details_auc['Team'].isin(f_team)]
+                    
+                    if not free_details_auc.empty:
+                        target_name = st.selectbox("Alvo (Livre)", free_details_auc['Label'].unique(), key="auc_target")
+                        pid_free = free_details_auc[free_details_auc['Label'] == target_name]['player_id'].iloc[0]
+                    else:
+                        st.warning("Nenhum jogador encontrado.")
+                        pid_free = None
                 else:
-                    pid_drop = own_details[own_details['Label'] == drop_name]['player_id'].iloc[0]
-            else:
-                pid_drop = "NENHUM" # Empty roster
+                    st.warning("Ninguem livre.")
+                    pid_free = None
                 
-        with c4:
-            safe_budget = float(budget or 0.0)
-            if safe_budget <= 0.0:
-                st.error("Sem caixa.")
-                price = 0.0
-            else:
-                price = st.number_input("Lance ($)", min_value=0.0, max_value=safe_budget, step=0.1, format="%.1f", key="auc_price")
+        # --- COLUNA DISPENSAR ---
+        with c_drop:
+            with st.container(border=True):
+                render_card_header("DISPENSAR 🔴", "#ffe6e6", "#990000")
+                own_ids = df_team[df_team['team_id'] == tid]['player_id'].tolist()
+                roster_size = len(own_ids)
+                own_details = df_players[df_players['player_id'].isin(own_ids)].copy()
+                st.caption(f"Elenco: {roster_size} jogadores")
+                
+                if not own_details.empty:
+                    own_details['Label'] = own_details['Nome'] + " (" + own_details['Posição'] + ")"
+                    options = list(own_details['Label'].unique())
+                    if roster_size <= 17:
+                        options = ["Nenhum (Vaga Livre)"] + options
+                    
+                    drop_name = st.selectbox("Descarte (Meu)", options, key="auc_drop")
+                    if drop_name == "Nenhum (Vaga Livre)":
+                        pid_drop = "NENHUM"
+                    else:
+                        pid_drop = own_details[own_details['Label'] == drop_name]['player_id'].iloc[0]
+                else:
+                    pid_drop = "NENHUM" # Empty roster
+                    
+                st.divider()
+                
+                safe_budget = float(budget or 0.0)
+                if safe_budget <= 0.0:
+                    st.error("Sem caixa.")
+                    price = 0.0
+                else:
+                    price = st.number_input("Valor do leilão (1 casa decimal)", min_value=0.0, max_value=safe_budget, step=0.1, format="%.1f", key="auc_price")
             
         if st.button("Enviar Lance", disabled=not state['auction_open']):
             if not state['auction_open']:
@@ -453,8 +526,22 @@ def app(is_admin=False):
 
     # --- TAB 2: FREE AGENCY ---
     with tab_free:
-        if not state['free_open']:
-            st.warning("O Free Agency está FECHADO.")
+        # Timer / Status Banner
+        if state['free_open']:
+             trem = get_time_remaining(state.get('closing_ts'))
+             d_str = format_deadline_ts(state.get('closing_ts'))
+             final_str = f"{trem} (Fecha: {d_str})"
+             render_timer("🟢 Free Agency Aberta", final_str, color="#997a00", bg_color="#fffbe6")
+        else:
+             # If Auction is open, Free Agency opens when Auction closes
+             if state['auction_open']:
+                 open_ts = state.get('closing_ts', 0) # Auction Close = Free Open
+                 trem = get_time_remaining(open_ts)
+                 d_str = format_deadline_ts(open_ts)
+                 final_str = f"{trem} (Abre: {d_str})"
+                 render_timer("🔴 Free Agency Fechada (Leilão em andamento)", final_str, color="#990000", bg_color="#ffe6e6")
+             else:
+                 render_timer("🔴 Free Agency Fechada", "Mercado trancado", color="#990000", bg_color="#ffe6e6")
 
         st.markdown("##### Troca de Jogador (Free Agency)")
         
@@ -464,51 +551,73 @@ def app(is_admin=False):
              sel_team_fa = st.selectbox("Clube", sorted(team_map.values()), key="fa_team_select")
              tid_fa = next((k for k,v in team_map.items() if v == sel_team_fa), None)
 
-        col1, col2 = st.columns(2)
+        col_add, col_drop = st.columns(2)
         
-        # --- COLUMN 1: DROP (My Team) ---
-        with col1:
-            st.subheader("🔻 Dispensar")
-            
-            # Get players for selected team
-            own_ids_fa = df_team[df_team['team_id'] == tid_fa]['player_id'].tolist()
-            own_details_fa = df_players[df_players['player_id'].isin(own_ids_fa)].copy()
-            
-            if not own_details_fa.empty:
-                own_details_fa['Label'] = own_details_fa['Nome'] + " (" + own_details_fa['Posição'] + ")"
-                drop_player_label_fa = st.selectbox("Escolha quem sai", own_details_fa['Label'].tolist(), key="fa_drop")
-                drop_pid_fa = own_details_fa[own_details_fa['Label'] == drop_player_label_fa]['player_id'].iloc[0]
-            else:
-                st.warning("Seu time está vazio.")
-                drop_pid_fa = None
-
-        # --- COLUMN 2: PICKUP (Free Agents) ---
-        with col2:
-            st.subheader("Adicionar")
-            # Filters
-            search_fa = st.text_input("Buscar Jogador Livre", placeholder="Nome...", key="fa_search")
-            
-            # Need to re-filter free players if needed or reuse loaded full set (df_players - owned)
-            # Actually we load `free_ids` from PLAYERS_FREE sheet
-            # Reuse `df_free_tab` logic
-            if not df_free_tab.empty:
-                free_ids_fa = df_free_tab['player_id'].unique()
-                free_details_fa = df_players[df_players['player_id'].isin(free_ids_fa)].copy()
-                free_details_fa['Label'] = free_details_fa['Nome'] + " (" + free_details_fa['Posição'] + ")"
-            else:
-                free_details_fa = pd.DataFrame()
-
-            filtered_free = free_details_fa.copy()
-            
-            if search_fa and not filtered_free.empty:
-                filtered_free = filtered_free[filtered_free['Nome'].str.contains(search_fa, case=False, na=False)]
+        # --- COLUNA ADICIONAR (Left) ---
+        with col_add:
+            with st.container(border=True):
+                render_card_header("ADICIONAR 🟢", "#e6fffa", "#00664d")
                 
-            if not filtered_free.empty:
-                pickup_player_label_fa = st.selectbox("Escolha quem entra", filtered_free['Label'].tolist(), key="fa_pickup")
-                pickup_pid_fa = filtered_free[filtered_free['Label'] == pickup_player_label_fa]['player_id'].iloc[0]
-            else:
-                st.warning("Nenhum jogador encontrado / Lista vazia.")
-                pickup_pid_fa = None
+                # Populate basic list first
+                if not df_free_tab.empty:
+                    free_ids_fa = df_free_tab['player_id'].unique()
+                    free_details_fa = df_players[df_players['player_id'].isin(free_ids_fa)].copy()
+                    free_details_fa['Label'] = free_details_fa['Nome'] + " (" + free_details_fa['Posição'] + ")"
+                else:
+                    free_details_fa = pd.DataFrame()
+
+                # Filters Harmoniosos
+                c_f1, c_f2, c_f3 = st.columns([1, 1, 1])
+                with c_f1:
+                    search_fa = st.text_input("Nome", placeholder="Buscar...", key="fa_search")
+                with c_f2:
+                    # Positions based on available data
+                    if not free_details_fa.empty:
+                        pos_opts = sorted(free_details_fa['Posição'].unique())
+                        sel_pos_fa = st.multiselect("Posição", pos_opts, key="fa_pos_filt", placeholder="Pos...")
+                    else:
+                        sel_pos_fa = []
+                with c_f3:
+                     if not free_details_fa.empty:
+                        team_opts = sorted(free_details_fa['Team'].dropna().unique())
+                        sel_team_fa_real = st.multiselect("Time Real", team_opts, key="fa_team_filt", placeholder="Time...")
+                     else:
+                        sel_team_fa_real = []
+
+                filtered_free = free_details_fa.copy()
+                
+                if search_fa and not filtered_free.empty:
+                    filtered_free = filtered_free[filtered_free['Nome'].str.contains(search_fa, case=False, na=False)]
+                
+                if sel_pos_fa and not filtered_free.empty:
+                    filtered_free = filtered_free[filtered_free['Posição'].isin(sel_pos_fa)]
+                    
+                if sel_team_fa_real and not filtered_free.empty:
+                    filtered_free = filtered_free[filtered_free['Team'].isin(sel_team_fa_real)]
+                    
+                if not filtered_free.empty:
+                    pickup_player_label_fa = st.selectbox("Escolha quem entra", filtered_free['Label'].tolist(), key="fa_pickup")
+                    pickup_pid_fa = filtered_free[filtered_free['Label'] == pickup_player_label_fa]['player_id'].iloc[0]
+                else:
+                    st.warning("Nenhum jogador encontrado / Lista vazia.")
+                    pickup_pid_fa = None
+
+        # --- COLUNA DISPENSAR (Right) ---
+        with col_drop:
+            with st.container(border=True):
+                render_card_header("DISPENSAR 🔴", "#ffe6e6", "#990000")
+                
+                # Get players for selected team
+                own_ids_fa = df_team[df_team['team_id'] == tid_fa]['player_id'].tolist()
+                own_details_fa = df_players[df_players['player_id'].isin(own_ids_fa)].copy()
+                
+                if not own_details_fa.empty:
+                    own_details_fa['Label'] = own_details_fa['Nome'] + " (" + own_details_fa['Posição'] + ")"
+                    drop_player_label_fa = st.selectbox("Escolha quem sai", own_details_fa['Label'].tolist(), key="fa_drop")
+                    drop_pid_fa = own_details_fa[own_details_fa['Label'] == drop_player_label_fa]['player_id'].iloc[0]
+                else:
+                    st.warning("Seu time está vazio.")
+                    drop_pid_fa = None
 
         st.divider()
         if st.button("🔄 Confirmar Troca (Free)", type="primary", disabled=not state['free_open']):

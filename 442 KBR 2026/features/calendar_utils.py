@@ -60,21 +60,50 @@ def get_game_state():
         # Current Timestamp (UTC)
         now_ts = time.time()
         
-        # Find Next Round (first round where 'start_ts' > now)
-        future_rounds = df[(df['start_ts'] > now_ts) & (df['start_ts'].notna()) & (df['start_ts'] > 0)]
+        # Determine Current/Next Round based on User Rule:
+        # "SE o tempo atual esta antes da (inicio da ultima partida da rodada + 4, está nessa rodada."
+        # If after, check next.
         
-        if future_rounds.empty:
-            return {
-                'status': 'Season Finished',
-                'auction_open': False,
-                'free_open': True,
-                'msg': 'Temporada encerrada ou sem próximas rodadas.',
-                'next_round': None
-            }
+        next_round_row = None
         
-        next_round_row = future_rounds.iloc[0]
+        # Iterate sorted rounds to find the first one that fits the criteria or is future
+        for idx, row in df.iterrows():
+            # Must have valid start/end
+            if pd.isna(row.get('start_ts')) or pd.isna(row.get('end_ts')) or row['start_ts'] == 0:
+                continue
+                
+            # Logic: Round is "Active/Current" if Now < (LastGameStart + 4h)
+            # Use 'end_ts' which comes from 'ultimo_fmt' (Last Game Start)
+            # Wait, 'ultimo' usually means Last Game Time.
+            # User said "inicio da ultima partida". 
+            # Code line 54 maps 'ultimo_fmt' to 'end_ts'. Assuming 'ultimo_fmt' IS the start time of the last match.
+            
+            threshold = row['end_ts'] + (4 * 3600)
+            
+            if now_ts < threshold:
+                next_round_row = row
+                break
+        
+        if next_round_row is None:
+             # No future rounds found
+             return {
+                 'status': 'Season Finished',
+                 'auction_open': False,
+                 'free_open': True,
+                 'msg': 'Temporada encerrada.',
+                 'next_round': None
+             }
+        
+        # Now 'next_round_row' is the target round.
+        # It could be the CURRENTLY RUNNING round (if Now > Start but < End+4h)
+        # Or it could be a FUTURE round.
+        
         next_round_idx = next_round_row['rodada']
         next_start = next_round_row['start_ts']
+        
+        # Recalculate 'future_rounds' just for reference? No, we have the row.
+        # But we need 'prev_round_row' logic below.
+        
         
         # Find Previous Round (to calc gap)
         prev_round_row = df[df['rodada'] == next_round_idx - 1]
@@ -120,13 +149,15 @@ def get_game_state():
             
             if hours_to_next > 24:
                 # Phase 1: Auction
-                deadline = fmt_deadline(next_start - 24*3600)
+                deadline_ts = next_start - 24*3600
+                deadline = fmt_deadline(deadline_ts)
                 return {
                     'status': 'AUCTION_OPEN',
                     'auction_open': True,
                     'free_open': False, 
                     'msg': "🟢 LEILÃO ABERTO",
                     'deadline_msg': f"Fim do Leilão: {deadline}",
+                    'closing_ts': deadline_ts,
                     **common_data
                 }
             elif hours_to_next > 2:
@@ -138,6 +169,7 @@ def get_game_state():
                     'free_open': True,
                     'msg': "🟡 FREE AGENCY ABERTA (Pós-Leilão)",
                     'deadline_msg': f"Fecha em: {str_deadline_2h}",
+                    'closing_ts': deadline_2h_ts,
                     **common_data
                 }
             else:
@@ -148,6 +180,7 @@ def get_game_state():
                     'free_open': False,
                     'msg': "🔴 MERCADO FECHADO (Pré-Jogo)",
                     'deadline_msg': f"Rodada começa em {hours_to_next*60:.0f} min",
+                    'closing_ts': next_start, # Opens after game? No, closes at start.
                     **common_data
                 }
         else:
@@ -160,6 +193,7 @@ def get_game_state():
                     'free_open': True,
                     'msg': "🔵 FREE AGENCY ABERTA",
                     'deadline_msg': f"Fecha em: {str_deadline_2h}",
+                    'closing_ts': deadline_2h_ts,
                     **common_data
                 }
             else:
@@ -169,6 +203,7 @@ def get_game_state():
                     'free_open': False,
                     'msg': "🔴 MERCADO FECHADO (Pré-Jogo)",
                     'deadline_msg': f"Rodada começa em {hours_to_next*60:.0f} min",
+                    'closing_ts': next_start,
                     **common_data
                 }
 

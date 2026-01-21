@@ -105,6 +105,23 @@ def save_lineup(team_id, rodada, formation, lineup_data):
         st.error(f"Erro ao salvar: {e}")
         return False
 
+
+def render_card_header(label, bg_color, text_color):
+    st.markdown(
+        f"""
+        <div style="
+            background-color: {bg_color};
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        ">
+            <h5 style="margin: 0; color: {text_color};">{label}</h5>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 def app():
     st.title("⚽ Escalar Time")
     
@@ -133,151 +150,202 @@ def app():
     roster = df_players[df_players['player_id'].isin(roster_ids)].copy()
     
     st.divider()
-    
-    # 3. Select Starters
-    fmt = FORMATIONS[formacao]
-    selected = [] # List of dicts {player_id, status}
-    used_ids = set()
 
-    st.subheader("Titulares")
-    c_gk, c_def, c_mei, c_ata = st.columns(4)
-    
-    def select_players(label, pos, count, container):
-        avail = roster[(roster['SimplePos'] == pos) & (~roster['player_id'].isin(used_ids))]
-        chosen = container.multiselect(f"{label} ({count})", avail['Nome'].unique(), max_selections=count, key=f"start_{pos}")
-        
-        # Lookup IDs
-        for name in chosen:
-            row = avail[avail['Nome'] == name].iloc[0]
-            pid = row['player_id']
-            pos = row['SimplePos']
-            used_ids.add(pid)
-            selected.append({'player_id': pid, 'status': 'TITULAR', 'posicao': pos})
-
-    with c_gk: select_players("Goleiro", 'GK', 1, st)
-    with c_def: select_players("Defensores", 'DEF', fmt['DEF'], st)
-    with c_mei: select_players("Meias", 'MEI', fmt['MEI'], st)
-    with c_ata: select_players("Atacantes", 'ATA', fmt['ATA'], st)
-
-    # 3.5 Select Captain (from starters only)
-    captain_pid = None
-    starters = [p for p in selected if p['status'] == 'TITULAR']
-    if starters:
-        starter_pids = [p['player_id'] for p in starters]
-        starter_names = roster[roster['player_id'].isin(starter_pids)]['Nome'].tolist()
-        
-        st.markdown("#### 🏅 Capitão")
-        captain_name = st.selectbox("Escolha o Capitão", starter_names, key="captain_select")
-        captain_pid = roster[roster['Nome'] == captain_name]['player_id'].iloc[0] if captain_name else None
-
-    # 4. Priority Bench (Reservas)
-    st.divider()
-    st.subheader("Banco de Reservas (Prioridade)")
-    st.info("Selecione os reservas na ordem de prioridade (1º selecionado = 1ª opção, etc). Jogadores não selecionados entrarão na lista com prioridade inferior automaticamente.")
-
-    rb_col1, rb_col2 = st.columns(2)
-    
-    # Helper for Priority Selection
-    def select_priority_reserves(label, pos, container):
-        # 1. Get available
-        avail = roster[(roster['SimplePos'] == pos) & (~roster['player_id'].isin(used_ids))]
-        
-        if avail.empty:
-            container.caption(f"{label}: Sem jogadores disponíveis.")
-            return
-
-        # 2. Ordered Multiselect
-        options = avail['Nome'].tolist()
-        # Sort options alphabetically for easier finding, but selection order matters for priority
-        options.sort() 
-        
-        chosen_names = container.multiselect(
-            f"{label} (Defina a Ordem)", 
-            options, 
-            key=f"bench_pri_{pos}",
-            help="O primeiro nome escolhido será a Pri 1, o segundo a Pri 2, e assim por diante."
-        )
-        
-        # 3. Assign Priority to Selected
-        priority_counter = 1
-        for name in chosen_names:
-            row = avail[avail['Nome'] == name].iloc[0]
-            pid = row['player_id']
-            p_pos = row['SimplePos']
-            
-            selected.append({
-                'player_id': pid, 
-                'status': f'PRI {priority_counter}', 
-                'posicao': p_pos
-            })
-            used_ids.add(pid)
-            priority_counter += 1
-            
-        # 4. Assign Priority to Unselected (Remaining)
-        remaining = avail[~avail['Nome'].isin(chosen_names)]
-        # Sort remaining by something standard (e.g. Value or Name)
-        remaining = remaining.sort_values(by='Valor de Mercado', ascending=False)
-        
-        for _, row in remaining.iterrows():
-            selected.append({
-                'player_id': row['player_id'],
-                'status': f'PRI {priority_counter}',
-                'posicao': row['SimplePos']
-            })
-            used_ids.add(row['player_id'])
-            priority_counter += 1
-
-    with rb_col1:
-        select_priority_reserves("Goleiros", 'GK', st)
-        select_priority_reserves("Defensores", 'DEF', st)
-        
-    with rb_col2:
-        select_priority_reserves("Meias", 'MEI', st)
-        select_priority_reserves("Atacantes", 'ATA', st)
-
-    # 5. Remaining (should be empty if logic works, but check just in case of other positions?)
-    # The clean_pos ensures we only have 4 positions. 
-    # Any player not caught above?
-    remaining_all = roster[~roster['player_id'].isin(used_ids)]
-    for _, row in remaining_all.iterrows():
-         # Fallback
-         selected.append({'player_id': row['player_id'], 'status': 'PRI 99', 'posicao': row['SimplePos']})
-
-
-    # 6. Save
-    st.markdown("---")
-    
-    # Check Deadline
+    # --- TOP SECTION: DEADLINE & SAVE ---
     import features.calendar_utils as calendar_utils
     state = calendar_utils.get_game_state()
-    
     is_locked = state['status'] == 'LOCKED' or state['status'] == 'Season Finished'
     
+    # Logic to build lineup from session state (for Callback)
+    def save_adapter(tid, rod, fmt, rst):
+        # Security Check
+        curr = calendar_utils.get_game_state()
+        if curr['status'] in ['LOCKED', 'Season Finished']:
+            st.toast(f"🚫 Fechado: {curr.get('msg')}", icon="🔒")
+            return
+
+        # Reconstruct 'selected' from session_state
+        sel = []
+        u_ids = set()
+        
+        # 1. Starters
+        f_map = FORMATIONS[fmt]
+        
+        def process_start(pos):
+             keys = [k for k in st.session_state.keys() if k == f"start_{pos}"]
+             if keys:
+                 names = st.session_state[keys[0]]
+                 for name in names:
+                     row = rst[rst['Nome'] == name]
+                     if not row.empty:
+                         pid = row.iloc[0]['player_id']
+                         ppos = row.iloc[0]['SimplePos']
+                         u_ids.add(pid)
+                         sel.append({'player_id': pid, 'status': 'TITULAR', 'posicao': ppos})
+
+        process_start('GK')
+        process_start('DEF')
+        process_start('MEI')
+        process_start('ATA')
+
+        # 2. Captain
+        cap_val = st.session_state.get("captain_select")
+        cap_pid = None
+        if cap_val:
+            c_row = rst[rst['Nome'] == cap_val]
+            if not c_row.empty:
+               cap_pid = c_row.iloc[0]['player_id']
+        
+        # Apply Captain
+        if cap_pid:
+            for p in sel:
+                if p['player_id'] == cap_pid: p['cap'] = 'CAPITAO'
+                else: p['cap'] = ''
+        
+        # 3. Reserves
+        def process_bench(pos, counter_start):
+             key = f"bench_pri_{pos}"
+             chosen = st.session_state.get(key, [])
+             
+             # Available for this pos (excluding starters)
+             avail = rst[(rst['SimplePos'] == pos) & (~rst['player_id'].isin(u_ids))].copy()
+             
+             # Priority from Selection
+             for name in chosen:
+                 row = avail[avail['Nome'] == name]
+                 if not row.empty:
+                     pid = row.iloc[0]['player_id']
+                     p_pos = row.iloc[0]['SimplePos']
+                     sel.append({'player_id': pid, 'status': f'PRI {counter_start}', 'posicao': p_pos})
+                     u_ids.add(pid)
+                     counter_start += 1
+            
+             # Remaining
+             rem = avail[~avail['Nome'].isin(chosen)]
+             rem = rem.sort_values(by='Valor de Mercado', ascending=False)
+             for _, r in rem.iterrows():
+                 sel.append({'player_id': r['player_id'], 'status': f'PRI {counter_start}', 'posicao': r['SimplePos']})
+                 u_ids.add(r['player_id'])
+                 counter_start += 1
+             return counter_start
+
+        # Need a global counter? actually the PRI is per position? 
+        # "O primeiro nome escolhido será a Pri 1..." usually implies Global or Per Pos?
+        # Based on previous code: "priority_counter = 1" was reset? 
+        # checking previous code... 
+        # "priority_counter = 1" was defined INSIDE select_priority_reserves loop.
+        # So it is 1,2,3 PER position group call. 
+        # Wait, select_priority_reserves was called 4 times.
+        # Inside the function: priority_counter = 1.
+        # So GK PRI 1, GK PRI 2... DEF PRI 1, DEF PRI 2...
+        # Yes.
+        
+        process_bench('GK', 1)
+        process_bench('DEF', 1)
+        process_bench('MEI', 1)
+        process_bench('ATA', 1)
+        
+        # 4. Fallback for anyone missing?
+        rem_all = rst[~rst['player_id'].isin(u_ids)]
+        for _, r in rem_all.iterrows():
+            sel.append({'player_id': r['player_id'], 'status': 'PRI 99', 'posicao': r['SimplePos']})
+
+        # SAVE
+        if save_lineup(tid, rod, fmt, sel):
+            st.toast("Escalação Salva!", icon="💾")
+
+    # Layout Top
     if is_locked:
         st.error(f"🚫 Escalação Fechada: {state.get('msg', 'Mercado Fechado')}")
-        if state.get('deadline_msg'):
-             st.caption(state['deadline_msg'])
+        if state.get('deadline_msg'): st.caption(state['deadline_msg'])
     else:
-        # Show deadline info if open
-        # Prioritize 'lineup_msg' which is the hard deadline (2h before)
         deadline_txt = state.get('lineup_msg') or state.get('deadline_msg')
         if deadline_txt:
             st.info(f"⏳ Prazo Final: {deadline_txt} (2h antes do jogo)")
 
-    if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked):
-        if is_locked:
-            st.error("O tempo para escalar já encerrou.")
-        else:
-            # Apply Captain Status
-            if starters and captain_pid:
-                for p in selected:
-                    if p['player_id'] == captain_pid:
-                        p['cap'] = 'CAPITAO'
-                    else:
-                        p['cap'] = ''
-            
-            with st.spinner("Salvando..."):
-                if save_lineup(team_id, rodada, formacao, selected):
-                    st.success("Escalação salva com sucesso!")
+    if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked, 
+                 on_click=save_adapter, args=(team_id, rodada, formacao, roster)):
+        pass # Callback handles it
+
+    st.divider()
+
+    # --- MAIN LAYOUT ---
+    col_titulares, col_reservas = st.columns(2)
     
-    st.caption("v1.4 - Prioridade, Capitão e Prazo (2h)")
+    # --- COLUNA 1: TITULARES + CAPITÃO ---
+    with col_titulares:
+        with st.container(border=True):
+            render_card_header("TITULARES E CAPITÃO", "#e6fffa", "#00664d")
+            
+            fmt = FORMATIONS[formacao]
+            selected = [] # List of dicts {player_id, status}
+            used_ids = set()
+
+            # Starters Layout: Stacked Vertically
+            
+            def select_players(label, pos, count, container):
+                avail = roster[(roster['SimplePos'] == pos) & (~roster['player_id'].isin(used_ids))]
+                chosen = container.multiselect(f"{label} ({count})", avail['Nome'].unique(), max_selections=count, key=f"start_{pos}")
+                
+                # Lookup IDs
+                for name in chosen:
+                    row = avail[avail['Nome'] == name]
+                    if not row.empty:
+                        pid = row.iloc[0]['player_id']
+                        p_pos = row.iloc[0]['SimplePos']
+                        used_ids.add(pid)
+                        selected.append({'player_id': pid, 'status': 'TITULAR', 'posicao': p_pos})
+
+            select_players("Goleiro", 'GK', 1, st)
+            select_players("Defensores", 'DEF', fmt['DEF'], st)
+            select_players("Meias", 'MEI', fmt['MEI'], st)
+            select_players("Atacantes", 'ATA', fmt['ATA'], st)
+
+            st.divider()
+            
+            # Captain
+            possible_starters = roster[roster['player_id'].isin(used_ids)]
+            starter_names = possible_starters['Nome'].tolist()
+            st.markdown("#### 🏅 Capitão")
+            st.selectbox("Escolha o Capitão", starter_names, key="captain_select")
+
+
+    # --- COLUNA 2: RESERVAS ---
+    with col_reservas:
+        with st.container(border=True):
+            render_card_header("PRIORIDADE DOS RESERVAS", "#fffbe6", "#997a00")
+            st.info("Selecione os reservas na ordem de prioridade. (1º = Pri 1, etc).")
+            
+            # Helper for Priority Selection
+            def select_priority_reserves(label, pos, container):
+                # 1. Get available
+                avail = roster[(roster['SimplePos'] == pos) & (~roster['player_id'].isin(used_ids))]
+                
+                if avail.empty:
+                    container.caption(f"{label}: Sem opções.")
+                    return
+
+                # 2. Ordered Multiselect
+                options = avail['Nome'].tolist()
+                options.sort() 
+                
+                chosen_names = container.multiselect(
+                    f"{label}", 
+                    options, 
+                    key=f"bench_pri_{pos}",
+                    help="Ordem define a prioridade."
+                )
+                
+                # Update used_ids for next calls (though usually distinct pos)
+                for name in chosen_names:
+                    row = avail[avail['Nome'] == name]
+                    if not row.empty:
+                        used_ids.add(row.iloc[0]['player_id'])
+
+            # Stacked Vertically
+            select_priority_reserves("Goleiros", 'GK', st)
+            select_priority_reserves("Defensores", 'DEF', st)
+            select_priority_reserves("Meias", 'MEI', st)
+            select_priority_reserves("Atacantes", 'ATA', st)
+    
+    st.caption("v1.5 - Filters Stacked, Top Save")
