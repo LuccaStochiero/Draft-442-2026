@@ -163,15 +163,49 @@ def app():
                 team_players['PosOrder'] = team_players['Pos'].map({p: i for i, p in enumerate(POS_ORDER)})
                 team_players = team_players.sort_values(['PosOrder', 'Nome'])
                 
-                # Display table
+                # Checkbox for view mode (optional? No, user asked for card style)
+                # Just render cards.
+                
                 display_df = team_players[['Nome', 'Pos', 'Team', 'Status']].rename(columns={'Team': 'Clube'})
                 
-                st.dataframe(
-                    display_df.style.apply(style_row, axis=1),
-                    hide_index=True,
-                    use_container_width=True,
-                    height=(len(display_df) + 1) * 35 + 10
-                )
+                POS_COLORS = {'GK': '#E3F2FD', 'DEF': '#E8F5E9', 'MEI': '#FFF9C4', 'ATA': '#FFEBEE'}
+                
+                for _, row in display_df.iterrows():
+                    pos = row['Pos']
+                    name = row['Nome']
+                    team = row['Clube']
+                    status = row['Status']
+                    bg = POS_COLORS.get(pos, '#FFF')
+                    
+                    st.markdown(
+                        f"""
+                        <div style="
+                            background-color: {bg};
+                            padding: 8px 10px;
+                            border-radius: 5px;
+                            margin-bottom: 6px;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            border: 1px solid #eee;
+                            font-size: 0.9em;
+                        ">
+                             <span style="
+                                font-weight: bold; 
+                                color: #444; 
+                                background-color: rgba(255,255,255,0.6); 
+                                padding: 1px 5px; 
+                                border-radius: 3px;
+                                font-size: 0.8em;
+                                min-width: 30px;
+                                text-align: center;
+                            ">{pos}</span>
+                             <span style="font-weight: 600; color: #111;">{name} ({team})</span>
+                             <span style="margin-left: auto;">{status}</span>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
 
 

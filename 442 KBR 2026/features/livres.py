@@ -126,8 +126,7 @@ def app():
                         min-width: 35px;
                         text-align: center;
                     ">{pos}</span>
-                    <span style="font-weight: 600; color: #111; font-size: 1.05em;">{name}</span>
-                    <span style="font-size: 0.9em; color: #666;">({team})</span>
+                    <span style="font-weight: 600; color: #111; font-size: 1.05em;">{name} ({team})</span>
                     <span style="margin-left: 5px;">{status}</span>
                 </div>
                 <div style="font-weight: bold; color: #00664d;">
