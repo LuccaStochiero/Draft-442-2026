@@ -109,12 +109,58 @@ def execute_trade(rodada, team1_id, team1_players, team1_cash, team2_id, team2_p
         st.error(f"Erro ao executar troca: {e}")
         return False
 
+def execute_drop(team_id, player_id):
+    """Drop a player from TEAM and move to PLAYERS_FREE"""
+    try:
+        client, sh = get_client()
+        
+        # 1. Update TEAM
+        ws_team = sh.worksheet("TEAM")
+        rows = ws_team.get_all_records()
+        
+        # Filter out the dropped player
+        new_rows = []
+        found = False
+        for r in rows:
+            if str(r.get('team_id')) == str(team_id) and str(r.get('player_id')) == str(player_id):
+                found = True
+                continue # Skip (Remove)
+            new_rows.append(r)
+            
+        if not found:
+            st.error("Jogador não encontrado no time.")
+            return False
+            
+        # 2. Update PLAYERS_FREE
+        try:
+             ws_free = sh.worksheet("PLAYERS_FREE")
+        except:
+             ws_free = sh.add_worksheet("PLAYERS_FREE", 1000, 1)
+             ws_free.append_row(['player_id'])
+             
+        # Just append row for efficiency? Or read-write to avoid dups?
+        # Let's just append. It's safe enough.
+        ws_free.append_row([str(player_id)])
+        
+        # Commit Team Changes
+        ws_team.clear()
+        if rows:
+            headers = list(rows[0].keys())
+            if new_rows:
+                ws_team.update([headers] + [list(r.values()) for r in new_rows])
+            else:
+                ws_team.append_row(headers)
+        
+        return True
+    except Exception as e:
+        st.error(f"Erro no drop: {e}")
+        return False
+
 from features import calendar_utils
 
 def app():
-    st.markdown("### Trocas")
+    st.markdown("### 🔄 Trade / Drop")
     
-    # Banner moved to Leilao per user request
     st.divider() 
     
     df_players, df_team, df_squad = load_data()
@@ -132,79 +178,119 @@ def app():
     team_map = pd.Series(df_squad[name_col].values, index=df_squad['team_id_norm']).to_dict()
     team_names = sorted(team_map.values())
     
-    # Round input
-    rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1)
+    # Round input shared? Or specific?
+    # Let's keep it global
+    # rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1)
+    # Actually, let's put it inside tabs or top. Top is fine.
     
-    st.divider()
+    tab_trade, tab_drop = st.tabs(["🔄 Trocas entre Times", "🗑️ Dispensar (Drops)"])
     
-    # Two columns for the two clubs
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("##### Clube 1")
-        team1_name = st.selectbox("Selecione o Clube 1", team_names, key="team1")
-        team1_id = next((k for k, v in team_map.items() if v == team1_name), None)
+    # --- TAB 1: TROCAS ---
+    with tab_trade:
+        st.caption("Troca direta de jogadores e caixa entre dois clubes.")
+        rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="trade_round")
         
-        # Budget
-        budget1 = df_squad[df_squad['team_id_norm'] == team1_id]['caixa'].iloc[0]
-        st.caption(f"Caixa: $ {budget1:,.2f}")
+        col1, col2 = st.columns(2)
         
-        # Get players
-        team1_player_ids = df_team[df_team['team_id'] == team1_id]['player_id'].tolist()
-        team1_details = df_players[df_players['player_id'].isin(team1_player_ids)].copy()
-        
-        if not team1_details.empty:
-            team1_details['Label'] = team1_details['Nome'] + " (" + team1_details['Posição'] + ")"
-            team1_selected = st.multiselect("Jogadores do Clube 1", team1_details['Label'].tolist(), key="p1")
-        else:
-            team1_selected = []
-            st.warning("Sem jogadores")
-        
-        team1_cash = st.number_input("Dinheiro do Clube 1 ($)", min_value=0.0, max_value=float(budget1), value=0.0, key="cash1")
-    
-    with col2:
-        st.markdown("##### Clube 2")
-        # Exclude team1 from options
-        team2_options = [t for t in team_names if t != team1_name]
-        team2_name = st.selectbox("Selecione o Clube 2", team2_options, key="team2")
-        team2_id = next((k for k, v in team_map.items() if v == team2_name), None)
-        
-        # Budget
-        budget2 = df_squad[df_squad['team_id_norm'] == team2_id]['caixa'].iloc[0]
-        st.caption(f"Caixa: $ {budget2:,.2f}")
-        
-        # Get players
-        team2_player_ids = df_team[df_team['team_id'] == team2_id]['player_id'].tolist()
-        team2_details = df_players[df_players['player_id'].isin(team2_player_ids)].copy()
-        
-        if not team2_details.empty:
-            team2_details['Label'] = team2_details['Nome'] + " (" + team2_details['Posição'] + ")"
-            team2_selected = st.multiselect("Jogadores do Clube 2", team2_details['Label'].tolist(), key="p2")
-        else:
-            team2_selected = []
-            st.warning("Sem jogadores")
-        
-        team2_cash = st.number_input("Dinheiro do Clube 2 ($)", min_value=0.0, max_value=float(budget2), value=0.0, key="cash2")
-    
-    st.divider()
-    
-    # Validation and submission
-    if st.button("Confirmar Troca", type="primary"):
-        # Validations
-        if len(team1_selected) != len(team2_selected):
-            st.error(f"Número de jogadores deve ser igual! Clube 1: {len(team1_selected)}, Clube 2: {len(team2_selected)}")
-        elif len(team1_selected) == 0:
-            st.error("Selecione pelo menos 1 jogador de cada clube.")
-        elif team1_cash > budget1:
-            st.error("Clube 1 não tem caixa suficiente.")
-        elif team2_cash > budget2:
-            st.error("Clube 2 não tem caixa suficiente.")
-        else:
-            # Get player IDs
-            team1_pids = team1_details[team1_details['Label'].isin(team1_selected)]['player_id'].tolist()
-            team2_pids = team2_details[team2_details['Label'].isin(team2_selected)]['player_id'].tolist()
+        with col1:
+            st.markdown("##### Clube 1")
+            team1_name = st.selectbox("Selecione o Clube 1", team_names, key="team1")
+            team1_id = next((k for k, v in team_map.items() if v == team1_name), None)
             
-            if execute_trade(rodada, team1_id, team1_pids, team1_cash, team2_id, team2_pids, team2_cash):
-                st.success("✅ Troca realizada com sucesso!")
-                st.cache_data.clear()
-                st.rerun()
+            # Budget
+            budget1 = df_squad[df_squad['team_id_norm'] == team1_id]['caixa'].iloc[0]
+            st.caption(f"Caixa: $ {budget1:,.2f}")
+            
+            # Get players
+            team1_player_ids = df_team[df_team['team_id'] == team1_id]['player_id'].tolist()
+            team1_details = df_players[df_players['player_id'].isin(team1_player_ids)].copy()
+            
+            if not team1_details.empty:
+                team1_details['Label'] = team1_details['Nome'] + " (" + team1_details['Posição'] + ")"
+                team1_selected = st.multiselect("Jogadores do Clube 1", team1_details['Label'].tolist(), key="p1")
+            else:
+                team1_selected = []
+                st.warning("Sem jogadores")
+            
+            team1_cash = st.number_input("Dinheiro do Clube 1 ($)", min_value=0.0, max_value=float(budget1), value=0.0, key="cash1")
+        
+        with col2:
+            st.markdown("##### Clube 2")
+            # Exclude team1 from options
+            team2_options = [t for t in team_names if t != team1_name]
+            team2_name = st.selectbox("Selecione o Clube 2", team2_options, key="team2")
+            team2_id = next((k for k, v in team_map.items() if v == team2_name), None)
+            
+            # Budget
+            budget2 = df_squad[df_squad['team_id_norm'] == team2_id]['caixa'].iloc[0]
+            st.caption(f"Caixa: $ {budget2:,.2f}")
+            
+            # Get players
+            team2_player_ids = df_team[df_team['team_id'] == team2_id]['player_id'].tolist()
+            team2_details = df_players[df_players['player_id'].isin(team2_player_ids)].copy()
+            
+            if not team2_details.empty:
+                team2_details['Label'] = team2_details['Nome'] + " (" + team2_details['Posição'] + ")"
+                team2_selected = st.multiselect("Jogadores do Clube 2", team2_details['Label'].tolist(), key="p2")
+            else:
+                team2_selected = []
+                st.warning("Sem jogadores")
+            
+            team2_cash = st.number_input("Dinheiro do Clube 2 ($)", min_value=0.0, max_value=float(budget2), value=0.0, key="cash2")
+        
+        st.divider()
+        
+        # Validation and submission
+        if st.button("Confirmar Troca", type="primary"):
+            # Validations
+            if len(team1_selected) != len(team2_selected):
+                st.error(f"Número de jogadores deve ser igual! Clube 1: {len(team1_selected)}, Clube 2: {len(team2_selected)}")
+            elif len(team1_selected) == 0:
+                st.error("Selecione pelo menos 1 jogador de cada clube.")
+            elif team1_cash > budget1:
+                st.error("Clube 1 não tem caixa suficiente.")
+            elif team2_cash > budget2:
+                st.error("Clube 2 não tem caixa suficiente.")
+            else:
+                # Get player IDs
+                team1_pids = team1_details[team1_details['Label'].isin(team1_selected)]['player_id'].tolist()
+                team2_pids = team2_details[team2_details['Label'].isin(team2_selected)]['player_id'].tolist()
+                
+                if execute_trade(rodada, team1_id, team1_pids, team1_cash, team2_id, team2_pids, team2_cash):
+                    st.success("✅ Troca realizada com sucesso!")
+                    st.cache_data.clear()
+                    st.rerun()
+
+    # --- TAB 2: DROPS ---
+    with tab_drop:
+        st.caption("Dispensar um jogador do elenco (enviar para Free Agency).")
+        
+        d_col1, d_col2 = st.columns(2)
+        with d_col1:
+            my_team_name = st.selectbox("Selecione o Clube", team_names, key="drop_team")
+            my_tid = next((k for k, v in team_map.items() if v == my_team_name), None)
+            
+            my_roster_ids = df_team[df_team['team_id'] == my_tid]['player_id'].tolist()
+            my_roster = df_players[df_players['player_id'].isin(my_roster_ids)].copy()
+            
+            st.info(f"Jogadores no elenco: {len(my_roster)}")
+            
+            if not my_roster.empty:
+                my_roster['Label'] = my_roster['Nome'] + " (" + my_roster['Posição'] + ")"
+                to_drop_label = st.selectbox("Selecionar Jogador para Dispensar", my_roster['Label'].tolist(), key="drop_p")
+                
+                to_drop_pid = my_roster[my_roster['Label'] == to_drop_label]['player_id'].iloc[0]
+            else:
+                to_drop_pid = None
+                st.warning("Elenco vazio.")
+                
+        with d_col2:
+            st.markdown("### Confirmar")
+            st.warning("⚠ Atenção: Essa ação remove o jogador do time imediatamente.")
+            
+            if st.button("🗑️ Confirmar Drop", type="primary", disabled=(to_drop_pid is None)):
+                if to_drop_pid:
+                    if execute_drop(my_tid, to_drop_pid):
+                        st.success("✅ Jogador invalidado com sucesso! (Enviado para Free Agency)")
+                        st.cache_data.clear()
+                        st.rerun()
