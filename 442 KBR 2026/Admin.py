@@ -3,7 +3,7 @@ import streamlit as st
 # Must be the first streamlit command
 st.set_page_config(page_title="4-4-2 Manager (ADMIN)", layout="wide")
 
-from features import escalacao_main, dados, elenco, leilao, livres, trade
+from features import escalacao_main, dados, elenco, leilao, livres, trade, confrontos
 
 def main():
     st.sidebar.title("👮‍♂️ Admin Panel")
@@ -13,6 +13,7 @@ def main():
         "Dados & Sync": dados.app,
         "Visualização Elenco": elenco.app,
         "Jogadores Livres": livres.app,
+        "Confrontos": confrontos.app,
         "Escalação": escalacao_main.app,
         "Leilão / Free Agency": lambda: leilao.app(is_admin=True),
         "Trocas": trade.app

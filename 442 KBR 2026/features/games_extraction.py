@@ -161,11 +161,19 @@ async def run_extraction_async():
         
         return rounds_data, combined_matches
 
+
+def to_gmt3(ts):
+    if not ts: return ""
+    # Explicit UTC -> GMT-3
+    from datetime import datetime, timedelta, timezone
+    dt_utc = datetime.fromtimestamp(ts, timezone.utc)
+    dt_gmt3 = dt_utc - timedelta(hours=3)
+    return dt_gmt3.strftime("%d/%m/%Y %H:%M")
+
 def update_google_sheets(rounds_data, matches_data):
     client, sh = get_client()
     
     # 1. Update GAMEWEEK
-    # Always try to clear/update
     try:
         ws_gw = sh.worksheet("GAMEWEEK")
         ws_gw.clear()
@@ -174,17 +182,18 @@ def update_google_sheets(rounds_data, matches_data):
         
     if matches_data:
         df_matches = pd.DataFrame(matches_data)
-        # Sort might be good
         df_matches = df_matches.sort_values(by='timestamp')
+        
+        # Apply GMT-3 Formatting to data_hora string
+        df_matches['data_hora'] = df_matches['timestamp'].apply(lambda x: to_gmt3(x) if x else '')
         
         # Select columns to save
         cols = ['id_jogo', 'rodada', 'home_team', 'away_team', 'data_hora', 'status']
-        # Convert df to values
         data_to_upload = [cols] + df_matches[cols].values.tolist()
         ws_gw.update(data_to_upload)
         print(f"Updated GAMEWEEK with {len(df_matches)} matches.")
     else:
-        print("No matches to save in GAMEWEEK (Sheet cleared).")
+        print("No matches to save in GAMEWEEK.")
     
     # 2. Update HOUR
     if rounds_data:
@@ -192,34 +201,21 @@ def update_google_sheets(rounds_data, matches_data):
             ws_hour = sh.worksheet("HOUR")
             ws_hour.clear()
         except:
-             ws_hour = sh.add_worksheet("HOUR", 100, 10)
+             ws_hour = sh.add_worksheet("HOUR", 100, 20)
         
         df_rounds = pd.DataFrame(rounds_data)
         
-        # Calculate First and Last match for each round from matches_data
+        # Calculate First and Last match using numeric timestamps
         if matches_data:
             df_m = pd.DataFrame(matches_data)
-            # Group by rodada
             if 'rodada' in df_m.columns and 'timestamp' in df_m.columns:
-                 # Ensure numeric
                  df_m['rodada'] = pd.to_numeric(df_m['rodada'], errors='coerce')
                  df_rounds['rodada'] = pd.to_numeric(df_rounds['rodada'], errors='coerce')
                  
                  agg = df_m.groupby('rodada')['timestamp'].agg(['min', 'max']).reset_index()
                  agg.columns = ['rodada', 'primeiro', 'ultimo']
                  
-                 print("DEBUG Rounds Data (Head):")
-                 print(df_rounds.head())
-                 print("DEBUG Agg Data:")
-                 print(agg)
-                 
-                 # Merge
                  df_rounds = pd.merge(df_rounds, agg, on='rodada', how='left')
-                 
-                 print("DEBUG Rounds After Merge:")
-                 print(df_rounds.head())
-                 
-                 # Fill NaN
                  df_rounds = df_rounds.fillna('')
             else:
                 df_rounds['primeiro'] = ''
@@ -228,17 +224,24 @@ def update_google_sheets(rounds_data, matches_data):
              df_rounds['primeiro'] = ''
              df_rounds['ultimo'] = ''
 
-        # Columns expected: rodada, inicio, final, primeiro, ultimo, id
-        target_cols = ['rodada', 'inicio', 'final', 'primeiro', 'ultimo', 'id']
-        # Ensure cols exist
+        # Prepare formatted columns for GMT-3 display
+        for col in ['inicio', 'final', 'primeiro', 'ultimo']:
+            if col in df_rounds.columns:
+                # Ensure it's treated as float/int before conversion
+                # Use helper with check
+                df_rounds[f'{col}_fmt'] = df_rounds[col].apply(lambda x: to_gmt3(x) if isinstance(x, (int, float)) else '')
+
+        # Columns: Raw (for logic) + Formatted (for display) + ID
+        target_cols = ['rodada', 'inicio', 'final', 'primeiro', 'ultimo', 'id',
+                       'inicio_fmt', 'final_fmt', 'primeiro_fmt', 'ultimo_fmt']
+                       
         for c in target_cols:
-            if c not in df_rounds.columns:
-                df_rounds[c] = ''
-                
-        # Upload
+            if c not in df_rounds.columns: df_rounds[c] = ''
+            
         data_rounds = [target_cols] + df_rounds[target_cols].values.tolist()
         ws_hour.update(data_rounds)
         print(f"Updated HOUR with {len(df_rounds)} rounds.")
+
 
 
 async def fetch_fantasy_players(round_id):

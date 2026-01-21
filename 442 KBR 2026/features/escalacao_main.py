@@ -243,19 +243,41 @@ def app():
          # Fallback
          selected.append({'player_id': row['player_id'], 'status': 'PRI 99', 'posicao': row['SimplePos']})
 
+
     # 6. Save
     st.markdown("---")
-    if st.button("💾 Salvar Escalação", type="primary"):
-        # Apply Captain Status
-        if starters and captain_pid:
-            for p in selected:
-                if p['player_id'] == captain_pid:
-                    p['cap'] = 'CAPITAO'
-                else:
-                    p['cap'] = ''
-        
-        with st.spinner("Salvando..."):
-            if save_lineup(team_id, rodada, formacao, selected):
-                st.success("Escalação salva com sucesso!")
     
-    st.caption("v1.3 - Com Capitão e Posição")
+    # Check Deadline
+    import features.calendar_utils as calendar_utils
+    state = calendar_utils.get_game_state()
+    
+    is_locked = state['status'] == 'LOCKED' or state['status'] == 'Season Finished'
+    
+    if is_locked:
+        st.error(f"🚫 Escalação Fechada: {state.get('msg', 'Mercado Fechado')}")
+        if state.get('deadline_msg'):
+             st.caption(state['deadline_msg'])
+    else:
+        # Show deadline info if open
+        # Prioritize 'lineup_msg' which is the hard deadline (2h before)
+        deadline_txt = state.get('lineup_msg') or state.get('deadline_msg')
+        if deadline_txt:
+            st.info(f"⏳ Prazo Final: {deadline_txt} (2h antes do jogo)")
+
+    if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked):
+        if is_locked:
+            st.error("O tempo para escalar já encerrou.")
+        else:
+            # Apply Captain Status
+            if starters and captain_pid:
+                for p in selected:
+                    if p['player_id'] == captain_pid:
+                        p['cap'] = 'CAPITAO'
+                    else:
+                        p['cap'] = ''
+            
+            with st.spinner("Salvando..."):
+                if save_lineup(team_id, rodada, formacao, selected):
+                    st.success("Escalação salva com sucesso!")
+    
+    st.caption("v1.4 - Prioridade, Capitão e Prazo (2h)")
