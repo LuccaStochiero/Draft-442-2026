@@ -181,23 +181,23 @@ def app():
                         f"""
                         <div style="
                             background-color: {bg};
-                            padding: 8px 10px;
+                            padding: 6px 8px;
                             border-radius: 5px;
-                            margin-bottom: 6px;
+                            margin-bottom: 5px;
                             display: flex;
                             align-items: center;
-                            gap: 8px;
+                            gap: 6px;
                             border: 1px solid #eee;
-                            font-size: 0.9em;
+                            font-size: 0.85em;
                         ">
                              <span style="
                                 font-weight: bold; 
                                 color: #444; 
                                 background-color: rgba(255,255,255,0.6); 
-                                padding: 1px 5px; 
+                                padding: 1px 4px; 
                                 border-radius: 3px;
-                                font-size: 0.8em;
-                                min-width: 30px;
+                                font-size: 0.75em;
+                                min-width: 25px;
                                 text-align: center;
                             ">{pos}</span>
                              <span style="font-weight: 600; color: #111;">{name} ({team})</span>
