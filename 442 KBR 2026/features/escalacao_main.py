@@ -170,43 +170,78 @@ def app():
         captain_name = st.selectbox("Escolha o Capitão", starter_names, key="captain_select")
         captain_pid = roster[roster['Nome'] == captain_name]['player_id'].iloc[0] if captain_name else None
 
-    # 4. Select Reserves
+    # 4. Priority Bench (Reservas)
     st.divider()
-    st.subheader("Reservas (1 por posição)")
-    r_gk, r_def, r_mei, r_ata = st.columns(4)
+    st.subheader("Banco de Reservas (Prioridade)")
+    st.info("Selecione os reservas na ordem de prioridade (1º selecionado = 1ª opção, etc). Jogadores não selecionados entrarão na lista com prioridade inferior automaticamente.")
 
-    def select_reserve(label, pos, container):
+    rb_col1, rb_col2 = st.columns(2)
+    
+    # Helper for Priority Selection
+    def select_priority_reserves(label, pos, container):
+        # 1. Get available
         avail = roster[(roster['SimplePos'] == pos) & (~roster['player_id'].isin(used_ids))]
         
         if avail.empty:
-            container.warning(f"{label}: Sem opções")
+            container.caption(f"{label}: Sem jogadores disponíveis.")
             return
 
-        options = list(avail['Nome'].unique())
-        # Default to no selection effectively requires handle, but Streamlit selectbox default is index 0.
-        # User implies they want to choose from available.
-        # We can use index=None (placeholder) if newer streamlit, but let's stick to standard behavior 
-        # or use a placeholder if desired. User said "no None option", meaning they MUST pick or it just shows options.
+        # 2. Ordered Multiselect
+        options = avail['Nome'].tolist()
+        # Sort options alphabetically for easier finding, but selection order matters for priority
+        options.sort() 
         
-        # If we remove None, they must pick one of the available.
-        chosen = container.selectbox(f"Reserva {label}", options, key=f"res_{pos}")
+        chosen_names = container.multiselect(
+            f"{label} (Defina a Ordem)", 
+            options, 
+            key=f"bench_pri_{pos}",
+            help="O primeiro nome escolhido será a Pri 1, o segundo a Pri 2, e assim por diante."
+        )
         
-        if chosen:
-            row = avail[avail['Nome'] == chosen].iloc[0]
+        # 3. Assign Priority to Selected
+        priority_counter = 1
+        for name in chosen_names:
+            row = avail[avail['Nome'] == name].iloc[0]
             pid = row['player_id']
-            pos = row['SimplePos']
+            p_pos = row['SimplePos']
+            
+            selected.append({
+                'player_id': pid, 
+                'status': f'PRI {priority_counter}', 
+                'posicao': p_pos
+            })
             used_ids.add(pid)
-            selected.append({'player_id': pid, 'status': 'RESERVA', 'posicao': pos})
+            priority_counter += 1
+            
+        # 4. Assign Priority to Unselected (Remaining)
+        remaining = avail[~avail['Nome'].isin(chosen_names)]
+        # Sort remaining by something standard (e.g. Value or Name)
+        remaining = remaining.sort_values(by='Valor de Mercado', ascending=False)
+        
+        for _, row in remaining.iterrows():
+            selected.append({
+                'player_id': row['player_id'],
+                'status': f'PRI {priority_counter}',
+                'posicao': row['SimplePos']
+            })
+            used_ids.add(row['player_id'])
+            priority_counter += 1
 
-    with r_gk: select_reserve("GK", 'GK', st)
-    with r_def: select_reserve("DEF", 'DEF', st)
-    with r_mei: select_reserve("MEI", 'MEI', st)
-    with r_ata: select_reserve("ATA", 'ATA', st)
+    with rb_col1:
+        select_priority_reserves("Goleiros", 'GK', st)
+        select_priority_reserves("Defensores", 'DEF', st)
+        
+    with rb_col2:
+        select_priority_reserves("Meias", 'MEI', st)
+        select_priority_reserves("Atacantes", 'ATA', st)
 
-    # 5. Mark Rest as FORA
-    remaining = roster[~roster['player_id'].isin(used_ids)]
-    for _, row in remaining.iterrows():
-        selected.append({'player_id': row['player_id'], 'status': 'FORA', 'posicao': row['SimplePos']})
+    # 5. Remaining (should be empty if logic works, but check just in case of other positions?)
+    # The clean_pos ensures we only have 4 positions. 
+    # Any player not caught above?
+    remaining_all = roster[~roster['player_id'].isin(used_ids)]
+    for _, row in remaining_all.iterrows():
+         # Fallback
+         selected.append({'player_id': row['player_id'], 'status': 'PRI 99', 'posicao': row['SimplePos']})
 
     # 6. Save
     st.markdown("---")

@@ -21,20 +21,6 @@ def load_data():
         df_players['player_id'] = df_players['player_id'].astype(str)
         # Pre-calc
         df_players['Posição Simplificada'] = df_players['Posição'].apply(clean_pos)
-        
-        from datetime import datetime
-        def calculate_age(dob_str):
-            if pd.isna(dob_str) or not isinstance(dob_str, str): return 0
-            try:
-                dob = datetime.strptime(dob_str, "%d/%m/%Y")
-                today = datetime.today()
-                return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-            except: return 0
-            
-        if 'Nascimento' in df_players.columns:
-            df_players['Idade'] = df_players['Nascimento'].apply(calculate_age)
-        else:
-            df_players['Idade'] = 0
     else:
         st.error(f"Arquivo Players.csv não encontrado em: {players_file}")
         return pd.DataFrame(), pd.DataFrame()
@@ -56,7 +42,7 @@ def load_data():
     return df_players, df_free_ids
 
 def app():
-    st.title("🆓 Jogadores Livres")
+    st.title("🆓 Jogadores Livres (Lista)")
     
     df_players, df_free_ids = load_data()
     
@@ -68,7 +54,7 @@ def app():
     free_ids = set(df_free_ids['player_id'].unique())
     df_free_detailed = df_players[df_players['player_id'].isin(free_ids)].copy()
     
-    st.markdown(f"**Disponíveis:** {len(df_free_detailed)}")
+    st.markdown(f"**Total Disponíveis:** {len(df_free_detailed)}")
     
     # --- Status Info Construction ---
     def make_status(row):
@@ -96,10 +82,8 @@ def app():
     with c1:
         search_name = st.text_input("Buscar por Nome")
     with c2:
-        # Fix sort error: ensure strings and dropna or fillna
-        unique_pos = df_free_detailed['Posição Simplificada'].dropna().astype(str).unique()
-        all_pos = sorted(unique_pos)
-        sel_pos = st.multiselect("Posição", all_pos)
+        unique_pos = sorted(df_free_detailed['Posição Simplificada'].dropna().astype(str).unique())
+        sel_pos = st.multiselect("Posição", unique_pos)
     with c3:
         all_clubs = sorted(df_free_detailed['Team'].fillna('-').astype(str).unique())
         sel_clubs = st.multiselect("Clube Real", all_clubs)
@@ -113,8 +97,7 @@ def app():
         filtered = filtered[filtered['Team'].astype(str).isin(sel_clubs)]
         
     # --- Compact Display ---
-    # Just essential cols
-    display_df = filtered[['Nome', 'Posição Simplificada', 'Team', 'Idade', 'Altura', 'Status Info', 'Valor de Mercado']].copy()
+    display_df = filtered[['Nome', 'Posição Simplificada', 'Team', 'Status Info', 'Valor de Mercado']].copy()
     
     st.dataframe(
         display_df.sort_values(by='Valor de Mercado', ascending=False),

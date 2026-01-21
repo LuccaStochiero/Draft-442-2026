@@ -109,8 +109,13 @@ def execute_trade(rodada, team1_id, team1_players, team1_cash, team2_id, team2_p
         st.error(f"Erro ao executar troca: {e}")
         return False
 
+from features import calendar_utils
+
 def app():
     st.markdown("### Trocas")
+    
+    # Banner moved to Leilao per user request
+    st.divider() 
     
     df_players, df_team, df_squad = load_data()
     

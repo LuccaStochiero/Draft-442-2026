@@ -241,93 +241,287 @@ def process_auction():
     except Exception as e:
         st.error(f"Erro processamento: {e}")
 
+from features import calendar_utils
+
+def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
+    """
+    Swap a player from Team to Free Agency
+    """
+    try:
+        client, sh = get_client()
+        
+        # 1. Update TEAM
+        ws_team = sh.worksheet("TEAM")
+        team_rows = ws_team.get_all_records()
+        
+        updated_team = False
+        for r in team_rows:
+            if str(r.get('team_id')) == str(team_id) and str(r.get('player_id')) == str(drop_pid):
+                r['player_id'] = str(pickup_pid)
+                updated_team = True
+                break
+        
+        if not updated_team:
+            st.error("Erro: Jogador a dispensar não encontrado no time.")
+            return False
+            
+        # 2. Update PLAYERS_FREE
+        ws_free = sh.worksheet("PLAYERS_FREE")
+        free_rows = ws_free.get_all_records()
+        
+        # Remove pickup
+        new_free_rows = [r for r in free_rows if str(r.get('player_id')) != str(pickup_pid)]
+        # Add drop (only player_id col usually)
+        new_free_rows.append({'player_id': str(drop_pid)})
+        
+        # 3. Log Transaction
+        try:
+            ws_log = sh.worksheet("LOG_FREE_AGENCY")
+        except:
+            ws_log = sh.add_worksheet("LOG_FREE_AGENCY", 1000, 5)
+            ws_log.append_row(['rodada', 'team_id', 'added_id', 'dropped_id', 'timestamp'])
+            
+        from datetime import datetime
+        ws_log.append_row([
+            rodada, 
+            str(team_id), 
+            str(pickup_pid), 
+            str(drop_pid), 
+            str(datetime.now())
+        ])
+        
+        # Commit Updates
+        ws_team.clear()
+        if team_rows:
+            ws_team.update([list(team_rows[0].keys())] + [list(r.values()) for r in team_rows])
+            
+        ws_free.clear()
+        if new_free_rows:
+             keys = list(new_free_rows[0].keys())
+             ws_free.update([keys] + [list(r.values()) for r in new_free_rows])
+        else:
+             ws_free.update([['player_id']]) # Header only
+             
+        return True
+
+    except Exception as e:
+        st.error(f"Erro ao processar troca: {e}")
+        return False
+
 def app(is_admin=False):
-    st.title("⚖️ Leilão")
+    st.title("💰 Leilão / Free Agency")
     
+    # --- GAME STATE BANNER ---
+    state = calendar_utils.get_game_state()
+    if state['status'] == 'ERROR':
+        st.error(state['msg'])
+    else:
+        # Color coding
+        color = "green" if "ABERTO" in state['msg'] else "red"
+        if "FREE AGENCY" in state['msg']: color = "orange"
+        
+        st.info(f"📅 **Status do Mercado:** {state['msg']}")
+        if state.get('deadline_msg'):
+            # Emphasized Deadline with colored box
+            # Default Blue
+            box_color = "#e6f3ff" 
+            border_color = "#3366ff"
+            text_color = "#004d99"
+            
+            if "LEILÃO" in state['msg']:
+                # Greenish
+                box_color = "#e6fffa"
+                border_color = "#00cc99"
+                text_color = "#00664d"
+            elif "FREE" in state['msg']:
+                # Yellowish
+                box_color = "#fffbe6"
+                border_color = "#ffcc00"
+                text_color = "#997a00"
+                
+            st.markdown(
+                f"""
+                <div style="
+                    background-color: {box_color};
+                    border-left: 5px solid {border_color};
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                ">
+                    <h4 style="margin:0; color: {text_color}; font-size: 1.2rem;">🕒 {state['deadline_msg']}</h4>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            
+        # Optional: Show warnings if relevant
+        if not state['auction_open'] and not state['free_open']:
+            st.warning("Mercado fechado no momento.")
+            
+    st.divider()
+
     if is_admin:
-        if st.button("👑 PROCESSAR RODADA ATUAL", type="primary"):
+        if st.button("👑 PROCESSAR RODADA ATUAL (Leilão)", type="primary"):
             process_auction()
         st.divider()
 
-    # User Form
+    # TABS using streamlit tabs
+    tab_auction, tab_free = st.tabs(["🔨 Leilão", "🆓 Free Agency"])
+    
+    # --- LOAD DATA ---
     df_players, df_team, df_squad, df_free_tab = load_data()
-    
     if df_squad.empty: return
-    
-    # 1. Inputs
-    c1, c20 = st.columns(2)
-    with c1:
-        name_col = next((c for c in df_squad.columns if c in ['name', 'nome', 'team', 'time', 'team_name']), None)
-        team_map = pd.Series(df_squad[name_col].values, index=df_squad['team_id_norm']).to_dict()
-        sel_team = st.selectbox("Clube", sorted(team_map.values()))
-        tid = next((k for k,v in team_map.items() if v == sel_team), None)
-        
-        # Budget info
-        budget = df_squad[df_squad['team_id_norm'] == tid]['caixa'].iloc[0]
-        st.caption(f"Caixa: $ {budget:,.2f}")
 
-    with c20:
-        rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1)
+    # Common Team Map
+    name_col = next((c for c in df_squad.columns if c in ['name', 'nome', 'team', 'time', 'team_name']), None)
+    team_map = pd.Series(df_squad[name_col].values, index=df_squad['team_id_norm']).to_dict()
+
+    # --- TAB 1: AUCTION ---
+    with tab_auction:
+        if not state['auction_open']:
+            st.warning("O Leilão está FECHADO.")
         
-    c2, c3, c4 = st.columns(3)
-    
-    # Target (Free)
-    with c2:
-        # Filter players who are in FREE tab
-        # Get Names
-        if not df_free_tab.empty:
-            free_ids = df_free_tab['player_id'].unique()
-            free_details = df_players[df_players['player_id'].isin(free_ids)].copy()
-            free_details['Label'] = free_details['Nome'] + " (" + free_details['Posição'] + ")"
+        # User Form (Auction)
+        # 1. Inputs
+        c1, c20 = st.columns(2)
+        with c1:
+            sel_team = st.selectbox("Clube", sorted(team_map.values()), key="auc_team")
+            tid = next((k for k,v in team_map.items() if v == sel_team), None)
             
-            target_name = st.selectbox("Alvo (Livre)", free_details['Label'].unique())
-            pid_free = free_details[free_details['Label'] == target_name]['player_id'].iloc[0]
-        else:
-            st.warning("Ninguem livre.")
-            pid_free = None
+            # Budget info
+            budget = df_squad[df_squad['team_id_norm'] == tid]['caixa'].iloc[0]
+            st.caption(f"Caixa: $ {budget:,.2f}")
+
+        with c20:
+            rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="auc_round")
             
-    # Drop (Own)
-    with c3:
-        # Filter owned players
-        own_ids = df_team[df_team['team_id'] == tid]['player_id'].tolist()
-        roster_size = len(own_ids)
-        own_details = df_players[df_players['player_id'].isin(own_ids)].copy()
+        c2, c3, c4 = st.columns(3)
         
-        # Show roster size
-        st.caption(f"Elenco: {roster_size} jogadores")
-        
-        if not own_details.empty:
-            own_details['Label'] = own_details['Nome'] + " (" + own_details['Posição'] + ")"
-            options = list(own_details['Label'].unique())
-            
-            # Add "Nenhum" option if roster ≤17
-            if roster_size <= 17:
-                options = ["Nenhum (Vaga Livre)"] + options
-            
-            drop_name = st.selectbox("Descarte (Meu)", options)
-            
-            if drop_name == "Nenhum (Vaga Livre)":
-                pid_drop = "NENHUM"
+        # Target (Free)
+        with c2:
+            if not df_free_tab.empty:
+                free_ids = df_free_tab['player_id'].unique()
+                free_details_auc = df_players[df_players['player_id'].isin(free_ids)].copy()
+                free_details_auc['Label'] = free_details_auc['Nome'] + " (" + free_details_auc['Posição'] + ")"
+                
+                target_name = st.selectbox("Alvo (Livre)", free_details_auc['Label'].unique(), key="auc_target")
+                pid_free = free_details_auc[free_details_auc['Label'] == target_name]['player_id'].iloc[0]
             else:
-                pid_drop = own_details[own_details['Label'] == drop_name]['player_id'].iloc[0]
-        else:
-            st.warning("Elenco vazio.")
-            pid_drop = "NENHUM"  # Empty roster = can add without drop
+                st.warning("Ninguem livre.")
+                pid_free = None
+                
+        # Drop (Own)
+        with c3:
+            own_ids = df_team[df_team['team_id'] == tid]['player_id'].tolist()
+            roster_size = len(own_ids)
+            own_details = df_players[df_players['player_id'].isin(own_ids)].copy()
+            st.caption(f"Elenco: {roster_size} jogadores")
             
-    with c4:
-        safe_budget = float(budget or 0.0)
-        # Prevent min > max error if budget is 0
-        if safe_budget <= 0.0:
-            st.error("Sem caixa disponível para lances.")
-            price = 0.0
-        else:
-            price = st.number_input("Lance ($)", min_value=0.0, max_value=safe_budget)
+            if not own_details.empty:
+                own_details['Label'] = own_details['Nome'] + " (" + own_details['Posição'] + ")"
+                options = list(own_details['Label'].unique())
+                if roster_size <= 17:
+                    options = ["Nenhum (Vaga Livre)"] + options
+                
+                drop_name = st.selectbox("Descarte (Meu)", options, key="auc_drop")
+                if drop_name == "Nenhum (Vaga Livre)":
+                    pid_drop = "NENHUM"
+                else:
+                    pid_drop = own_details[own_details['Label'] == drop_name]['player_id'].iloc[0]
+            else:
+                pid_drop = "NENHUM" # Empty roster
+                
+        with c4:
+            safe_budget = float(budget or 0.0)
+            if safe_budget <= 0.0:
+                st.error("Sem caixa.")
+                price = 0.0
+            else:
+                price = st.number_input("Lance ($)", min_value=0.0, max_value=safe_budget, step=0.1, format="%.1f", key="auc_price")
+            
+        if st.button("Enviar Lance", disabled=not state['auction_open']):
+            if not state['auction_open']:
+                st.error("Leilão Fechado.")
+            elif price > budget:
+                st.error("Sem grana.")
+            elif not pid_free:
+                st.error("Selecione o jogador.")
+            else:
+                if save_bid(tid, rodada, pid_free, pid_drop, price):
+                    st.success("Lance enviado!")
+
+    # --- TAB 2: FREE AGENCY ---
+    with tab_free:
+        if not state['free_open']:
+            st.warning("O Free Agency está FECHADO.")
+
+        st.markdown("##### Troca de Jogador (Free Agency)")
         
-    if st.button("Enviar Lance"):
-        if price > budget:
-            st.error("Sem grana.")
-        elif not pid_free:
-            st.error("Selecione o jogador alvo.")
-        else:
-            if save_bid(tid, rodada, pid_free, pid_drop, price):
-                st.success("Lance enviado!")
+        # Team Selector for Free Agency
+        c_fa_1, _ = st.columns(2)
+        with c_fa_1:
+             sel_team_fa = st.selectbox("Clube", sorted(team_map.values()), key="fa_team_select")
+             tid_fa = next((k for k,v in team_map.items() if v == sel_team_fa), None)
+
+        col1, col2 = st.columns(2)
+        
+        # --- COLUMN 1: DROP (My Team) ---
+        with col1:
+            st.subheader("🔻 Dispensar")
+            
+            # Get players for selected team
+            own_ids_fa = df_team[df_team['team_id'] == tid_fa]['player_id'].tolist()
+            own_details_fa = df_players[df_players['player_id'].isin(own_ids_fa)].copy()
+            
+            if not own_details_fa.empty:
+                own_details_fa['Label'] = own_details_fa['Nome'] + " (" + own_details_fa['Posição'] + ")"
+                drop_player_label_fa = st.selectbox("Escolha quem sai", own_details_fa['Label'].tolist(), key="fa_drop")
+                drop_pid_fa = own_details_fa[own_details_fa['Label'] == drop_player_label_fa]['player_id'].iloc[0]
+            else:
+                st.warning("Seu time está vazio.")
+                drop_pid_fa = None
+
+        # --- COLUMN 2: PICKUP (Free Agents) ---
+        with col2:
+            st.subheader("Adicionar")
+            # Filters
+            search_fa = st.text_input("Buscar Jogador Livre", placeholder="Nome...", key="fa_search")
+            
+            # Need to re-filter free players if needed or reuse loaded full set (df_players - owned)
+            # Actually we load `free_ids` from PLAYERS_FREE sheet
+            # Reuse `df_free_tab` logic
+            if not df_free_tab.empty:
+                free_ids_fa = df_free_tab['player_id'].unique()
+                free_details_fa = df_players[df_players['player_id'].isin(free_ids_fa)].copy()
+                free_details_fa['Label'] = free_details_fa['Nome'] + " (" + free_details_fa['Posição'] + ")"
+            else:
+                free_details_fa = pd.DataFrame()
+
+            filtered_free = free_details_fa.copy()
+            
+            if search_fa and not filtered_free.empty:
+                filtered_free = filtered_free[filtered_free['Nome'].str.contains(search_fa, case=False, na=False)]
+                
+            if not filtered_free.empty:
+                pickup_player_label_fa = st.selectbox("Escolha quem entra", filtered_free['Label'].tolist(), key="fa_pickup")
+                pickup_pid_fa = filtered_free[filtered_free['Label'] == pickup_player_label_fa]['player_id'].iloc[0]
+            else:
+                st.warning("Nenhum jogador encontrado / Lista vazia.")
+                pickup_pid_fa = None
+
+        st.divider()
+        if st.button("🔄 Confirmar Troca (Free)", type="primary", disabled=not state['free_open']):
+            if not state['free_open']:
+                st.error("Free Agency Fechada.")
+            elif not drop_pid_fa or not pickup_pid_fa:
+                st.error("Selecione os dois jogadores.")
+            else:
+                # Validate team roster size if needed? 
+                # Assuming Swap maintains size.
+                rodada_fa = state.get('next_round', 0)
+                if execute_free_swap(tid_fa, drop_pid_fa, pickup_pid_fa, rodada_fa):
+                    st.balloons()
+                    st.success("Troca realizada! Tabelas atualizadas.")
+                    st.cache_data.clear()
+                    st.rerun()

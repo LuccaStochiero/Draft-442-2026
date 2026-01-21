@@ -25,7 +25,8 @@ def get_credentials():
             )
             return creds
     except Exception as e:
-        st.warning(f"Secrets error: {e}")
+        # Local run without secrets.toml is expected; fail silently and try local file
+        pass # print(f"Debug: Secrets not found ({e}), trying local file...")
     
     # Fall back to local file
     if SERVICE_ACCOUNT_FILE.exists():

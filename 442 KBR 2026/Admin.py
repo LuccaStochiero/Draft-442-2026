@@ -14,7 +14,7 @@ def main():
         "Visualização Elenco": elenco.app,
         "Jogadores Livres": livres.app,
         "Escalação": escalacao_main.app,
-        "Leilão": lambda: leilao.app(is_admin=True),
+        "Leilão / Free Agency": lambda: leilao.app(is_admin=True),
         "Trocas": trade.app
     }
     
