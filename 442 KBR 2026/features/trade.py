@@ -313,4 +313,4 @@ def app():
                         st.success("✅ Jogador invalidado com sucesso! (Enviado para Free Agency e Logado)")
                         st.cache_data.clear()
                         st.rerun()
-```
+                        st.rerun()
