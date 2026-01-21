@@ -109,8 +109,8 @@ def execute_trade(rodada, team1_id, team1_players, team1_cash, team2_id, team2_p
         st.error(f"Erro ao executar troca: {e}")
         return False
 
-def execute_drop(team_id, player_id):
-    """Drop a player from TEAM and move to PLAYERS_FREE"""
+def execute_drop(team_id, player_id, rodada):
+    """Drop a player from TEAM and move to PLAYERS_FREE, logging to DROPS_FEITOS"""
     try:
         client, sh = get_client()
         
@@ -141,6 +141,15 @@ def execute_drop(team_id, player_id):
         # Just append row for efficiency? Or read-write to avoid dups?
         # Let's just append. It's safe enough.
         ws_free.append_row([str(player_id)])
+        
+        # 3. Log to DROPS_FEITOS
+        try:
+            ws_log = sh.worksheet("DROPS_FEITOS")
+        except:
+            ws_log = sh.add_worksheet("DROPS_FEITOS", 1000, 3)
+            ws_log.append_row(['rodada', 'team_id', 'player_id'])
+            
+        ws_log.append_row([int(rodada), str(team_id), str(player_id)])
         
         # Commit Team Changes
         ws_team.clear()
@@ -178,17 +187,15 @@ def app():
     team_map = pd.Series(df_squad[name_col].values, index=df_squad['team_id_norm']).to_dict()
     team_names = sorted(team_map.values())
     
-    # Round input shared? Or specific?
-    # Let's keep it global
-    # rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1)
-    # Actually, let's put it inside tabs or top. Top is fine.
+    # Round input
+    rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="trade_round")
     
     tab_trade, tab_drop = st.tabs(["🔄 Trocas entre Times", "🗑️ Dispensar (Drops)"])
     
     # --- TAB 1: TROCAS ---
     with tab_trade:
         st.caption("Troca direta de jogadores e caixa entre dois clubes.")
-        rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="trade_round")
+        # rodada moved up
         
         col1, col2 = st.columns(2)
         
@@ -288,9 +295,22 @@ def app():
             st.markdown("### Confirmar")
             st.warning("⚠ Atenção: Essa ação remove o jogador do time imediatamente.")
             
+            # Using the same rodada input from Tab 1 or a new one?
+            # It's better to verify rodada is set. 
+            # Currently rodada is defined inside tab_trade, so it's not accessible here directly?
+            # Wait, `rodada` variable scope in Python functions...
+            # If defined in `with tab_trade:`, it might be local to that block? No, Python doesn't scope `with` blocks.
+            # But the st.number_input is RENDERED in tab_trade. 
+            # If the user is on TAB 2, TAB 1 content might not be rendered or updated?
+            # Safest is to have a rodada input here too or move `rodada` to top level.
+            # I will move `rodada` input to top level (common for both).
+            
+        # Refactoring to move rodada to top level (before tabs)
+            
             if st.button("🗑️ Confirmar Drop", type="primary", disabled=(to_drop_pid is None)):
                 if to_drop_pid:
-                    if execute_drop(my_tid, to_drop_pid):
-                        st.success("✅ Jogador invalidado com sucesso! (Enviado para Free Agency)")
+                    if execute_drop(my_tid, to_drop_pid, rodada):
+                        st.success("✅ Jogador invalidado com sucesso! (Enviado para Free Agency e Logado)")
                         st.cache_data.clear()
                         st.rerun()
+```
