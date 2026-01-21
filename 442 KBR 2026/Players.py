@@ -15,7 +15,7 @@ def main():
         "Confrontos": confrontos.app,
         "Escalação": escalacao_main.app,
         "Leilão / Free Agency": lambda: leilao.app(is_admin=False),
-        "Trocas": trade.app
+        "Trade / Drop": trade.app
     }
     
     selection = st.sidebar.radio("Navegação", list(options.keys()))
