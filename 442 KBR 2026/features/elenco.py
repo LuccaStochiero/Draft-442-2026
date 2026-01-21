@@ -102,6 +102,48 @@ def app():
         }
         </style>
     """, unsafe_allow_html=True)
+
+    # --- Player Search ---
+    with st.expander("🔍 Pesquisar Jogador (Onde ele está?)"):
+        search_term = st.text_input("Nome do jogador (min 3 letras):", key="search_elenco")
+        if search_term and len(search_term) >= 3:
+            mask = df_players['Nome'].str.contains(search_term, case=False, na=False)
+            results = df_players[mask].head(10)
+            
+            if results.empty:
+                st.info("Nenhum jogador encontrado.")
+            else:
+                for _, p_row in results.iterrows():
+                    pid = str(p_row['player_id'])
+                    pname = p_row['Nome']
+                    ppos = p_row.get('Posição', 'N/A')
+                    preal = p_row.get('Club', '') 
+                    
+                    # Find owner
+                    owner_row = df_team[df_team['player_id'] == pid]
+                    
+                    status_txt = "LIVRE"
+                    status_color = "green"
+                    
+                    if not owner_row.empty:
+                        tid = str(owner_row.iloc[0]['team_id'])
+                        # Team Name from already loaded df_squad
+                        squad_row = df_squad[df_squad['team_id_norm'] == tid]
+                        if not squad_row.empty:
+                             if name_col:
+                                 tname = squad_row.iloc[0][name_col]
+                                 status_txt = f"Em: {tname}"
+                                 status_color = "orange"
+                             else:
+                                 status_txt = f"Em: Time {tid}"
+                                 status_color = "orange"
+                        else:
+                             status_txt = f"Em: Time {tid}"
+                             status_color = "orange"
+                    
+                    st.markdown(f"**{pname}** ({ppos}) - {preal} -> <span style='color:{status_color}; font-weight:bold'>{status_txt}</span>", unsafe_allow_html=True)
+    
+    st.divider()
     
     # Display teams in columns
     cols = st.columns(len(sorted_teams))
@@ -130,4 +172,6 @@ def app():
                     use_container_width=True,
                     height=(len(display_df) + 1) * 35 + 10
                 )
+
+
 
