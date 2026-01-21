@@ -311,27 +311,33 @@ def app():
         if save_lineup(tid, rod, fmt, sel):
             st.toast("Escalação Salva!", icon="💾")
 
-    # Layout Top
-    if is_locked:
-        st.error(f"🚫 Escalação Fechada: {state.get('msg', 'Mercado Fechado')}")
-        if state.get('deadline_msg'): st.caption(state['deadline_msg'])
-    else:
-        deadline_txt = state.get('lineup_msg') or state.get('deadline_msg')
-        if deadline_txt:
-            st.info(f"⏳ Prazo Final: {deadline_txt} (2h antes do jogo)")
+    # Layout Top: Status Row
+    c_status_time, c_status_lineup = st.columns(2)
     
-    c_btn, c_stat = st.columns([1, 2])
-    
-    with c_btn:
-        if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked, 
-                     on_click=save_adapter, args=(team_id, rodada, formacao, roster)):
-            pass # Callback handles it
-            
-    with c_stat:
+    with c_status_time:
+        if is_locked:
+            st.error(f"🚫 Fechado: {state.get('msg', 'Mercado Fechado')}")
+            # if state.get('deadline_msg'): st.caption(state['deadline_msg'])
+        else:
+            deadline_txt = state.get('lineup_msg') or state.get('deadline_msg')
+            if deadline_txt:
+                st.info(f"⏳ Prazo: {deadline_txt}")
+            else:
+                st.info("Mercado Aberto")
+
+    with c_status_lineup:
         if has_lineup:
-            st.success("✅ Escalação Salva")
+            st.success("✅ Time Escalado")
         else:
             st.warning("🔴 Precisa Escalar")
+
+    # Save Button Row
+    # Only show button if not locked? Or show disabled.
+    # The previous code showed disabled if locked.
+    
+    if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked, 
+                 on_click=save_adapter, args=(team_id, rodada, formacao, roster)):
+        pass # Callback handles it
             
     if has_lineup:
         with st.expander("Ver Escalação Salva", expanded=False):
