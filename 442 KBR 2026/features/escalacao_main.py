@@ -105,6 +105,32 @@ def save_lineup(team_id, rodada, formation, lineup_data):
         st.error(f"Erro ao salvar: {e}")
         return False
 
+def get_saved_lineup_data(team_id, rodada):
+    try:
+        client, sh = get_client()
+        try:
+             ws = sh.worksheet("TEAM_LINEUP")
+        except:
+             return pd.DataFrame()
+             
+        # Optimization: Get all and filter in DF (easier than cell matching)
+        records = ws.get_all_records()
+        df = pd.DataFrame(records)
+        
+        if df.empty: return df
+        
+        df.columns = df.columns.str.lower()
+        if 'rodada' not in df.columns or 'team_id' not in df.columns: return pd.DataFrame()
+        
+        df['rodada'] = pd.to_numeric(df['rodada'], errors='coerce').fillna(0).astype(int)
+        df['team_id'] = df['team_id'].astype(str)
+        
+        mask = (df['team_id'] == str(team_id)) & (df['rodada'] == int(rodada))
+        return df[mask].copy()
+        
+    except Exception as e:
+        # st.error(f"Erro ao ler escalação: {e}") # Silently fail or log?
+        return pd.DataFrame()
 
 def render_card_header(label, bg_color, text_color):
     st.markdown(
@@ -117,6 +143,33 @@ def render_card_header(label, bg_color, text_color):
             text-align: center;
         ">
             <h5 style="margin: 0; color: {text_color};">{label}</h5>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+def render_saved_player(name, pos, cap, status, bg_color):
+    cap_icon = "©️" if (cap and str(cap).lower() == 'capitao') else ""
+    st.markdown(
+        f"""
+        <div style="
+            background-color: {bg_color};
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+        ">
+            <div>
+                <span style="font-weight: bold; margin-right: 8px; color: #333;">{pos}</span>
+                <span style="color: #000;">{name}</span>
+                <span style="margin-left: 5px;">{cap_icon}</span>
+            </div>
+            <div style="font-size: 0.8em; color: #555;">
+                {status}
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -156,6 +209,10 @@ def app():
     state = calendar_utils.get_game_state()
     is_locked = state['status'] == 'LOCKED' or state['status'] == 'Season Finished'
     
+    # Check Saved Lineup
+    saved_df = get_saved_lineup_data(team_id, rodada)
+    has_lineup = not saved_df.empty
+
     # Logic to build lineup from session state (for Callback)
     def save_adapter(tid, rod, fmt, rst):
         # Security Check
@@ -262,10 +319,74 @@ def app():
         deadline_txt = state.get('lineup_msg') or state.get('deadline_msg')
         if deadline_txt:
             st.info(f"⏳ Prazo Final: {deadline_txt} (2h antes do jogo)")
+    
+    c_btn, c_stat = st.columns([1, 2])
+    
+    with c_btn:
+        if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked, 
+                     on_click=save_adapter, args=(team_id, rodada, formacao, roster)):
+            pass # Callback handles it
+            
+    with c_stat:
+        if has_lineup:
+            st.success("✅ Escalação Salva")
+        else:
+            st.warning("🔴 Precisa Escalar")
+            
+    if has_lineup:
+        with st.expander("Ver Escalação Salva", expanded=False):
+            # Show Formation
+            saved_form = saved_df['formacao'].iloc[0]
+            st.caption(f"Formação Salva: {saved_form}")
 
-    if st.button("💾 Salvar Escalação", type="primary", disabled=is_locked, 
-                 on_click=save_adapter, args=(team_id, rodada, formacao, roster)):
-        pass # Callback handles it
+            # Merge with Player Details (Name)
+            # saved_df has 'player_id', 'lineup' (status), 'posicao', 'cap'
+            # roster has 'player_id', 'Nome'
+            
+            # Ensure types match
+            saved_df['player_id'] = saved_df['player_id'].astype(str)
+            full_saved = saved_df.merge(roster[['player_id', 'Nome']], on='player_id', how='left')
+            full_saved['Nome'] = full_saved['Nome'].fillna("Desconhecido")
+            
+            # 1. Starters
+            starters = full_saved[full_saved['lineup'] == 'TITULAR'].copy()
+            # Sort Order: GK, DEF, MEI, ATA
+            pos_map_order = {'GK': 0, 'DEF': 1, 'MEI': 2, 'ATA': 3}
+            starters['pos_idx'] = starters['posicao'].map(pos_map_order).fillna(99)
+            starters = starters.sort_values('pos_idx')
+            
+            # Colors
+            pos_colors = {'GK': '#E3F2FD', 'DEF': '#E8F5E9', 'MEI': '#FFF9C4', 'ATA': '#FFEBEE'}
+            
+            st.markdown("###### Titulares")
+            for _, r in starters.iterrows():
+                bg = pos_colors.get(r['posicao'], '#f9f9f9')
+                render_saved_player(r['Nome'], r['posicao'], r['cap'], r['lineup'], bg)
+                
+            # 2. Reserves
+            # Typically 'lineup' is 'PRI 1', 'PRI 2', etc.
+            # We want to sort by that string text naturally works 1 < 2? 
+            # 'PRI 1' < 'PRI 10' -> Yes. But 'PRI 2' > 'PRI 10' strings.. Wait
+            # PRI 1 vs PRI 10. '1' < '10' in ASCII. ' ' is same. 
+            # '1' vs '1'. ' ' vs '0'. ' ' is 32, '0' is 48. So PRI 1 < PRI 10.
+            # PRI 9 vs PRI 10. '9' > '1'. It will sort wrong if just string sort PRI 10 comes before PRI 2.
+            # Let's extract number.
+            
+            reserves = full_saved[full_saved['lineup'].str.startswith("PRI")].copy()
+            
+            def extract_pri(s):
+                try: 
+                    return int(s.replace("PRI", "").strip())
+                except:
+                    return 999
+            
+            reserves['pri_idx'] = reserves['lineup'].apply(extract_pri)
+            reserves = reserves.sort_values('pri_idx')
+            
+            st.markdown("###### Banco de Reservas (Prioridade)")
+            for _, r in reserves.iterrows():
+                bg = pos_colors.get(r['posicao'], '#f9f9f9')
+                render_saved_player(r['Nome'], r['posicao'], r['cap'], r['lineup'], bg)
 
     st.divider()
 
