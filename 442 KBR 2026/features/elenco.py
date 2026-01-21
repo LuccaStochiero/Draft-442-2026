@@ -94,7 +94,9 @@ def app():
         <style>
         [data-testid="stHorizontalBlock"] {
             overflow-x: auto;
+            overflow-y: hidden;
             flex-wrap: nowrap !important;
+            padding-bottom: 15px;
         }
         [data-testid="stHorizontalBlock"] > div {
             min-width: 350px !important;
