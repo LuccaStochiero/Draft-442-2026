@@ -2,3 +2,6 @@ streamlit
 pandas
 gspread
 oauth2client
+curl_cffi
+playwright
+requests
