@@ -417,18 +417,7 @@ def app(is_admin=False):
 
     # --- TAB 1: AUCTION ---
     with tab_auction:
-        # Timer / Status Banner
-        if state['auction_open']:
-            trem = get_time_remaining(state.get('closing_ts'))
-            d_str = format_deadline_ts(state.get('closing_ts'))
-            final_str = f"{trem} (Fecha: {d_str})"
-            render_timer("🟢 Leilão Aberto", final_str, color="#00664d", bg_color="#e6fffa")
-        else:
-            # Auction Closed
-            render_timer("🔴 Leilão Fechado", "Aguarde a próxima janela", color="#990000", bg_color="#ffe6e6")
-        
-        # User Form (Auction)
-        # 1. Inputs
+        # Inputs moved UP to determine state
         c1, c20 = st.columns(2)
         with c1:
             sel_team = st.selectbox("Clube", sorted(team_map.values()), key="auc_team")
@@ -439,7 +428,20 @@ def app(is_admin=False):
             st.caption(f"Caixa: $ {budget:,.2f}")
 
         with c20:
-            rodada = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="auc_round")
+            rodada_auc = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="auc_round")
+            
+        # State based on Selected Round
+        state_auc = calendar_utils.get_game_state(target_round=rodada_auc)
+        
+        # Timer / Status Banner
+        if state_auc['auction_open']:
+            trem = get_time_remaining(state_auc.get('closing_ts'))
+            d_str = format_deadline_ts(state_auc.get('closing_ts'))
+            final_str = f"{trem} (Fecha: {d_str})"
+            render_timer(f"🟢 Leilão Aberto (Rodada {rodada_auc})", final_str, color="#00664d", bg_color="#e6fffa")
+        else:
+            # Auction Closed
+            render_timer(f"🔴 Leilão Fechado (Rodada {rodada_auc})", "Fora do prazo", color="#990000", bg_color="#ffe6e6")
             
         c_add, c_drop = st.columns(2)
         
@@ -513,43 +515,52 @@ def app(is_admin=False):
                 else:
                     price = st.number_input("Valor do leilão (1 casa decimal)", min_value=0.0, max_value=safe_budget, step=0.1, format="%.1f", key="auc_price")
             
-        if st.button("Enviar Lance", disabled=not state['auction_open']):
-            if not state['auction_open']:
-                st.error("Leilão Fechado.")
+        if st.button("Enviar Lance", disabled=not state_auc['auction_open']):
+            if not state_auc['auction_open']:
+                st.error("Leilão Fechado para esta rodada.")
             elif price > budget:
                 st.error("Sem grana.")
             elif not pid_free:
                 st.error("Selecione o jogador.")
             else:
-                if save_bid(tid, rodada, pid_free, pid_drop, price):
+                if save_bid(tid, rodada_auc, pid_free, pid_drop, price):
                     st.success("Lance enviado!")
 
     # --- TAB 2: FREE AGENCY ---
     with tab_free:
-        # Timer / Status Banner
-        if state['free_open']:
-             trem = get_time_remaining(state.get('closing_ts'))
-             d_str = format_deadline_ts(state.get('closing_ts'))
-             final_str = f"{trem} (Fecha: {d_str})"
-             render_timer("🟢 Free Agency Aberta", final_str, color="#997a00", bg_color="#fffbe6")
-        else:
-             # If Auction is open, Free Agency opens when Auction closes
-             if state['auction_open']:
-                 open_ts = state.get('closing_ts', 0) # Auction Close = Free Open
-                 trem = get_time_remaining(open_ts)
-                 d_str = format_deadline_ts(open_ts)
-                 final_str = f"{trem} (Abre: {d_str})"
-                 render_timer("🔴 Free Agency Fechada (Leilão em andamento)", final_str, color="#990000", bg_color="#ffe6e6")
-             else:
-                 render_timer("🔴 Free Agency Fechada", "Mercado trancado", color="#990000", bg_color="#ffe6e6")
-
-        st.markdown("##### Troca de Jogador (Free Agency)")
-        
         # Team Selector for Free Agency
-        c_fa_1, _ = st.columns(2)
+        c_fa_1, c_fa_2 = st.columns(2)
         with c_fa_1:
              sel_team_fa = st.selectbox("Clube", sorted(team_map.values()), key="fa_team_select")
              tid_fa = next((k for k,v in team_map.items() if v == sel_team_fa), None)
+             
+        with c_fa_2:
+             # Add Round Selector for Free Agency
+             rodada_fa = st.number_input("Rodada", min_value=1, max_value=38, value=1, key="fa_round")
+
+        # State based on Selected Round
+        state_fa = calendar_utils.get_game_state(target_round=rodada_fa)
+        
+        # Timer / Status Banner
+        if state_fa['free_open']:
+             trem = get_time_remaining(state_fa.get('closing_ts'))
+             d_str = format_deadline_ts(state_fa.get('closing_ts'))
+             final_str = f"{trem} (Fecha: {d_str})"
+             render_timer(f"🟢 Free Agency Aberta (Rodada {rodada_fa})", final_str, color="#997a00", bg_color="#fffbe6")
+        else:
+             # If Auction is open, Free Agency opens when Auction closes (plus buffer)
+             if state_fa['auction_open']:
+                 open_ts = state_fa.get('ts_free_start', 0) # Exact timestamp from HOUR
+                 if open_ts == 0: open_ts = state_fa.get('closing_ts', 0) # Fallback
+                 
+                 trem = get_time_remaining(open_ts)
+                 d_str = format_deadline_ts(open_ts)
+                 final_str = f"{trem} (Abre: {d_str})"
+                 render_timer(f"🔴 Free Agency Fechada (Rodada {rodada_fa})", final_str, color="#990000", bg_color="#ffe6e6")
+             else:
+                 render_timer(f"🔴 Free Agency Fechada (Rodada {rodada_fa})", "Fora do prazo", color="#990000", bg_color="#ffe6e6")
+
+        st.markdown("##### Troca de Jogador (Free Agency)")
 
         col_add, col_drop = st.columns(2)
         
@@ -620,15 +631,13 @@ def app(is_admin=False):
                     drop_pid_fa = None
 
         st.divider()
-        if st.button("🔄 Confirmar Troca (Free)", type="primary", disabled=not state['free_open']):
-            if not state['free_open']:
-                st.error("Free Agency Fechada.")
+        if st.button("🔄 Confirmar Troca (Free)", type="primary", disabled=not state_fa['free_open']):
+            if not state_fa['free_open']:
+                st.error("Free Agency Fechada para esta rodada.")
             elif not drop_pid_fa or not pickup_pid_fa:
                 st.error("Selecione os dois jogadores.")
             else:
-                # Validate team roster size if needed? 
-                # Assuming Swap maintains size.
-                rodada_fa = state.get('next_round', 0)
+                # Validation based on SELECTED round
                 if execute_free_swap(tid_fa, drop_pid_fa, pickup_pid_fa, rodada_fa):
                     st.balloons()
                     st.success("Troca realizada! Tabelas atualizadas.")

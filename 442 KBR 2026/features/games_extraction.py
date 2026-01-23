@@ -224,23 +224,126 @@ def update_google_sheets(rounds_data, matches_data):
              df_rounds['primeiro'] = ''
              df_rounds['ultimo'] = ''
 
-        # Prepare formatted columns for GMT-3 display
-        for col in ['inicio', 'final', 'primeiro', 'ultimo']:
-            if col in df_rounds.columns:
-                # Ensure it's treated as float/int before conversion
-                # Use helper with check
-                df_rounds[f'{col}_fmt'] = df_rounds[col].apply(lambda x: to_gmt3(x) if isinstance(x, (int, float)) else '')
+        # --- DEADLINE CALCULATION LOGIC ---
+        # Sort by 'primeiro' (First Game)
+        # Ensure 'primeiro' is numeric for sorting. If empty steps above left it as '', convert for sort.
+        df_rounds['sort_key'] = pd.to_numeric(df_rounds['primeiro'], errors='coerce').fillna(9999999999)
+        df_rounds = df_rounds.sort_values('sort_key').reset_index(drop=True)
+        
+        # Init columns
+        new_cols = ['inicio_escalacao', 'fim_escalacao', 'inicio_leilao', 'fim_leilao', 'inicio_free', 'fim_free']
+        for c in new_cols: df_rounds[c] = 0 # Default 0 (will become '')
 
-        # Columns: Raw (for logic) + Formatted (for display) + ID
-        target_cols = ['rodada', 'inicio', 'final', 'primeiro', 'ultimo', 'id',
-                       'inicio_fmt', 'final_fmt', 'primeiro_fmt', 'ultimo_fmt']
-                       
-        for c in target_cols:
-            if c not in df_rounds.columns: df_rounds[c] = ''
+        count = len(df_rounds)
+        
+        for i in range(count):
+            # Current Round Data
+            # Force numeric conversion just in case fillna('') messed up types
+            curr_start = pd.to_numeric(df_rounds.at[i, 'primeiro'], errors='coerce')
+            
+            # If we don't have a start time, skip calculation
+            if pd.isna(curr_start) or curr_start == 0:
+                continue
+            
+            # --- GLOBAL RULES ---
+            # 1. Lineup Deadline: Always 2 hours before first game
+            lineup_deadline = curr_start - (2 * 3600)
+            df_rounds.at[i, 'fim_escalacao'] = lineup_deadline
+            df_rounds.at[i, 'fim_free'] = lineup_deadline # Free closes same time as lineup
+            
+            # 2. Start Times (Lineup/Auction/Free) depend on Previous Round
+            start_ts = 0
+            
+            # Special Case: Round 1 (or Manual Override)
+            curr_round_num = df_rounds.at[i, 'rodada']
+            
+            if curr_round_num == 1:
+                # User Rule: Start at 20/01/2026? 
+                # Assuming 2026 based on file paths. 
+                # Timestamp for 20/01/2026 00:00 GMT-3 ?? Or just Date?
+                # Let's assume 00:00 GMT-3.
+                from datetime import datetime, timezone, timedelta
+                dt_override = datetime(2026, 1, 20, 0, 0, 0)
+                # Convert to UTC
+                dt_utc = dt_override + timedelta(hours=3) 
+                start_ts = dt_utc.timestamp()
+                
+                # Rule for Round 1: Logic of Gap doesn't apply cleanly, usually just open.
+                # Is gap > 48h from "nothing"? Yes.
+                gap_hours = 999
+            else:
+                # Look at previous round
+                if i > 0:
+                    prev_end = pd.to_numeric(df_rounds.at[i-1, 'ultimo'], errors='coerce') # Last game of prev round
+                    if pd.notna(prev_end) and prev_end > 0:
+                        # User Rule: Starts 4h after last game of previous round
+                        start_ts = prev_end + (4 * 3600)
+                        gap_seconds = curr_start - prev_end
+                        gap_hours = gap_seconds / 3600.0
+                    else:
+                        start_ts = 0 # Fallback
+                        gap_hours = 999
+                else:
+                    # Should not happen if sorted, but logical fallback
+                    start_ts = 0
+                    gap_hours = 999
+
+            # --- SET START TIMES ---
+            
+            # Lineup Open: Always at start_ts (which is Prev Round End or Override)
+            df_rounds.at[i, 'inicio_escalacao'] = start_ts
+            
+            # Auction / Free Logic
+            if gap_hours > 48:
+                # Long Gap
+                # Auction: Open at start_ts. Closes 24h before Game.
+                auc_deadline = curr_start - (24 * 3600)
+                
+                # Verify consistency (Auction End must be > Start)
+                if auc_deadline > start_ts:
+                    df_rounds.at[i, 'inicio_leilao'] = start_ts
+                    df_rounds.at[i, 'fim_leilao'] = auc_deadline
+                    
+                    # Free Agency: Opens when Auction Closes + 10 minutes buffer
+                    # User Rule: "inicio do free sempre 10 minutos depois do fechamento do leilao"
+                    df_rounds.at[i, 'inicio_free'] = auc_deadline + (10 * 60)
+                    # Free Agency End is Lineup Deadline (2h before) set above
+                else:
+                    # Weird case (gap > 48, but < 24h available?), fallback to Free Only
+                    df_rounds.at[i, 'inicio_leilao'] = 0
+                    df_rounds.at[i, 'fim_leilao'] = 0
+                    df_rounds.at[i, 'inicio_free'] = start_ts
+            else:
+                # Short Gap
+                # No Auction
+                df_rounds.at[i, 'inicio_leilao'] = 0
+                df_rounds.at[i, 'fim_leilao'] = 0
+                
+                # Free Agency: Open at start_ts
+                df_rounds.at[i, 'inicio_free'] = start_ts
+
+        # Prepare formatted columns for GMT-3 display
+        # List of all TS columns to format
+        ts_cols = ['inicio', 'final', 'primeiro', 'ultimo',
+                   'inicio_escalacao', 'fim_escalacao', 
+                   'inicio_leilao', 'fim_leilao', 
+                   'inicio_free', 'fim_free']
+                   
+        for col in ts_cols:
+            if col in df_rounds.columns:
+                # Use helper with check
+                df_rounds[f'{col}_fmt'] = df_rounds[col].apply(lambda x: to_gmt3(x) if isinstance(x, (int, float)) and x > 0 else '')
+
+        # Columns to Export
+        # Raw columns + Fmt columns
+        target_cols = ['rodada', 'id']
+        for c in ts_cols:
+            target_cols.append(c)          # Raw numeric
+            target_cols.append(f'{c}_fmt') # String GMT-3
             
         data_rounds = [target_cols] + df_rounds[target_cols].values.tolist()
         ws_hour.update(data_rounds)
-        print(f"Updated HOUR with {len(df_rounds)} rounds.")
+        print(f"Updated HOUR with {len(df_rounds)} rounds (Verified Deadlines).")
 
 
 

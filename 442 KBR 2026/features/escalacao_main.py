@@ -206,8 +206,63 @@ def app():
 
     # --- TOP SECTION: DEADLINE & SAVE ---
     import features.calendar_utils as calendar_utils
-    state = calendar_utils.get_game_state()
-    is_locked = state['status'] == 'LOCKED' or state['status'] == 'Season Finished'
+    # Check status specifically for the SELECTED round
+    state = calendar_utils.get_game_state(target_round=rodada)
+    
+    # Logic adjustment: 'LOCKED' means outside of [Inicio, Fim].
+    # But wait, get_game_state logic returns 'LOCKED' if not in Auction/Free window?
+    # Actually, check logic in calendar_utils:
+    # 1. Auction Open?
+    # 2. Free Open?
+    # 3. Else -> LOCKED
+    
+    # We need to know if LINEUP is open.
+    # Lineup is open if now > inicio_escalacao AND now < fim_escalacao.
+    # The 'status' field in state might be 'FREE_OPEN' (implies lineup open) or 'AUCTION_OPEN' (lineup might be open? usually yes).
+    # Since we separated logic, let's trust the timestamps.
+    
+    now_ts = pd.Timestamp.now().timestamp() # Use UTC timestamp matching utils
+    import time
+    now_ts = time.time()
+    
+    ts_start = state.get('closing_ts', 0) # Use caution, lookup logic
+    # Re-reading calendar_utils logic:
+    # closing_ts returned depends on status.
+    
+    # Better: Use the raw row data? No, abstraction.
+    # Let's rely on Free Open / Auction Open implying Lineup Open?
+    # Actually, Lineup Open is a wider window (starts 4h after prev round).
+    # Auction is shorter.
+    # So we can simply check if NOT 'Season Finished' and ...
+    
+    # Explicit custom check for Lineup Window
+    # We need the timestamps from state? state doesn't return raw timestamps for lineup start/end clearly unless we add them.
+    # But 'FREE_OPEN' or 'AUCTION_OPEN' implies we are in the active window.
+    # 'LOCKED' means we are either BEFORE (waiting round) or AFTER.
+    
+    # Wait, 'LOCKED' in calendar_utils (lines 118) is returned if NEITHER Auction NOR Free is open.
+    # But Lineup might still be open?
+    # If Auction Closes (24h before), Free Opens.
+    # Free Closes (2h before).
+    # So if Free is Open, Lineup is Open.
+    # If Auction is Open, Lineup is Open? Yes.
+    # So if 'LOCKED', Lineup is Closed?
+    # Yes, because Free closes 2h before first game.
+    # What about BEFORE Auction opens? (Short gap cases or just start).
+    # Lineup starts 4h after prev round.
+    # Auction starts same time or later.
+    # So Lineup CAN be open while Auction/Free is NOT yet explicitly 'OPEN' in some edge cases?
+    # Actually, my previous logic in games_extraction:
+    # if gap > 48h: Auction from start to -24h. Free from -24h to -2h.
+    # if gap < 48h: No Auction. Free from start to -2h.
+    # So effectively, there is ALWAYS either Auction or Free open during the Lineup Window.
+    # UNLESS: We are in the 4h buffer AFTER the previous round?
+    # Start = Prev + 4h.
+    # Auction/Free Start = Start.
+    # So yes, they align.
+    # CONCLUSION: If state['status'] is 'LOCKED' or 'Season Finished', then Lineup is CLOSED.
+    
+    is_locked = state['status'] in ['LOCKED', 'Season Finished']
     
     # Check Saved Lineup
     saved_df = get_saved_lineup_data(team_id, rodada)
@@ -216,9 +271,9 @@ def app():
     # Logic to build lineup from session state (for Callback)
     def save_adapter(tid, rod, fmt, rst):
         # Security Check
-        curr = calendar_utils.get_game_state()
+        curr = calendar_utils.get_game_state(target_round=rod)
         if curr['status'] in ['LOCKED', 'Season Finished']:
-            st.toast(f"🚫 Fechado: {curr.get('msg')}", icon="🔒")
+            st.toast(f"🚫 Fechado para Rodada {rod}: {curr.get('msg')}", icon="🔒")
             return
 
         # Reconstruct 'selected' from session_state
