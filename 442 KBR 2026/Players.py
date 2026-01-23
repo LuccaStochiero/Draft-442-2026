@@ -7,7 +7,12 @@ from features import escalacao_main, elenco, leilao, livres, trade, live_stats, 
 
 def main():
     # Background Service: Check Live Stats (Safe Concurrency)
-    live_stats.run_auto_update()
+    # Background Service: Check Live Stats (Safe Concurrency)
+    try:
+        with st.spinner("Sincronizando dados..."):
+            live_stats.run_auto_update()
+    except Exception as e:
+        st.error(f"Erro na atualização automática: {e}")
     
     st.sidebar.title("⚽ Players Area")
     
