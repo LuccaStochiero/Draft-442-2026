@@ -31,7 +31,7 @@ MEI,7,Breno Bidon,Corinthians,Active,,7.5,https://www.sofascore.com/football/pla
 DEF,15,Gustavo Gómez,Palmeiras,Active,,7.5,https://www.sofascore.com/football/player/gustavo-gomez/220833
 DEF,13,Alex Telles,Botafogo,Active,,7.5,https://www.sofascore.com/football/player/alex-telles/312110
 ATA,22,Martin Braithwaite,Grêmio,Active,,7.5,https://www.sofascore.com/football/player/martin-braithwaite/66471
-MEI,10,Jefferson Savarino,Botafogo,Active,,7.5,https://www.sofascore.com/football/player/jefferson-savarino/874739
+MEI,10,Jefferson Savarino,Fluminense,Active,,7.5,https://www.sofascore.com/football/player/jefferson-savarino/874739
 DEF,96,Paulo Henrique,Vasco da Gama,Active,,7.5,https://www.sofascore.com/football/player/paulo-henrique/1021721
 DEF,22,Joaquín Piquerez,Palmeiras,Active,,7.5,https://www.sofascore.com/football/player/joaquin-piquerez/881110
 MEI,10,Everton Ribeiro,Bahia,Active,,7.5,https://www.sofascore.com/football/player/everton-ribeiro/145063
@@ -40,7 +40,7 @@ MEI,8,Matheus Martinelli,Fluminense,Active,,7.5,https://www.sofascore.com/footba
 MEI,6,Jean Lucas,Bahia,Active,,7.5,https://www.sofascore.com/football/player/jean-lucas/927975
 DEF,2,Vitinho,Botafogo,Active,,7.5,https://www.sofascore.com/football/player/vitinho/914477
 DEF,46,Luciano Juba,Bahia,Active,,7.5,https://www.sofascore.com/football/player/luciano-juba/1017264
-MEI,27,Marlon Freitas,Palmeiras,Active,,7.5,https://www.sofascore.com/football/player/marlon-freitas/840202
+MEI,17,Marlon Freitas,Palmeiras,Active,,7.5,https://www.sofascore.com/football/player/marlon-freitas/840202
 MEI,8,Marcos Antônio,São Paulo,Active,,7.5,https://www.sofascore.com/football/player/marcos-antonio/905453
 DEF,20,Alexander Barboza,Botafogo,Active,,7.5,https://www.sofascore.com/football/player/alexander-barboza/801044
 DEF,25,Lucas Villalba,Cruzeiro,Active,,7.5,https://www.sofascore.com/football/player/lucas-villalba/260077
@@ -95,8 +95,8 @@ DEF,5,Robert Arboleda,São Paulo,Active,,6.5,https://www.sofascore.com/football/
 ATA,21,Tetê,Grêmio,Active,,6.5,https://www.sofascore.com/football/player/tete/980327
 DEF,6,Lucas Piton,Vasco da Gama,Active,,6.5,https://www.sofascore.com/football/player/lucas-piton/982174
 MEI,10,Ganso,Fluminense,Active,,6.5,https://www.sofascore.com/football/player/ganso/116853
-ATA,32,Luciano Acosta,Fluminense,Active,,6.5,https://www.sofascore.com/football/player/luciano-acosta/548030
 MEI,90,Kevin Serna,Fluminense,Active,,6.5,https://www.sofascore.com/football/player/serna-kevin/981374
+ATA,32,Luciano Acosta,Fluminense,Active,,6.5,https://www.sofascore.com/football/player/luciano-acosta/548030
 DEF,30,Robert Renan,Vasco da Gama,Active,,6.5,https://www.sofascore.com/football/player/robert-renan/1191278
 MEI,35,Hércules,Fluminense,Active,,6.5,https://www.sofascore.com/football/player/hercules/1104068
 MEI,30,Lucas Evangelista,Palmeiras,Active,,6.5,https://www.sofascore.com/football/player/lucas-evangelista/331397
@@ -107,7 +107,6 @@ MEI,12,Khellven,Palmeiras,Active,,6.5,https://www.sofascore.com/football/player/
 MEI,16,Lucas Silva,Cruzeiro,Active,,6.5,https://www.sofascore.com/football/player/lucas-silva/245159
 ATA,7,Johan Carbonero,Internacional,Active,,6.5,https://www.sofascore.com/football/player/carbonero-johan/925125
 DEF,23,Marlon,Grêmio,Active,,6.5,https://www.sofascore.com/football/player/marlon/870787
-DEF,33,Souza,Santos,Active,,6.5,https://www.sofascore.com/football/player/souza/1482340
 MEI,23,Santiago Rodríguez,Botafogo,Active,,6.5,https://www.sofascore.com/football/player/santiago-rodriguez/975216
 DEF,6,Junior Alonso,Atlético Mineiro,Active,,6.5,https://www.sofascore.com/football/player/junior-alonso/333275
 MEI,19,Caio Alexandre,Bahia,Active,,6.5,https://www.sofascore.com/football/player/caio-alexandre/1008832
@@ -163,14 +162,13 @@ MEI,10,Josué,Coritiba,Active,,6.0,https://www.sofascore.com/football/player/jos
 DEF,6,Renê,Fluminense,Active,,6.0,https://www.sofascore.com/football/player/rene/243113
 MEI,29,Thiago Maia,Internacional,Active,,6.0,https://www.sofascore.com/football/player/thiago-maia/358550
 MEI,8,Edenilson,Grêmio,Active,,6.0,https://www.sofascore.com/football/player/edenilson/221636
-MEI,26,Breno Lopes,Coritiba,Active,,6.0,https://www.sofascore.com/football/player/breno-lopes/937552
 DEF,22,Juan Freytes,Fluminense,Active,,6.0,https://www.sofascore.com/football/player/juan-freytes/962187
+MEI,26,Breno Lopes,Coritiba,Active,,6.0,https://www.sofascore.com/football/player/breno-lopes/937552
 ATA,79,Renato Kayzer,Vitória,Active,,6.0,https://www.sofascore.com/football/player/renato-kayzer/814723
 MEI,27,Antonio Galeano,Mirassol,Active,,6.0,https://www.sofascore.com/football/player/antonio-galeano/883207
 ATA,32,Pedro Rocha,Coritiba,Active,,6.0,https://www.sofascore.com/football/player/pedro-rocha/794930
 MEI,5,João Schmidt,Santos,Active,,6.0,https://www.sofascore.com/football/player/joao-schmidt/244591
 MEI,15,Bruno Gomes,Internacional,Active,,6.0,https://www.sofascore.com/football/player/bruno-gomes/995071
-DEF,5,Lucas Halter,Botafogo,Active,,6.0,https://www.sofascore.com/football/player/lucas-halter/905450
 DEF,35,Braian Aguirre,Internacional,Active,,6.0,https://www.sofascore.com/football/player/braian-aguirre/1084963
 GK,22,Walter,Mirassol,Active,,6.0,https://www.sofascore.com/football/player/walter/329055
 DEF,31,Kaio Pantaleão,Botafogo,Active,,6.0,https://www.sofascore.com/football/player/kaio/990193
@@ -188,14 +186,14 @@ DEF,37,Walter Clar,Chapecoense,Active,,6.0,https://www.sofascore.com/football/pl
 GK,1,Hugo Souza,Corinthians,Active,,5.5,https://www.sofascore.com/football/player/hugo-souza/950454
 DEF,22,Emerson Royal,Flamengo,Active,,5.5,https://www.sofascore.com/football/player/emerson-royal/856123
 MEI,70,José Martínez,Corinthians,Active,,5.5,https://www.sofascore.com/football/player/jose-martinez/979325
-GK,1,Weverton,Grêmio,Active,,5.5,https://www.sofascore.com/football/player/weverton/243529
 MEI,30,Miguelito,Santos,Active,,5.5,https://www.sofascore.com/football/player/miguel-terceros/1159656
+GK,1,Weverton,Grêmio,Active,,5.5,https://www.sofascore.com/football/player/weverton/243529
 ATA,17,Luis Sinisterra,Cruzeiro,Active,,5.5,https://www.sofascore.com/football/player/luis-sinisterra/836070
 ATA,56,Gui Negão,Corinthians,Active,,5.5,https://www.sofascore.com/football/player/guilherme-silva-inacio/1922597
 GK,1,Léo Jardim,Vasco da Gama,Active,,5.5,https://www.sofascore.com/football/player/leo-jardim/595598
 ATA,30,Joaquín Correa,Botafogo,Active,,5.5,https://www.sofascore.com/football/player/joaquin-correa/249929
 DEF,5,André Ramalho,Corinthians,Active,,5.5,https://www.sofascore.com/football/player/andre-ramalho/148155
-ATA,19,Arthur Cabral,Botafogo,Active,,5.5,https://www.sofascore.com/football/player/arthur-cabral/870762
+ATA,98,Arthur Cabral,Botafogo,Active,,5.5,https://www.sofascore.com/football/player/arthur-cabral/870762
 MEI,4,Agustín Giay,Palmeiras,Active,,5.5,https://www.sofascore.com/football/player/agustin-giay/1106603
 ATA,99,John Kennedy,Fluminense,Active,,5.5,https://www.sofascore.com/football/player/john-kennedy/1087399
 DEF,3,Gabriel Paulista,Corinthians,Active,,5.5,https://www.sofascore.com/football/player/gabriel-paulista/124737
@@ -215,8 +213,8 @@ ATA,91,Chico da Costa,Cruzeiro,Active,,5.5,https://www.sofascore.com/football/pl
 MEI,7,David,Vasco da Gama,Active,,5.5,https://www.sofascore.com/football/player/david/840291
 MEI,23,Matheus Pereira,Corinthians,Active,,5.5,https://www.sofascore.com/football/player/pereira-matheus/795268
 MEI,94,Wanderson,Cruzeiro,Active,,5.5,https://www.sofascore.com/football/player/wanderson/247483
-MEI,11,Keno,Fluminense,Active,,5.5,https://www.sofascore.com/football/player/keno/787607
 MEI,99,José Enamorado,Grêmio,Active,,5.5,https://www.sofascore.com/football/player/enamorado-jose/974558
+MEI,11,Keno,Fluminense,Active,,5.5,https://www.sofascore.com/football/player/keno/787607
 ATA,9,Isidro Pitta,Red Bull Bragantino,Active,,5.5,https://www.sofascore.com/football/player/isidro-pitta/979861
 ATA,16,Thaciano,Santos,Active,,5.5,https://www.sofascore.com/football/player/thaciano/872039
 ATA,9,Kevin Viveros,Athletico,Active,,5.5,https://www.sofascore.com/football/player/kevin-viveros/925124
@@ -228,8 +226,8 @@ DEF,2,Gilberto Junior,Athletico,Active,,5.5,https://www.sofascore.com/football/p
 DEF,31,Gonzalo Escobar,Santos,Active,,5.5,https://www.sofascore.com/football/player/gonzalo-escobar/840500
 DEF,4,Ruan,Atlético Mineiro,Active,,5.5,https://www.sofascore.com/football/player/ruan/914487
 DEF,53,Gustavo Martins,Grêmio,Active,,5.5,https://www.sofascore.com/football/player/gustavo-martins/1105796
-DEF,14,Luan Peres,Santos,Active,,5.5,https://www.sofascore.com/football/player/luan-peres/842098
 MEI,16,Nonato,Fluminense,Active,,5.5,https://www.sofascore.com/football/player/nonato/922566
+DEF,14,Luan Peres,Santos,Active,,5.5,https://www.sofascore.com/football/player/luan-peres/842098
 MEI,98,JP,Vasco da Gama,Active,,5.5,https://www.sofascore.com/football/player/joao-pedro/1641124
 MEI,17,Igor Gomes,Atlético Mineiro,Active,,5.5,https://www.sofascore.com/football/player/igor-gomes/913598
 MEI,17,Bruno Tabata,Internacional,Active,,5.5,https://www.sofascore.com/football/player/bruno-tabata/845433
@@ -268,7 +266,7 @@ ATA,88,Willian,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/wil
 ATA,19,Ramón Sosa,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/ramon-sosa/1015733
 DEF,6,Ayrton Lucas,Flamengo,Active,,5.0,https://www.sofascore.com/football/player/ayrton-lucas/818473
 ATA,64,Wallace Yan,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com/football/player/wallace/1466084
-MEI,11,Keny Arroyo,Cruzeiro,Active,,5.0,https://www.sofascore.com/football/player/arroyo-keny/1482431
+MEI,99,Keny Arroyo,Cruzeiro,Active,,5.0,https://www.sofascore.com/football/player/arroyo-keny/1482431
 GK,1,Carlos Miguel,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/carlos-miguel/973738
 DEF,,Fabrizio Angileri,Corinthians,Active,,5.0,https://www.sofascore.com/football/player/fabrizio-angileri/311462
 ATA,22,Néiser Villarreal,Cruzeiro,Active,,5.0,https://www.sofascore.com/football/player/neyser-villareal/1539599
@@ -276,13 +274,13 @@ DEF,23,Fagner,Cruzeiro,Active,,5.0,https://www.sofascore.com/football/player/fag
 ATA,14,Gonzalo Tapia,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/tapia-gonzalo/1002947
 MEI,32,Emiliano Martínez,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/emiliano-martinez/973533
 ATA,9,Matheus França,Vasco da Gama,Active,,5.0,https://www.sofascore.com/football/player/matheus-franca/1116593
-ATA,,Yannick Bolasie,Chapecoense,Active,,5.0,https://www.sofascore.com/football/player/yannick-bolasie/46620
+ATA,11,Yannick Bolasie,Chapecoense,Active,,5.0,https://www.sofascore.com/football/player/yannick-bolasie/46620
 MEI,25,Allan,Botafogo,Active,,5.0,https://www.sofascore.com/football/player/allan/158277
 ATA,49,Ryan Francisco,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/ryan-francisco-rodrigues-dos-santos-silva/1631904
 MEI,11,Guilherme,Santos,Active,,5.0,https://www.sofascore.com/football/player/guilherme/844605
 DEF,57,Iago Silva,Flamengo,Active,,5.0,https://www.sofascore.com/football/player/iago/1647585
-DEF,18,Wendell,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/wendell/335033
 MEI,30,Victor Hugo,Atlético Mineiro,Active,,5.0,https://www.sofascore.com/football/player/victor-hugo/1170954
+DEF,18,Wendell,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/wendell/335033
 MEI,29,Pablo Maia,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/pablo-maia/1120721
 MEI,21,Alan Franco,Atlético Mineiro,Active,,5.0,https://www.sofascore.com/football/player/alan-franco/822729
 ATA,11,Bruno Rodrigues,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/bruno-rodrigues/817650
@@ -297,8 +295,8 @@ GK,1,Sergio Rochet,Internacional,Active,,5.0,https://www.sofascore.com/football/
 MEI,37,Kayky,Bahia,Active,,5.0,https://www.sofascore.com/football/player/kayky/1106151
 DEF,12,Mayke,Santos,Active,,5.0,https://www.sofascore.com/football/player/mayke/273329
 MEI,10,Franco Cristaldo,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/franco-cristaldo/558820
-DEF,6,Jefté,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/jefte/1116665
 ATA,77,Biel,Atlético Mineiro,Active,,5.0,https://www.sofascore.com/football/player/biel/1106140
+DEF,6,Jefté,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/jefte/1116665
 ATA,9,Everaldo,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/everaldo/386212
 MEI,14,Jordan Barrera,Botafogo,Active,,5.0,https://www.sofascore.com/football/player/jordan-andres-barrera-herrera/1899902
 DEF,4,Walter Kannemann,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/walter-kannemann/249647
@@ -313,13 +311,13 @@ ATA,19,Lautaro Díaz,Santos,Active,,5.0,https://www.sofascore.com/football/playe
 ATA,11,Matheus Martins,Botafogo,Active,,5.0,https://www.sofascore.com/football/player/matheus-martins/1106779
 MEI,27,Paulinho Paula,Internacional,Active,,5.0,https://www.sofascore.com/football/player/paulinho-paula/879902
 MEI,9,Francis Amuzu,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/amuzu-francis/901889
-MEI,33,Eduardo,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/eduardo/76507
+MEI,21,Eduardo,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/eduardo/76507
 DEF,12,Vanderlan,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com/football/player/vanderlan/1067640
 DEF,4,Ignácio,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/ignacio/958382
 MEI,8,Jair,Vasco da Gama,Active,,5.0,https://www.sofascore.com/football/player/jair/268419
 MEI,5,Facundo Bernal,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/bernal-facundo/1177404
 ATA,9,Matheus Nascimento,Botafogo,Active,,5.0,https://www.sofascore.com/football/player/matheus-nascimento/1047683
-ATA,9,Gonzalo Mastriani,Athletico,Active,,5.0,https://www.sofascore.com/football/player/gonzalo-mastriani/345847
+ATA,39,Gonzalo Mastriani,Athletico,Active,,5.0,https://www.sofascore.com/football/player/gonzalo-mastriani/345847
 DEF,2,Fabián Balbuena,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/fabian-balbuena/339447
 MEI,15,Michel Araújo,Bahia,Active,,5.0,https://www.sofascore.com/football/player/michel-araujo/924857
 MEI,,Yago Pikachu,Remo,Active,,5.0,https://www.sofascore.com/football/player/yago-pikachu/363688
@@ -332,8 +330,8 @@ DEF,34,Jonathan Jesus,Cruzeiro,Active,,5.0,https://www.sofascore.com/football/pl
 MEI,5,Fabinho,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com/football/player/fabinho/1117513
 MEI,39,Tiaguinho,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/tiaguinho/2010540
 DEF,42,Maik,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/maik/2035326
-MEI,29,Johan Rojas,Vasco da Gama,Active,,5.0,https://www.sofascore.com/football/player/johan-rojas/1173373
 DEF,3,Gabriel Xavier,Bahia,Active,,5.0,https://www.sofascore.com/football/player/gabriel-xavier/1117710
+MEI,29,Johan Rojas,Vasco da Gama,Active,,5.0,https://www.sofascore.com/football/player/johan-rojas/1173373
 MEI,45,Lima,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/lima/807850
 MEI,26,Nicolás Acevedo,Bahia,Active,,5.0,https://www.sofascore.com/football/player/nicolas-acevedo/959620
 MEI,14,Erick,Bahia,Active,,5.0,https://www.sofascore.com/football/player/erick/874063
@@ -341,12 +339,10 @@ MEI,17,Dodi,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/dodi/8
 ATA,77,André Henrique,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/andre-henrique/1463912
 ATA,28,Riquelme Felipe,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/riquelme-felipe-silva/1884803
 MEI,17,Gustavo Caballero,Santos,Active,,5.0,https://www.sofascore.com/football/player/caballero-gustavo/988656
-MEI,,Giuliano,Athletico,Active,,5.0,https://www.sofascore.com/football/player/giuliano/90862
 MEI,11,Lucas Ronier,Coritiba,Active,,5.0,https://www.sofascore.com/football/player/lucas-ronier/1172056
 DEF,25,Gabriel Mercado,Internacional,Active,,5.0,https://www.sofascore.com/football/player/gabriel-mercado/128376
 MEI,30,Santiago Moreno,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/santiago-moreno/100203
 MEI,23,Mateo Sanabria,Bahia,Active,,5.0,https://www.sofascore.com/football/player/mateo-sanabria/1182233
-ATA,77,Tiago Souza,Bahia,Active,,5.0,https://www.sofascore.com/football/player/tiago-souza/1469531
 DEF,5,Rodrigo Ely,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/rodrigo-ely/168745
 MEI,17,Steven Mendoza,Athletico,Active,,5.0,https://www.sofascore.com/football/player/steven-mendoza/354510
 DEF,13,Ramon,Vitória,Active,,5.0,https://www.sofascore.com/football/player/ramon/980761
@@ -356,26 +352,27 @@ DEF,41,Victor Gabriel,Internacional,Active,,5.0,https://www.sofascore.com/footba
 DEF,4,Alexis Duarte,Santos,Active,,5.0,https://www.sofascore.com/football/player/alexis-duarte/883205
 MEI,35,Matheus Fernandes,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com/football/player/matheus-fernandes/840150
 DEF,4,Alan Saldivia,Vasco da Gama,Active,,5.0,https://www.sofascore.com/football/player/alan-saldivia/1112908
+DEF,,Pedro Milans,Corinthians,Active,,5.0,https://www.sofascore.com/football/player/milans-pedro/985809
 DEF,3,Léo,Athletico,Active,,5.0,https://www.sofascore.com/football/player/leo/360940
 MEI,50,Luis Pacheco,Palmeiras,Active,,5.0,https://www.sofascore.com/football/player/luis-felipe-pacheco/1884646
 DEF,3,Vinicius Rodrigues Lira,Santos,Active,,5.0,https://www.sofascore.com/football/player/vinicius-lira/2039241
 ATA,18,Lelê,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/lele/1173457
 ATA,42,Cadu,Atlético Mineiro,Active,,5.0,https://www.sofascore.com/football/player/cadu/1199473
 MEI,88,Fernando Sobral,Coritiba,Active,,5.0,https://www.sofascore.com/football/player/fernando-sobral/931479
-MEI,26,Lucas Mugni,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/lucas-mugni/249881
 DEF,2,Kauã Moraes,Cruzeiro,Active,,5.0,https://www.sofascore.com/football/player/kaua-moraes/2057367
 MEI,88,Patrick,Remo,Active,,5.0,https://www.sofascore.com/football/player/patrick/594428
-DEF,,Pedro Milans,Corinthians,Active,,5.0,https://www.sofascore.com/football/player/milans-pedro/985809
+MEI,26,Lucas Mugni,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/lucas-mugni/249881
 MEI,,Emmanuel Martínez,Vitória,Active,,5.0,https://www.sofascore.com/football/player/emmanuel-martinez/794312
 ATA,27,Alan Kardec,Athletico,Active,,5.0,https://www.sofascore.com/football/player/alan-kardec/39656
-MEI,16,Ronaldo,Internacional,Active,,5.0,https://www.sofascore.com/football/player/ronaldo/824152
-GK,1,Cleiton,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com/football/player/cleiton/844576
 MEI,10,Pedro Ferreira,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/pedro-henrique-ferreira-da-silva/2026233
+GK,1,Cleiton,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com/football/player/cleiton/844576
+MEI,16,Ronaldo,Internacional,Active,,5.0,https://www.sofascore.com/football/player/ronaldo/824152
 DEF,2,Claudinho,Vitória,Active,,5.0,https://www.sofascore.com/football/player/claudinho/992791
+ATA,9,Paulo Sérgio,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/paulo-sergio-venuto-bezerra/1631905
 DEF,44,Marcos Victor,Bahia,Active,,5.0,https://www.sofascore.com/football/player/marcos-victor/1174196
 ATA,,Alef Manga,Remo,Active,,5.0,https://www.sofascore.com/football/player/manga-alef/954719
 GK,1,Gabriel Vasconcelos,Vitória,Active,,5.0,https://www.sofascore.com/football/player/gabriel-vasconcelos/147467
-ATA,9,Paulo Sérgio,São Paulo,Active,,5.0,https://www.sofascore.com/football/player/paulo-sergio-venuto-bezerra/1631905
+MEI,,Carlos De Pena,Coritiba,Active,,5.0,https://www.sofascore.com/football/player/carlos-de-pena/311394
 MEI,19,Sebastian Gomez,Coritiba,Active,,5.0,https://www.sofascore.com/football/player/sebastian-gomez/925142
 DEF,4,Camutanga,Vitória,Active,,5.0,https://www.sofascore.com/football/player/camutanga/931759
 MEI,16,Jádson,Athletico,Active,,5.0,https://www.sofascore.com/football/player/jadson/243651
@@ -388,8 +385,8 @@ DEF,2,Alan Benítez,Internacional,Active,,5.0,https://www.sofascore.com/football
 MEI,19,Kike Saverio,Vitória,Active,,5.0,https://www.sofascore.com/football/player/kike-saverio/1032938
 MEI,8,Robert Santos,Chapecoense,Active,,5.0,https://www.sofascore.com/football/player/robert-santos/1650085
 MEI,29,Willian Oliveira,Coritiba,Active,,5.0,https://www.sofascore.com/football/player/willian-oliveira/295167
-MEI,7,Shaylon,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/shaylon/874723
 MEI,47,Roger,Grêmio,Active,,5.0,https://www.sofascore.com/football/player/roger/1907757
+MEI,7,Shaylon,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/shaylon/874723
 MEI,36,Richard Cândido,Internacional,Active,,5.0,https://www.sofascore.com/football/player/richard-candido/897617
 GK,88,Marcelo Rangel,Remo,Active,,5.0,https://www.sofascore.com/football/player/marcelo-rangel/870902
 DEF,14,Igor Cariús,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/igor-carius/874195
@@ -397,7 +394,6 @@ DEF,16,Gustavo Marques,Red Bull Bragantino,Active,,5.0,https://www.sofascore.com
 DEF,43,Edu,Vitória,Active,,5.0,https://www.sofascore.com/football/player/edu/989715
 MEI,28,Fabinho,Coritiba,Active,,5.0,https://www.sofascore.com/football/player/fabinho/995294
 MEI,10,Jaderson,Remo,Active,,5.0,https://www.sofascore.com/football/player/jaderson/869639
-DEF,36,Felipe Andrade,Fluminense,Active,,5.0,https://www.sofascore.com/football/player/felipe-andrade/1586575
 ATA,17,Everton Galdino,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/everton-galdino/871162
 ATA,18,Neto Pessoa,Chapecoense,Active,,5.0,https://www.sofascore.com/football/player/neto-pessoa/992025
 DEF,29,Reynaldo,Remo,Active,,5.0,https://www.sofascore.com/football/player/reynaldo/877470
@@ -405,8 +401,8 @@ ATA,45,João Pedro Silva,Remo,Active,,5.0,https://www.sofascore.com/football/pla
 MEI,7,Marcinho,Chapecoense,Active,,5.0,https://www.sofascore.com/football/player/marcinho/870329
 MEI,8,Dudu Miraíma,Vitória,Active,,5.0,https://www.sofascore.com/football/player/eduardo/1017251
 MEI,5,Yuri Lara,Mirassol,Active,,5.0,https://www.sofascore.com/football/player/yuri-lara/809536
-MEI,20,Alejandro García,Athletico,Active,,5.0,https://www.sofascore.com/football/player/alejandro-garcia/912291
 MEI,16,Rúben Ramos Ismael,Vitória,Active,,5.0,https://www.sofascore.com/football/player/ruben-ramos-ismael/1469058
+MEI,20,Alejandro García,Athletico,Active,,5.0,https://www.sofascore.com/football/player/alejandro-garcia/912291
 DEF,4,William Klaus,Remo,Active,,5.0,https://www.sofascore.com/football/player/william-klaus/866721
 MEI,10,Pablo Santos,Vitória,Active,,5.0,https://www.sofascore.com/football/player/pablo/1841330
 MEI,5,João Vitor,Chapecoense,Active,,5.0,https://www.sofascore.com/football/player/joao-vitor/1465222
@@ -442,10 +438,10 @@ ATA,27,Alan Minda,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/footba
 MEI,28,Adson,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/adson/1105970
 ATA,37,Riquelme Fillipi,Palmeiras,Active,,4.5,https://www.sofascore.com/football/player/fillipi-riquelme/1485294
 MEI,10,Vitor Figueiredo,Palmeiras,Active,,4.5,https://www.sofascore.com/football/player/vitor-figueiredo/1942460
-ATA,99,Carlinhos,Remo,Active,,4.5,https://www.sofascore.com/football/player/carlinhos/852534
 GK,42,Andrew,Flamengo,Active,,4.5,https://www.sofascore.com/football/player/andrew/947893
-DEF,38,Caio Paulista,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/caio-paulista/931591
+ATA,99,Carlinhos,Remo,Active,,4.5,https://www.sofascore.com/football/player/carlinhos/852534
 MEI,49,André Luiz,Corinthians,Active,,4.5,https://www.sofascore.com/football/player/andre-luiz/1647612
+DEF,38,Caio Paulista,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/caio-paulista/931591
 DEF,43,João Marcelo,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/joao-marcelo/978638
 MEI,14,Guilherme Estrella,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/estrella-guilherme/1634144
 GK,51,Kauê,Corinthians,Active,,4.5,https://www.sofascore.com/football/player/kaue/1382923
@@ -464,14 +460,14 @@ DEF,43,Lucas Freitas,Vasco da Gama,Active,,4.5,https://www.sofascore.com/footbal
 MEI,45,Patrick de Paula,Remo,Active,,4.5,https://www.sofascore.com/football/player/patrick-de-paula/1015291
 MEI,19,Rubén Lezcano,Fluminense,Active,,4.5,https://www.sofascore.com/football/player/ruben-lezcano/1393308
 DEF,18,João Pedro,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/joao-pedro/605528
+DEF,23,Guga,Fluminense,Active,,4.5,https://www.sofascore.com/football/player/guga/928134
 DEF,12,Victor Luis,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/victor-luis/252781
 MEI,30,Felipe Negrucci,São Paulo,Active,,4.5,https://www.sofascore.com/football/player/felipe-negrucci/1485598
-DEF,23,Guga,Fluminense,Active,,4.5,https://www.sofascore.com/football/player/guga/928134
 MEI,94,Otávio,Fluminense,Active,,4.5,https://www.sofascore.com/football/player/otavio/552686
 GK,24,Léo Linck,Botafogo,Active,,4.5,https://www.sofascore.com/football/player/leo-linck/1119887
 GK,23,Santos,Athletico,Active,,4.5,https://www.sofascore.com/football/player/santos/166491
-GK,24,Aranha,Palmeiras,Active,,4.5,https://www.sofascore.com/football/player/aranha/1587799
 DEF,25,Lucas Esteves,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/lucas-esteves/1387272
+GK,24,Aranha,Palmeiras,Active,,4.5,https://www.sofascore.com/football/player/aranha/1587799
 GK,96,Ronaldo,Bahia,Active,,4.5,https://www.sofascore.com/football/player/ronaldo/840106
 MEI,75,Rodriguinho,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/rodriguinho/1174770
 MEI,2,Lucas Oliveira,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/lucas-oliveira/867907
@@ -483,9 +479,9 @@ MEI,10,Chico,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/chic
 MEI,5,Rezende,Bahia,Active,,4.5,https://www.sofascore.com/football/player/rezende/868030
 MEI,26,Maxime Dominguez,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/maxime-dominguez/282233
 GK,31,Carlos Coronel,São Paulo,Active,,4.5,https://www.sofascore.com/football/player/carlos-coronel/800150
-DEF,13,João Basso,Santos,Active,,4.5,https://www.sofascore.com/football/player/joao-basso/850955
-MEI,27,Vitinho,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/amorim-de-assis-vitor-hugo/1836052
 MEI,48,Larson,Palmeiras,Active,,4.5,https://www.sofascore.com/football/player/larson/2057364
+MEI,27,Vitinho,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/amorim-de-assis-vitor-hugo/1836052
+DEF,13,João Basso,Santos,Active,,4.5,https://www.sofascore.com/football/player/joao-basso/850955
 MEI,65,Riquelme Freitas,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/riquelme-freitas-dos-santos/1634619
 MEI,20,Víctor Cantillo,Remo,Active,,4.5,https://www.sofascore.com/football/player/victor-cantillo/355802
 GK,24,Anthoni,Internacional,Active,,4.5,https://www.sofascore.com/football/player/anthoni/1106134
@@ -499,15 +495,14 @@ MEI,11,Osvaldo,Vitória,Active,,4.5,https://www.sofascore.com/football/player/os
 MEI,5,Rodrigo Villagra,Internacional,Active,,4.5,https://www.sofascore.com/football/player/rodrigo-villagra/978563
 MEI,53,Dudu,Athletico,Active,,4.5,https://www.sofascore.com/football/player/dudu/1482354
 MEI,8,Nathan,Remo,Active,,4.5,https://www.sofascore.com/football/player/nathan/358538
+DEF,2,Igor Felisberto,São Paulo,Active,,4.5,https://www.sofascore.com/football/player/igor-teixeira-felisberto/1631911
 MEI,19,Hyoran,Internacional,Active,,4.5,https://www.sofascore.com/football/player/hyoran/551348
 DEF,18,Juninho,Internacional,Active,,4.5,https://www.sofascore.com/football/player/juninho/799947
-DEF,2,Igor Felisberto,São Paulo,Active,,4.5,https://www.sofascore.com/football/player/igor-teixeira-felisberto/1631911
 DEF,23,Nathan,Santos,Active,,4.5,https://www.sofascore.com/football/player/nathan/1016912
-MEI,21,Dudu,Vitória,Active,,4.5,https://www.sofascore.com/football/player/dudu/1124220
 DEF,33,Janderson,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/jose-janderson-da-silva-marques/1588663
+MEI,21,Dudu,Vitória,Active,,4.5,https://www.sofascore.com/football/player/dudu/1124220
 MEI,21,Jhosefer,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/januario-jhosefer-raphael/1868440
 MEI,25,Bruno Praxedes,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/bruno-praxedes/1018093
-MEI,39,Luis Otávio,Internacional,Active,,4.5,https://www.sofascore.com/football/player/luis-otavio/1835768
 MEI,57,João Cruz,Athletico,Active,,4.5,https://www.sofascore.com/football/player/joao-cruz/1485226
 ATA,23,Fabrício Santos,Vitória,Active,,4.5,https://www.sofascore.com/football/player/fabricio-santos/975351
 ATA,26,Marrony,Remo,Active,,4.5,https://www.sofascore.com/football/player/marrony/926871
@@ -515,7 +510,7 @@ ATA,39,Arthur Sousa,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/fo
 MEI,68,Jota,Bahia,Active,,4.5,https://www.sofascore.com/football/player/jota/1200993
 MEI,20,Jean Carlos,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/jean-carlos/850475
 DEF,6,Bruno Pacheco,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/bruno-pacheco/870691
-DEF,55,Wallace Davi,Fluminense,Active,,4.5,https://www.sofascore.com/football/player/wallace-davi-nunes/1884816
+DEF,55,Wallace Davi,Botafogo,Active,,4.5,https://www.sofascore.com/football/player/wallace-davi-nunes/1884816
 DEF,3,Marllon,Remo,Active,,4.5,https://www.sofascore.com/football/player/marllon/221206
 MEI,25,Clayson,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/clayson/811308
 MEI,6,Vitinho,Internacional,Active,,4.5,https://www.sofascore.com/football/player/vitinho/840210
@@ -527,26 +522,26 @@ MEI,11,Isaac,Athletico,Active,,4.5,https://www.sofascore.com/football/player/isa
 DEF,33,Juan Felipe Aguirre,Athletico,Active,,4.5,https://www.sofascore.com/football/player/juan-felipe-aguirre/925173
 DEF,45,Nathan Mendes,Vitória,Active,,4.5,https://www.sofascore.com/football/player/nathan-mendes/1116955
 ATA,17,Rafael Monti,Remo,Active,,4.5,https://www.sofascore.com/football/player/rafael-monti/2024892
-DEF,23,Agustin Sant'Anna,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/agustin-santanna/869726
 DEF,42,Nicolas Pontes,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/nicolas-pontes/1647577
+DEF,23,Agustin Sant'Anna,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/agustin-santanna/869726
 ATA,17,Renan Viana,Athletico,Active,,4.5,https://www.sofascore.com/football/player/renan-viana/1459787
 MEI,21,José Aldo,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/jose-aldo/988851
-MEI,39,Gustavo,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/gustavo/1099747
 ATA,80,Joao Camargo,Flamengo,Active,,4.5,https://www.sofascore.com/football/player/camargo-joao/2408644
+MEI,39,Gustavo,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/gustavo/1099747
 MEI,27,Paulo Vitor,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/vitor-paulo/1488136
 MEI,5,Felipinho,Athletico,Active,,4.5,https://www.sofascore.com/football/player/felipinho/1107060
 MEI,58,Lucas Eduardo,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/lucas-eduardo/1463560
 MEI,20,Rúben Rodrigues,Vitória,Active,,4.5,https://www.sofascore.com/football/player/ruben-rodrigues/946563
-ATA,78,Renato Marques,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/marques-renato/1194689
 DEF,13,Carlos Teran,Athletico,Active,,4.5,https://www.sofascore.com/football/player/carlos-teran/974512
+ATA,78,Renato Marques,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/marques-renato/1194689
 MEI,77,Panagiotis Tachtsidis,Remo,Active,,4.5,https://www.sofascore.com/football/player/panagiotis-tachtsidis/32985
 ATA,30,Bruno Goncalves De Jesus,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/goncalves-de-jesus-bruno/1868441
 MEI,97,Ênio,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/enio/1015935
 MEI,22,Gustavo Neves,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/gustavo-neves/1463904
 MEI,38,Hugo Leonardo,São Paulo,Active,,4.5,https://www.sofascore.com/football/player/hugo-leonardo-nunes-fernandes-santos/1587927
-MEI,11,Felipe Cardoso,Vitória,Active,,4.5,https://www.sofascore.com/football/player/felipe-cardoso/1652635
 MEI,22,Régis,Remo,Active,,4.5,https://www.sofascore.com/football/player/regis/335365
 DEF,14,Lucas Belezi,Athletico,Active,,4.5,https://www.sofascore.com/football/player/belezi-lucas/1130040
+MEI,11,Felipe Cardoso,Vitória,Active,,4.5,https://www.sofascore.com/football/player/felipe-cardoso/1652635
 DEF,22,Madson,Athletico,Active,,4.5,https://www.sofascore.com/football/player/madson/243439
 MEI,35,Pedro Padula,Santos,Active,,4.5,https://www.sofascore.com/football/player/pedro-padula-tobias/1888795
 DEF,4,Rodrigo Moledo,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/rodrigo-moledo/72080
@@ -556,15 +551,15 @@ ATA,9,Nathan Fogaça,Mirassol,Active,,4.5,https://www.sofascore.com/football/pla
 MEI,17,Vinicius Balieiro,Santos,Active,,4.5,https://www.sofascore.com/football/player/vinicius-balieiro/1065976
 DEF,20,Daniel Borges,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/daniel-borges/794874
 DEF,26,Bruno Melo,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/bruno-melo/870851
-DEF,,Rodrigues,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/rodrigues/976188
 MEI,22,Higor Meritão,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/higor-meritao/973845
+DEF,,Rodrigues,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/rodrigues/976188
+ATA,57,Kaue Furquim,Bahia,Active,,4.5,https://www.sofascore.com/football/player/kaue-furquim/2297112
 ATA,9,Perotti,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/perotti/840076
 MEI,50,David Kauã,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/david-kaua/1485268
 MEI,8,Wallisson Luiz,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/wallisson-luiz/922601
-ATA,57,Kaue Furquim,Bahia,Active,,4.5,https://www.sofascore.com/football/player/kaue-furquim/2297112
 ATA,,Diego Campos Minete,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/minete-diego-campos/2337474
-MEI,15,Raul,Athletico,Active,,4.5,https://www.sofascore.com/football/player/raul/870760
 DEF,4,Diogo Antônio,Vitória,Active,,4.5,https://www.sofascore.com/football/player/diogo-antonio-rodrigues-da-silva/1631803
+MEI,15,Raul,Athletico,Active,,4.5,https://www.sofascore.com/football/player/raul/870760
 MEI,27,Davi Gomes,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/davi-gomes/2032806
 MEI,80,João Neto,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/joao-neto/990454
 MEI,41,Wallyson Breno Freitas da Silva,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/wallyson-breno-freitas-da-silva/1829044
@@ -574,52 +569,51 @@ MEI,42,Miqueias,Bahia,Active,,4.5,https://www.sofascore.com/football/player/miqu
 DEF,6,Thalisson Gabriel,Remo,Active,,4.5,https://www.sofascore.com/football/player/thalisson-gabriel/1109577
 MEI,15,Khensane Mpusane Eustaquio Machel,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/khensane-mpusane-eustaquio-machel/2080527
 DEF,8,Dudu,Athletico,Active,,4.5,https://www.sofascore.com/football/player/dudu/859083
-DEF,4,Luiz Otávio,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/luiz-otavio/874778
 MEI,38,Índio,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/hendel-dos-santos-nascimento/1829023
+MEI,57,Rayan Lelis,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/rayan-lelis/2409599
+DEF,4,Luiz Otávio,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/luiz-otavio/874778
 ATA,31,Dodô,Remo,Active,,4.5,https://www.sofascore.com/football/player/dodo/338839
 ATA,19,Gabriel Novaes,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/gabriel-novaes/882854
-DEF,4,Habraão,Athletico,Active,,4.5,https://www.sofascore.com/football/player/habraao/1167540
 DEF,16,Sávio,Remo,Active,,4.5,https://www.sofascore.com/football/player/savio/866369
-MEI,57,Rayan Lelis,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/rayan-lelis/2409599
-ATA,98,Werik Popó,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/werik-popo/1186631
+DEF,4,Habraão,Athletico,Active,,4.5,https://www.sofascore.com/football/player/habraao/1167540
 MEI,7,Giovanni Pavani,Remo,Active,,4.5,https://www.sofascore.com/football/player/giovanni-pavani/1176815
+ATA,98,Werik Popó,Red Bull Bragantino,Active,,4.5,https://www.sofascore.com/football/player/werik-popo/1186631
 DEF,79,Marcelinho,Remo,Active,,4.5,https://www.sofascore.com/football/player/marcelinho/986868
 MEI,36,Vini Paulista,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/paulista-vini/1111139
-MEI,35,Igor Toledo,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/igor-toledo/1645891
 ATA,39,Eduardo Melo,Remo,Active,,4.5,https://www.sofascore.com/football/player/eduardo-melo/1018777
+MEI,35,Igor Toledo,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/igor-toledo/1645891
 MEI,6,Zé Ricardo,Remo,Active,,4.5,https://www.sofascore.com/football/player/ze-ricardo/943044
 ATA,70,Renan Peixoto Nepomuceno,Athletico,Active,,4.5,https://www.sofascore.com/football/player/renan-peixoto-nepomuceno/2436885
 MEI,60,Luis Aucélio,Vitória,Active,,4.5,https://www.sofascore.com/football/player/luis-aucelio/1835671
 DEF,17,Cristian Tassano,Remo,Active,,4.5,https://www.sofascore.com/football/player/cristian-tassano/790099
-DEF,6,Rodrigo Gelado,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/rodrigo-gelado/1465499
 MEI,31,Allex,Internacional,Active,,4.5,https://www.sofascore.com/football/player/allex/1485191
+DEF,6,Rodrigo Gelado,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/rodrigo-gelado/1465499
 ATA,49,João Bezerra,Internacional,Active,,4.5,https://www.sofascore.com/football/player/joao-bezerra/2429684
+MEI,40,Jeferson Forneck,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/jeferson-forneck/1588363
 ATA,33,David da Hora,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/david/1104714
 MEI,50,Gustavo dos Santos,Internacional,Active,,4.5,https://www.sofascore.com/football/player/dos-santos-gustavo/2111049
 DEF,2,Marcos Vinícius,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/marcos-vinicius/942054
 GK,12,Matheus Soares,Athletico,Active,,4.5,https://www.sofascore.com/football/player/matheus-rocha/1485244
-MEI,40,Jeferson Forneck,Grêmio,Active,,4.5,https://www.sofascore.com/football/player/jeferson-forneck/1588363
 GK,1,Yuri Sena,Vitória,Active,,4.5,https://www.sofascore.com/football/player/yuri-sena/905464
 DEF,4,Gabriel Justino,Botafogo,Active,,4.5,https://www.sofascore.com/football/player/gabriel-justino/1631268
 ATA,70,Rubens Tadeu,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/rubens-tadeu/1470928
-ATA,20,Ruan Lucas de Assis,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/ruan-assis/1495892
+DEF,87,Daniel Silva,Flamengo,Active,,4.5,https://www.sofascore.com/football/player/daniel-silva/2445457
 DEF,,Léo,Remo,Active,,4.5,https://www.sofascore.com/football/player/leo/903027
 MEI,5,Diogo Riquelme,Athletico,Active,,4.5,https://www.sofascore.com/football/player/diogo-riquelme/1635772
+MEI,54,João Vitor Couto,Flamengo,Active,,4.5,https://www.sofascore.com/football/player/joao-couto/2445458
 ATA,41,Wendell dos Santos Sacramento,Vitória,Active,,4.5,https://www.sofascore.com/football/player/wendell-sacramento/1835894
-DEF,87,Daniel Silva,Flamengo,Active,,4.5,https://www.sofascore.com/football/player/daniel-silva/2445457
-DEF,3,Eduardo Doma,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/eduardo-doma/1122967
-GK,12,Léo Vieira,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/leo-vieira/166279
 MEI,71,Lyan Araujo,Bahia,Active,,4.5,https://www.sofascore.com/football/player/lyan-araujo/2076565
+DEF,3,Eduardo Doma,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/eduardo-doma/1122967
 DEF,48,Kaiquy Luiz,Cruzeiro,Active,,4.5,https://www.sofascore.com/football/player/kaiquy-luiz/2437587
 ATA,29,Cauã Soares,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/caua-soares/2118857
+GK,12,Léo Vieira,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/leo-vieira/166279
 GK,87,Gabriel Leite,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/gabriel-leite/870928
-MEI,54,João Vitor Couto,Flamengo,Active,,4.5,https://www.sofascore.com/football/player/joao-couto/2445458
+MEI,10,Kempes,Internacional,Active,,4.5,https://www.sofascore.com/football/player/joao-gabriel-kempes-goncalves/2173264
 DEF,45,Yan Henrique,Internacional,Active,,4.5,https://www.sofascore.com/football/player/yan-henrique/1465212
 DEF,33,Bruno Leonardo,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/bruno-leonardo/840280
-MEI,10,Kempes,Internacional,Active,,4.5,https://www.sofascore.com/football/player/joao-gabriel-kempes-goncalves/2173264
-MEI,50,Wanderson Papaterra Matos,Vitória,Active,,4.5,https://www.sofascore.com/football/player/wanderson-papaterra-matos/2025531
 MEI,35,Freitas,Remo,Active,,4.5,https://www.sofascore.com/football/player/freitas/1464525
 DEF,64,Walace,Vasco da Gama,Active,,4.5,https://www.sofascore.com/football/player/walace/2028691
+MEI,50,Wanderson Papaterra Matos,Vitória,Active,,4.5,https://www.sofascore.com/football/player/wanderson-papaterra-matos/2025531
 ATA,,Caio Suassuna,Bahia,Active,,4.5,https://www.sofascore.com/football/player/caio-suassuna-goncalves-ferreira/1831095
 ATA,41,Murillo Fernandes,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/murillo-fernandes/2440352
 ATA,50,Paulo Roberto,Vitória,Active,,4.5,https://www.sofascore.com/football/player/paulo-roberto-dos-santos-almeida/2112480
@@ -635,19 +629,19 @@ MEI,17,Ítalo Machado,Vitória,Active,,4.5,https://www.sofascore.com/football/pl
 ATA,18,Brayan Gravelo,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/brayan-gravelo/2433419
 MEI,10,Guilherme Back,Athletico,Active,,4.5,https://www.sofascore.com/football/player/guilherme-back/1631228
 DEF,3,Danillo,Botafogo,Active,,4.5,https://www.sofascore.com/football/player/danillo-dos-santos-de-oliveira/1828978
-MEI,5,Vitor Gonçalves Tissi,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/vitor-goncalves-tissi/1864296
 MEI,16,Kauan Augusto Stabelini,Athletico,Active,,4.5,https://www.sofascore.com/football/player/kauan-augusto-stabelini/2025640
+MEI,5,Vitor Gonçalves Tissi,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/vitor-goncalves-tissi/1864296
+MEI,,Pedrinho,Bahia,Active,,4.5,https://www.sofascore.com/football/player/pedrinho/2442965
 MEI,23,Renatinho Conceição Santos da Silva,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/renato-conceicao-santos-da-silva/2030892
 DEF,40,Ramires,Mirassol,Active,,4.5,https://www.sofascore.com/football/player/ramires/2408576
 ATA,17,Kauê Sestrem,Athletico,Active,,4.5,https://www.sofascore.com/football/player/kaue-sestrem/1804705
-MEI,,Pedrinho,Bahia,Active,,4.5,https://www.sofascore.com/football/player/pedrinho/2442965
 ATA,18,Lucas Guimarães Amorim,Athletico,Active,,4.5,https://www.sofascore.com/football/player/lucas-guimaraes-amorim/2436884
 MEI,,Victor Hugo,Bahia,Active,,4.5,https://www.sofascore.com/football/player/victor-hugo-oliveira-de-carvalho/1634969
 DEF,,Luis Gustavo,Atlético Mineiro,Active,,4.5,https://www.sofascore.com/football/player/luis-gustavo/2443880
-GK,,Maksym,Athletico,Active,,4.5,https://www.sofascore.com/football/player/maksym/2442956
 ATA,16,Gustavo Sobral Alves Pereira,Vitória,Active,,4.5,https://www.sofascore.com/football/player/gustavo-sobral-alves-pereira/2440222
 MEI,16,Pedro Martins,Botafogo,Active,,4.5,https://www.sofascore.com/football/player/pedro-martins/2446050
 ATA,18,Matheusinho,Botafogo,Active,,4.5,https://www.sofascore.com/football/player/matheusinho/2446049
+GK,,Maksym,Athletico,Active,,4.5,https://www.sofascore.com/football/player/maksym/2442956
 ATA,22,Ruan Lima,Coritiba,Active,,4.5,https://www.sofascore.com/football/player/ruan-lima/1464672
 MEI,19,David Antunes da Silva,Chapecoense,Active,,4.5,https://www.sofascore.com/football/player/david-antunes/2083032
 MEI,24,Bernardo,Vitória,Active,,4.5,https://www.sofascore.com/football/player/bernardo/2442387
@@ -661,7 +655,6 @@ MEI,35,Charles,Corinthians,Active,,4.0,https://www.sofascore.com/football/player
 GK,32,Matheus Donelli,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/matheus-donelli/1002609
 DEF,23,Iván Román,Atlético Mineiro,Active,,4.0,https://www.sofascore.com/football/player/ivan-roman/1464929
 DEF,15,Léo Mana,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/leo-mana/1170769
-DEF,13,Micael,Palmeiras,Active,,4.0,https://www.sofascore.com/football/player/micael/1105341
 GK,49,Dyogo Alves,Flamengo,Active,,4.0,https://www.sofascore.com/football/player/dyogo-alves/1514629
 GK,14,Marcelo Lomba,Palmeiras,Active,,4.0,https://www.sofascore.com/football/player/marcelo-lomba/34141
 GK,40,Felipe Longo,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/felipe-longo/1485272
@@ -672,15 +665,16 @@ GK,12,Gabriel Grando,Grêmio,Active,,4.0,https://www.sofascore.com/football/play
 GK,27,Marcelo Pitaluga,Fluminense,Active,,4.0,https://www.sofascore.com/football/player/marcelo-pitaluga/1093974
 DEF,21,Thiago Santos,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/thiago-santos/378590
 GK,13,Daniel Fuzato,Vasco da Gama,Active,,4.0,https://www.sofascore.com/football/player/daniel-fuzato/863276
-DEF,44,Luiz Gustavo,Bahia,Active,,4.0,https://www.sofascore.com/football/player/gustavo-luiz/1634148
 DEF,21,Igor Rabello,Fluminense,Active,,4.0,https://www.sofascore.com/football/player/igor-rabello/753662
+DEF,44,Luiz Gustavo,Bahia,Active,,4.0,https://www.sofascore.com/football/player/gustavo-luiz/1634148
 DEF,25,Iago Borduchi,Bahia,Active,,4.0,https://www.sofascore.com/football/player/iago/869644
 GK,1,Mycael,Athletico,Active,,4.0,https://www.sofascore.com/football/player/mycael/1128850
+DEF,59,João Vitor,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/jacare/2039254
 GK,81,Otávio Costa,Cruzeiro,Active,,4.0,https://www.sofascore.com/football/player/otavio-eleodoro-rezende-costa/1589358
 DEF,13,Renato Santos,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/renato-santos/1411159
 DEF,2,João Lucas,Remo,Active,,4.0,https://www.sofascore.com/football/player/joao-lucas/981019
 GK,12,Ivan Quaresma,Internacional,Active,,4.0,https://www.sofascore.com/football/player/ivan-quaresma/795029
-GK,12,Cristhian Loor,Botafogo,Active,,4.0,https://www.sofascore.com/football/player/cristhian-loor/1470452
+GK,40,Cristhian Loor,Botafogo,Active,,4.0,https://www.sofascore.com/football/player/cristhian-loor/1470452
 DEF,25,Riquelme,Vasco da Gama,Active,,4.0,https://www.sofascore.com/football/player/riquelme/1016905
 GK,43,Kaio Assis,Atlético Mineiro,Active,,4.0,https://www.sofascore.com/football/player/kaio-assis/2033878
 GK,98,Vitor Eudes,Fluminense,Active,,4.0,https://www.sofascore.com/football/player/vitor-eudes/927666
@@ -690,8 +684,8 @@ DEF,44,Viery,Grêmio,Active,,4.0,https://www.sofascore.com/football/player/viery
 DEF,43,Luis Guedes,Grêmio,Active,,4.0,https://www.sofascore.com/football/player/luis-eduardo-guedes-de-souza/1895389
 GK,1,Gabriel Delfim,Atlético Mineiro,Active,,4.0,https://www.sofascore.com/football/player/gabriel-delfim/1117032
 DEF,16,Felipe Jonatan,Mirassol,Active,,4.0,https://www.sofascore.com/football/player/felipe-jonatan/931574
-DEF,3,Kevyson,Santos,Active,,4.0,https://www.sofascore.com/football/player/kevyson/1389980
 GK,1,Diogenes,Santos,Active,,4.0,https://www.sofascore.com/football/player/diogenes/1128754
+DEF,3,Kevyson,Santos,Active,,4.0,https://www.sofascore.com/football/player/kevyson/1389980
 GK,13,Keiller,Internacional,Active,,4.0,https://www.sofascore.com/football/player/keiller/840082
 DEF,2,Tinga,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/tinga/330057
 DEF,33,Lyncon,Vasco da Gama,Active,,4.0,https://www.sofascore.com/football/player/lyncon/1463561
@@ -712,61 +706,62 @@ DEF,29,Gastón Benavídez,Athletico,Active,,4.0,https://www.sofascore.com/footba
 DEF,40,Davi Duarte,Fluminense,Active,,4.0,https://www.sofascore.com/football/player/davi-duarte-schuindt/1631679
 GK,12,Pedro Rangel,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/pedro-rangel/1092614
 GK,51,Luiz Sá,Palmeiras,Active,,4.0,https://www.sofascore.com/football/player/luiz-sa/2060231
+DEF,20,Rafael Venâncio,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/rafael-venancio/2270857
 GK,35,Alexandre Fintelman,Vitória,Active,,4.0,https://www.sofascore.com/football/player/alexandre-fintelman/1017274
 GK,46,Pedro Cobra,Atlético Mineiro,Active,,4.0,https://www.sofascore.com/football/player/pedro-cobra/1597269
-DEF,20,Rafael Venâncio,Corinthians,Active,,4.0,https://www.sofascore.com/football/player/rafael-venancio/2270857
-DEF,23,Tiago,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/tiago/1124329
 DEF,67,Kaio Júnior,Flamengo,Active,,4.0,https://www.sofascore.com/football/player/kaio-junior/2028687
+DEF,23,Tiago,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/tiago/1124329
 GK,71,Pedro Batista,Flamengo,Active,,4.0,https://www.sofascore.com/football/player/pedro-batista/2440991
 DEF,36,Kauã Pascini,Atlético Mineiro,Active,,4.0,https://www.sofascore.com/football/player/kaua-pascini-resende/1829022
 GK,22,Kauan,Internacional,Active,,4.0,https://www.sofascore.com/football/player/kauan/1485233
 DEF,6,Felipe Vieira,Vitória,Active,,4.0,https://www.sofascore.com/football/player/felipe-vieira/892875
 DEF,42,Pablo Pereira da Costa,Internacional,Active,,4.0,https://www.sofascore.com/football/player/pereira-da-costa-pablo/2040091
-DEF,14,Bressan,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/bressan/312114
 GK,32,Rhyan,Botafogo,Active,,4.0,https://www.sofascore.com/football/player/rhyan/1819829
+DEF,14,Bressan,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/bressan/312114
+GK,31,Gabriel Menegon,Grêmio,Active,,4.0,https://www.sofascore.com/football/player/gabriel-menegon/2152875
 DEF,58,Ythallo,Botafogo,Active,,4.0,https://www.sofascore.com/football/player/ythallo/1512551
 DEF,16,João Almeida,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/joao-vitor-da-silva-almeida/1588318
-GK,31,Gabriel Menegon,Grêmio,Active,,4.0,https://www.sofascore.com/football/player/gabriel-menegon/2152875
 GK,36,Allan Vitor,Vasco da Gama,Active,,4.0,https://www.sofascore.com/football/player/allan-vitor-silva-de-barros/1589419
 DEF,17,Diogo Batista de Souza,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/diogo-batista-de-souza/1588320
 GK,61,Victor Nascimento,Bahia,Active,,4.0,https://www.sofascore.com/football/player/joao-victor-nascimento-da-silva/2077503
 DEF,34,Samuel Lima Barros,Atlético Mineiro,Active,,4.0,https://www.sofascore.com/football/player/lima-barros-samuel/1633611
 DEF,6,Gabriel Da Silva Abdias,Botafogo,Active,,4.0,https://www.sofascore.com/football/player/gabriel-da-silva-abdias/2084595
 GK,94,Ygor Vinhas,Remo,Active,,4.0,https://www.sofascore.com/football/player/ygor-vinhas/922569
-GK,90,Thomazella,Mirassol,Active,,4.0,https://www.sofascore.com/football/player/thomazella/870929
 GK,42,Davi Barbosa da Silva Novaes,Vitória,Active,,4.0,https://www.sofascore.com/football/player/davi-barbosa-da-silva-novaes/1633877
-GK,1,Rafael Santos,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/rafael-santos/108480
+GK,90,Thomazella,Mirassol,Active,,4.0,https://www.sofascore.com/football/player/thomazella/870929
 MEI,60,João Vitor Silva,Vasco da Gama,Active,,4.0,https://www.sofascore.com/football/player/joao-vitor-cardoso-silva/2075165
+GK,1,Rafael Santos,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/rafael-santos/108480
 MEI,5,José Breno,Vitória,Active,,4.0,https://www.sofascore.com/football/player/jose-breno/1896090
 GK,1,Benassi,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/benassi/1174621
 DEF,57,Pedro Henrique Pinheiro de Jesus,Vitória,Active,,4.0,https://www.sofascore.com/football/player/pedro-henrique-pinheiro-de-jesus/1633653
 DEF,4,João Paulo,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/joao-paulo/1019157
-DEF,6,Mancha,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/mancha/1108007
 DEF,56,William Fernando,Cruzeiro,Active,,4.0,https://www.sofascore.com/football/player/william-fernando/2437584
+DEF,6,Mancha,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/mancha/1108007
 ATA,,Roger Ruan,Bahia,Active,,4.0,https://www.sofascore.com/football/player/roger-ruan-pereira-santos/1589573
 DEF,32,Jhonnathan,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/jhonnathan/1067637
 GK,37,Fabrício,Red Bull Bragantino,Active,,4.0,https://www.sofascore.com/football/player/fabricio/1047208
-DEF,18,Kauan,Vitória,Active,,4.0,https://www.sofascore.com/football/player/kauan-santos-neves/2025518
 GK,62,Cleber Lucas,Botafogo,Active,,4.0,https://www.sofascore.com/football/player/cleber-lucas/2358135
+DEF,18,Kauan,Vitória,Active,,4.0,https://www.sofascore.com/football/player/kauan-santos-neves/2025518
 DEF,50,Kauan Alves,Internacional,Active,,4.0,https://www.sofascore.com/football/player/kauan-alves/2111310
+MEI,37,Pedro Assis,Santos,Active,,4.0,https://www.sofascore.com/football/player/pedro-assis-goncalves/1831085
 DEF,20,Gustavo Talles,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/gustavo-talles/1473223
 DEF,22,Felipe Guimarães,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/felipe-guimaraes/1871902
 DEF,83,Frederico Lippert Neto Gomes,Bahia,Active,,4.0,https://www.sofascore.com/football/player/lippert-neto-gomes-frederico/2399662
 DEF,3,Fábio Ferreira,Athletico,Active,,4.0,https://www.sofascore.com/football/player/fabio-ferreira/1631220
 DEF,40,Lazáro,Internacional,Active,,4.0,https://www.sofascore.com/football/player/lazaro/2152088
-DEF,2,Lucas Taverna,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/lucas-taverna/1864297
 DEF,13,Murilo Camargo,Athletico,Active,,4.0,https://www.sofascore.com/football/player/murilo-camargo/1882409
-DEF,26,Everton,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/everton/1105058
+DEF,2,Lucas Taverna,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/lucas-taverna/1864297
 DEF,13,João Pedro Santos Oliveira,Coritiba,Active,,4.0,https://www.sofascore.com/football/player/joao-pedro-santos-oliveira/1589464
 DEF,51,Cauê Nascimento Santos,Red Bull Bragantino,Active,,4.0,https://www.sofascore.com/football/player/caue-nascimento-santos/1632360
+DEF,26,Everton,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/everton/1105058
 GK,24,Fernando Costa,Red Bull Bragantino,Active,,4.0,https://www.sofascore.com/football/player/pires-costa-fernando-henrique/2140167
 DEF,15,Arthur Vanzela,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/arthur-vanzela/1167080
-GK,23,Carlos Eduardo Souza de Barros,Athletico,Active,,4.0,https://www.sofascore.com/football/player/carlos-eduardo-souza-de-barros/2436848
 DEF,21,Kauan Faria Gomes,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/kauan-faria-gomes/1588001
 DEF,56,Miguel Sampaio,Fluminense,Active,,4.0,https://www.sofascore.com/football/player/miguel-sampaio/2441798
+GK,23,Carlos Eduardo Souza de Barros,Athletico,Active,,4.0,https://www.sofascore.com/football/player/carlos-eduardo-souza-de-barros/2436848
 DEF,13,João Gabriel Queiroz Marques,Vitória,Active,,4.0,https://www.sofascore.com/football/player/joao-gabriel-queiroz-marques/2081316
-DEF,16,Carlos Eduardo,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/carlos-eduardo-galvao-pires/1915450
 DEF,4,Ivan Henrique,Vitória,Active,,4.0,https://www.sofascore.com/football/player/ivan-henrique/2442382
+DEF,16,Carlos Eduardo,Chapecoense,Active,,4.0,https://www.sofascore.com/football/player/carlos-eduardo-galvao-pires/1915450
 DEF,15,Guilherme Inácio Cavalcante da Silva,Vitória,Active,,4.0,https://www.sofascore.com/football/player/guilherme-inacio-cavalcante-da-silva/2442343
 GK,,Guilherme Felipe Martins,Athletico,Active,,4.0,https://www.sofascore.com/football/player/guilherme-felipe-martins/1882393
 GK,50,Lucas,Fluminense,Active,,4.0,https://www.sofascore.com/football/player/lucas/2441797

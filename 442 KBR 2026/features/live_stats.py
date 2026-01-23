@@ -4,7 +4,9 @@ import requests
 import datetime
 import time
 import numpy as np
-from features.auth import get_client
+from features.auth import get_client, BASE_DIR
+import sys
+import subprocess
 
 # Constants
 CACHE_SHEET = "CACHE_LIVE"
@@ -210,6 +212,67 @@ def update_cache_time():
         check_if_needs_update.clear()
     except:
         pass
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def check_and_run_daily_sync():
+    """
+    Checks if General Sync (B2 in CACHE_LIVE) runs for today.
+    If not, runs it and updates the date.
+    """
+    try:
+        client, sh = get_client()
+        try:
+            ws = sh.worksheet(CACHE_SHEET)
+        except:
+             # If doesn't exist, create (handled in other func usually but safety)
+             ws = sh.add_worksheet(CACHE_SHEET, 10, 2)
+             ws.append_row(['last_update', 'last_general_sync'])
+             ws.append_row(['2000-01-01 00:00:00', '2000-01-01'])
+
+        # Header B1: last_general_sync
+        # Value B2
+        # Check if B1 is correct header (optional but good practice)
+        # Assuming A1=last_update, B1... if not set, set it?
+        # Just read B2 directly.
+        
+        today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        
+        # Read B2
+        val_b2 = ws.acell('B2').value
+        
+        if val_b2 != today_str:
+            # NEEDS UPDATE
+            st.toast("📅 Detectado primeiro acesso do dia. Iniciando Sincronização Geral...", icon="🔄")
+            
+            # 1. Update B2 immediately to lock
+            ws.update_acell('B2', today_str)
+            
+            # 2. Run Subprocess
+            # module: features.games_extraction
+            cmd = [sys.executable, "-m", "features.games_extraction"]
+            
+            with st.spinner("⏳ Executando Sincronização Diária (Pode levar ~1 minuto)..."):
+                result = subprocess.run(
+                    cmd, 
+                    cwd=str(BASE_DIR), 
+                    capture_output=True, 
+                    text=True,
+                    encoding='utf-8', 
+                    errors='replace'
+                )
+                
+            if result.returncode == 0:
+                st.toast("✅ Sincronização Diária Concluída!", icon="📅")
+                # Optional: Log stdout
+                print("Daily Sync Success:", result.stdout)
+            else:
+                st.toast("❌ Falha na Sincronização Diária.", icon="⚠️")
+                print("Daily Sync Error:", result.stderr)
+                # Revert B2 so it tries again? Or keep it locked to avoid loop?
+                # Keep it locked to avoid breaking app for everyone if persistent error.
+                
+    except Exception as e:
+        print(f"Error in Daily Sync Check: {e}")
 
 from curl_cffi import requests as cffi_requests # Rename to avoid conflict if any
 
@@ -495,6 +558,9 @@ def save_points_to_sheet(points_df):
 def run_auto_update():
     """Main entry point called by Players.py"""
     
+    # 0. Daily Sync Check
+    check_and_run_daily_sync()
+
     # 1. Check Active Games
     active_ids = get_active_games_cached()
     
