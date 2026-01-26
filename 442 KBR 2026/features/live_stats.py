@@ -251,15 +251,14 @@ def check_and_run_daily_sync():
             # module: features.games_extraction
             cmd = [sys.executable, "-m", "features.games_extraction"]
             
-            with st.spinner("⏳ Executando Sincronização Diária (Pode levar ~1 minuto)..."):
-                result = subprocess.run(
-                    cmd, 
-                    cwd=str(BASE_DIR), 
-                    capture_output=True, 
-                    text=True,
-                    encoding='utf-8', 
-                    errors='replace'
-                )
+            result = subprocess.run(
+                cmd, 
+                cwd=str(BASE_DIR), 
+                capture_output=True, 
+                text=True,
+                encoding='utf-8', 
+                errors='replace'
+            )
                 
             if result.returncode == 0:
                 st.toast("✅ Sincronização Diária Concluída!", icon="📅")
@@ -267,6 +266,7 @@ def check_and_run_daily_sync():
                 print("Daily Sync Success:", result.stdout)
             else:
                 st.toast("❌ Falha na Sincronização Diária.", icon="⚠️")
+                st.error(f"Detalhes do erro na Sincronização:\n{result.stderr}")
                 print("Daily Sync Error:", result.stderr)
                 # Revert B2 so it tries again? Or keep it locked to avoid loop?
                 # Keep it locked to avoid breaking app for everyone if persistent error.
