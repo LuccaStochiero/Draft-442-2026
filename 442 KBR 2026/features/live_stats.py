@@ -267,6 +267,20 @@ def check_and_run_daily_sync():
             else:
                 st.toast("❌ Falha na Sincronização Diária.", icon="⚠️")
                 st.error(f"Detalhes do erro na Sincronização:\n{result.stderr}")
+                
+                # Log to file for debugging
+                try:
+                    log_path = BASE_DIR / "sync_log.txt"
+                    with open(log_path, "w", encoding="utf-8") as f:
+                        f.write(f"EXIT CODE: {result.returncode}\n")
+                        f.write("--- STDOUT ---\n")
+                        f.write(result.stdout)
+                        f.write("\n--- STDERR ---\n")
+                        f.write(result.stderr)
+                    st.info(f"Log de erro salvo em: {log_path}")
+                except:
+                    pass
+                
                 print("Daily Sync Error:", result.stderr)
                 # Revert B2 so it tries again? Or keep it locked to avoid loop?
                 # Keep it locked to avoid breaking app for everyone if persistent error.

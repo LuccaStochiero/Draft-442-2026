@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .env
 service_account.json
+
+# Cache and Logs
+Dados/cache_*.csv
+sync_log.txt
