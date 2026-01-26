@@ -13,15 +13,27 @@ POS_MAPPING = {
 def clean_pos(p):
     return POS_MAPPING.get(p, p)
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=3600)
 def load_data():
     players_file = get_players_file()
+    
+    # Init empty
+    df_players = pd.DataFrame()
+    df_team = pd.DataFrame()
+    df_squad = pd.DataFrame()
+
+    # 1. Load Players (Always Local)
     if players_file.exists():
         df_players = pd.read_csv(players_file)
-        df_players['player_id'] = df_players['player_id'].astype(str)
-    else:
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+        if 'player_id' in df_players.columns:
+            df_players['player_id'] = df_players['player_id'].astype(str)
+    
+    # define cache paths
+    cache_team_path = players_file.parent / "cache_team.csv"
+    cache_squad_path = players_file.parent / "cache_squad.csv"
 
+    # 2. Try Load API
+    api_success = False
     try:
         client, sh = get_client()
         
@@ -32,6 +44,8 @@ def load_data():
             df_team.columns = df_team.columns.str.lower()
             df_team['player_id'] = df_team['player_id'].astype(str)
             df_team['team_id'] = df_team['team_id'].astype(str)
+            # Save to cache
+            df_team.to_csv(cache_team_path, index=False)
 
         # Load SQUAD
         ws_squad = sh.worksheet("SQUAD")
@@ -41,11 +55,35 @@ def load_data():
             # Normalize ID col
             id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
             df_squad['team_id_norm'] = df_squad[id_col].astype(str)
+            # Save to cache
+            df_squad.to_csv(cache_squad_path, index=False)
+            
+        api_success = True
 
     except Exception as e:
-        st.error(f"Erro sheets: {e}")
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
-        
+        st.warning(f"⚠️ Aviso: Não foi possível conectar ao Google Sheets (Erro: {e}). Tentando carregar cache local...")
+    
+    # 3. Fallback to Disk Cache if API failed or returned empty
+    if not api_success or df_team.empty:
+        if cache_team_path.exists():
+            try:
+                df_team = pd.read_csv(cache_team_path)
+                df_team['player_id'] = df_team['player_id'].astype(str)
+                df_team['team_id'] = df_team['team_id'].astype(str)
+                # st.info("Usando cache local para TEAM.")
+            except: pass
+            
+    if not api_success or df_squad.empty:
+        if cache_squad_path.exists():
+            try:
+                df_squad = pd.read_csv(cache_squad_path)
+                # Re-apply norm logic
+                if not df_squad.empty:
+                    id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
+                    df_squad['team_id_norm'] = df_squad[id_col].astype(str)
+                # st.info("Usando cache local para SQUAD.")
+            except: pass
+
     return df_players, df_team, df_squad
 
 def app():
