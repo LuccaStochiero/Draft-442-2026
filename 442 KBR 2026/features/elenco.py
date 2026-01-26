@@ -61,7 +61,7 @@ def load_data():
         api_success = True
 
     except Exception as e:
-        st.warning(f"⚠️ Aviso: Não foi possível conectar ao Google Sheets (Erro: {e}). Tentando carregar cache local...")
+        print(f"⚠️ Aviso: Não foi possível conectar ao Google Sheets (Erro: {e}). Tentando carregar cache local...")
     
     # 3. Fallback to Disk Cache if API failed or returned empty
     if not api_success or df_team.empty:
@@ -84,12 +84,15 @@ def load_data():
                 # st.info("Usando cache local para SQUAD.")
             except: pass
 
-    return df_players, df_team, df_squad
+    return df_players, df_team, df_squad, api_success
 
 def app():
     st.markdown("### Visualização de Elenco")
     
-    df_players, df_team, df_squad = load_data()
+    df_players, df_team, df_squad, is_api_fresh = load_data()
+    
+    if not is_api_fresh:
+        st.toast("⚠️ API indisponível (Quota). Exibindo dados em cache local.", icon="📂")
     
     if df_team.empty or df_squad.empty:
         st.warning("Dados insuficientes.")
