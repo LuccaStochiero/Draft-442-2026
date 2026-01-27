@@ -55,9 +55,12 @@ def save_bid(team_id, rodada, pid_free, pid_team, price):
             ws = sh.worksheet("LEILAO_LANCES")
         except:
             ws = sh.add_worksheet("LEILAO_LANCES", 1000, 5)
-            ws.append_row(['team_id', 'rodada', 'player_id_free', 'player_id_team', 'price'])
+            ws.append_row(['team_id', 'rodada', 'player_id_free', 'player_id_team', 'price', 'status'])
         
-        ws.append_row([str(team_id), int(rodada), str(pid_free), str(pid_team), float(price)])
+        # Ensure price is float
+        price_val = float(price)
+        # Store status as empty initially
+        ws.append_row([str(team_id), int(rodada), str(pid_free), str(pid_team), price_val, ''])
         return True
     except Exception as e:
         st.error(f"Erro ao salvar lance: {e}")
@@ -68,9 +71,13 @@ def has_pending_bids():
         client, sh = get_client()
         ws_lances = sh.worksheet("LEILAO_LANCES")
         # Check if there is any data beyond headers
-        # fast check: get_all_values() and len > 1
         vals = ws_lances.get_all_values()
-        return len(vals) > 1
+        if len(vals) <= 1: return False
+        
+        # Check if there are unprocessed items
+        # Heuristic: Look for empty status in last column?
+        # Better: just return True, process_auction handles the check
+        return True
     except:
         return False
 
@@ -80,20 +87,53 @@ def process_auction():
         
         # 1. Load Data Live
         ws_lances = sh.worksheet("LEILAO_LANCES")
-        lances = pd.DataFrame(ws_lances.get_all_records())
+        all_values = ws_lances.get_all_values()
         
-        if lances.empty: st.info("Sem lances."); return
+        if len(all_values) <= 1: 
+            st.info("Sem lances.")
+            return
 
-        lances.columns = lances.columns.str.lower()
+        headers = [h.lower() for h in all_values[0]]
+        data = all_values[1:]
+        lances = pd.DataFrame(data, columns=headers)
+        
+        if lances.empty: 
+            st.info("Sem lances.")
+            return
+
         if 'rodada' not in lances.columns: return
         
-        lances['rodada'] = pd.to_numeric(lances.rodada, errors='coerce').fillna(0).astype(int)
-        lances['price'] = pd.to_numeric(lances.price, errors='coerce').fillna(0)
+        # Ensure 'status' column exists in DataFrame
+        if 'status' not in lances.columns:
+            lances['status'] = ''
+
+        # Filter: Only process UNPROCESSED bids
+        # We assume empty string or None means unprocessed. 
+        # Be robust: fillna('') and strip.
+        lances['status'] = lances['status'].fillna('').astype(str).str.strip()
+        df_pending = lances[lances['status'] == ''].copy()
         
-        max_round = lances['rodada'].max()
-        df_process = lances[lances['rodada'] == max_round].sort_values(by='price', ascending=False)
+        if df_pending.empty:
+            st.info("Todos os lances já foram processados.")
+            return
+
+        # Fix Numerics (Commas)
+        # Apply to df_pending for calculation
+        df_pending['rodada'] = pd.to_numeric(df_pending['rodada'], errors='coerce').fillna(0).astype(int)
         
-        st.write(f"Processando Rodada {max_round} ({len(df_process)} lances)...")
+        # Fix Price: Replace , with . and convert
+        df_pending['price'] = df_pending['price'].astype(str).str.replace(',', '.', regex=False)
+        df_pending['price'] = pd.to_numeric(df_pending['price'], errors='coerce').fillna(0.0)
+        
+        max_round = df_pending['rodada'].max()
+        # Filter for the current round being processed
+        df_process = df_pending[df_pending['rodada'] == max_round].sort_values(by='price', ascending=False)
+        
+        if df_process.empty:
+            st.info(f"Sem lances pendentes para a rodada atual ({max_round}).")
+            return
+
+        st.write(f"Processando Rodada {max_round} ({len(df_process)} lances novos)...")
         
         # Load State
         ws_team = sh.worksheet("TEAM")
@@ -111,13 +151,15 @@ def process_auction():
             for r in squad_rows:
                 if str(r.get('team_id', r.get('id'))) == str(tid):
                     val = str(r.get('caixa', 0)).replace(',','.')
-                    return float(val)
+                    try: return float(val)
+                    except: return 0.0
             return 0.0
             
         def update_budget(tid, val):
             for r in squad_rows:
                  if str(r.get('team_id', r.get('id'))) == str(tid):
-                    cur = float(str(r.get('caixa', 0)).replace(',','.'))
+                    cur_str = str(r.get('caixa', 0)).replace(',','.')
+                    cur = float(cur_str) if cur_str else 0.0
                     r['caixa'] = cur - val
                     return
 
@@ -139,10 +181,13 @@ def process_auction():
                     count += 1
             return count
 
-        processed_bids = []
         valid_bids = []
 
-        for _, bid in df_process.iterrows():
+        # Use index from original 'lances' to update status later
+        # But df_process is a filtered copy. We need to map back or easier:
+        # Just update 'lances' using the index from df_process (preserved)
+        
+        for idx, bid in df_process.iterrows():
             tid = str(bid['team_id'])
             p_free = str(bid['player_id_free'])
             p_drop = str(bid['player_id_team'])
@@ -150,28 +195,33 @@ def process_auction():
             
             # Checks
             if get_budget(tid) < price:
-                st.write(f"❌ {tid}: Sem caixa.")
+                st.write(f"❌ {tid}: Sem caixa ({price}).")
+                lances.at[idx, 'status'] = 'REJEITADO_CAIXA'
                 continue
             if not is_free(p_free):
-                st.write(f"❌ {tid}: {p_free} não está livre (já vendido?).")
+                st.write(f"❌ {tid}: {p_free} não está livre.")
+                lances.at[idx, 'status'] = 'REJEITADO_NAO_LIVRE'
                 continue
             
             # Check for NENHUM (empty slot) case
-            is_empty_slot = p_drop == "NENHUM" or p_drop == ""
+            is_empty_slot = p_drop == "NENHUM" or p_drop == "" or p_drop.lower() == "none"
             
             if is_empty_slot:
                 # Verify team still has ≤17 players
                 if get_roster_size(tid) > 17:
-                    st.write(f"❌ {tid}: Elenco cheio (>17). Não pode usar vaga livre.")
+                    st.write(f"❌ {tid}: Elenco cheio.")
+                    lances.at[idx, 'status'] = 'REJEITADO_CHEIO'
                     continue
             else:
                 # Normal case - must own the player to drop
                 if not owns_player(tid, p_drop):
                     st.write(f"❌ {tid}: Não possui {p_drop}.")
+                    lances.at[idx, 'status'] = 'REJEITADO_NAO_POSSUI'
                     continue
             
             # --- EXECUTE ---
             st.write(f"✅ Lance Válido: {tid} leva {p_free} por {price}" + (" (Vaga Livre)" if is_empty_slot else ""))
+            lances.at[idx, 'status'] = 'APROVADO'
             
             # 1. Update Budget
             update_budget(tid, price)
@@ -179,16 +229,15 @@ def process_auction():
             # 2. Handle TEAM
             if is_empty_slot:
                 # Just add the new player without removing anyone
-                # Create a new row (use first row as template for structure)
                 if teams_rows:
-                    new_row = {k: '' for k in teams_rows[0].keys()}
-                    new_row['team_id'] = tid
-                    new_row['player_id'] = p_free
+                    new_default = {k: '' for k in teams_rows[0].keys()}
+                    new_default['team_id'] = tid
+                    new_default['player_id'] = p_free
+                    teams_rows.append(new_default)
                 else:
-                    new_row = {'team_id': tid, 'player_id': p_free}
-                teams_rows.append(new_row)
+                    teams_rows.append({'team_id': tid, 'player_id': p_free})
             else:
-                # Swap: Find row to remove and replace player
+                # Swap
                 idx_rem = -1
                 for i, r in enumerate(teams_rows):
                     if str(r.get('team_id')) == tid and str(r.get('player_id')) == p_drop:
@@ -216,8 +265,8 @@ def process_auction():
         if valid_bids:
             # TEAM
             ws_team.clear()
-            headers = list(teams_rows[0].keys()) if teams_rows else []
-            ws_team.update([headers] + [list(r.values()) for r in teams_rows])
+            headers_tm = list(teams_rows[0].keys()) if teams_rows else []
+            ws_team.update([headers_tm] + [list(r.values()) for r in teams_rows])
             
             # PLAYERS_FREE
             ws_free.clear()
@@ -228,26 +277,38 @@ def process_auction():
             headers_sq = list(squad_rows[0].keys()) if squad_rows else []
             ws_squad.update([headers_sq] + [list(r.values()) for r in squad_rows])
             
-            # LEILAO_VENCIDO
+            # LEILAO_VENCIDO (Keep this as Log)
             try: ws_vencido = sh.worksheet("LEILAO_VENCIDO")
             except: ws_vencido = sh.add_worksheet("LEILAO_VENCIDO", 1000, 5)
             
             vb_df = pd.DataFrame(valid_bids)
-            data_venc = vb_df[['team_id','rodada','player_id_free','player_id_team','price']].values.tolist()
+            # Ensure columns exist
+            cols_to_save = ['team_id','rodada','player_id_free','player_id_team','price']
+            for c in cols_to_save:
+                 if c not in vb_df.columns: vb_df[c] = ''
+            
+            # Format price back to something standard or keep as float
+            data_venc = vb_df[cols_to_save].values.tolist()
             ws_vencido.append_rows(data_venc)
             
-            # Remove from LANCES (Only processed round)
-            # Re-read lances to be safe or filter df
-            lances_remain = lances[lances['rodada'] != max_round]
-            ws_lances.clear()
-            if not lances_remain.empty:
-                ws_lances.update([lances_remain.columns.tolist()] + lances_remain.values.tolist())
-            else:
-                 ws_lances.append_row(['team_id','rodada','player_id_free','player_id_team','price'])
-            
+        # FINAL STEP: Update LEILAO_LANCES with new status
+        # Reconstruct full data
+        # Ensure status handled for NaN
+        lances = lances.fillna('')
+        
+        # Prepare output
+        output_data = [lances.columns.tolist()] + lances.values.tolist()
+        
+        # SAFE UPDATE: Do NOT use clear()
+        # We only overwrite the rows we read + changed.
+        # If new rows were added (row > len(output_data)), they remain untouched.
+        # We assume headers didn't change (A1 start).
+        ws_lances.update(output_data, "A1")
+        
+        if valid_bids:
             st.success("Processamento concluído com sucesso!")
         else:
-            st.warning("Nenhum lance foi efetivado.")
+            st.warning("Rodada processada. Nenhum lance aprovado.")
 
     except Exception as e:
         st.error(f"Erro processamento: {e}")
@@ -257,6 +318,7 @@ from features import calendar_utils
 def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
     """
     Swap a player from Team to Free Agency
+    Or Add if drop_pid is None/Empty (and space exists)
     """
     try:
         client, sh = get_client()
@@ -265,16 +327,38 @@ def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
         ws_team = sh.worksheet("TEAM")
         team_rows = ws_team.get_all_records()
         
-        updated_team = False
-        for r in team_rows:
-            if str(r.get('team_id')) == str(team_id) and str(r.get('player_id')) == str(drop_pid):
-                r['player_id'] = str(pickup_pid)
-                updated_team = True
-                break
+        # Check roster limit if adding without dropping
+        is_addition = (str(drop_pid).upper() == "NENHUM" or not drop_pid)
         
-        if not updated_team:
-            st.error("Erro: Jogador a dispensar não encontrado no time.")
-            return False
+        if is_addition:
+            # Check size
+            current_roster = [r for r in team_rows if str(r.get('team_id')) == str(team_id)]
+            if len(current_roster) >= 18:
+                st.error("Erro: Elenco cheio (Limite 18). Você precisa dispensar algúem.")
+                return False
+                
+            # Add new row
+            # Use structure from first row if exists
+            if team_rows:
+                new_row = {k: '' for k in team_rows[0].keys()}
+                new_row['team_id'] = str(team_id)
+                new_row['player_id'] = str(pickup_pid)
+                team_rows.append(new_row)
+            else:
+                team_rows.append({'team_id': str(team_id), 'player_id': str(pickup_pid)})
+                
+        else:
+            # Swap Logic
+            updated_team = False
+            for r in team_rows:
+                if str(r.get('team_id')) == str(team_id) and str(r.get('player_id')) == str(drop_pid):
+                    r['player_id'] = str(pickup_pid)
+                    updated_team = True
+                    break
+            
+            if not updated_team:
+                st.error("Erro: Jogador a dispensar não encontrado no time.")
+                return False
             
         # 2. Update PLAYERS_FREE
         ws_free = sh.worksheet("PLAYERS_FREE")
@@ -282,14 +366,16 @@ def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
         
         # Remove pickup
         new_free_rows = [r for r in free_rows if str(r.get('player_id')) != str(pickup_pid)]
-        # Add drop (only player_id col usually)
-        new_free_rows.append({'player_id': str(drop_pid)})
         
-        # 3. Log Transaction
+        # Add drop (if not addition)
+        if not is_addition:
+            new_free_rows.append({'player_id': str(drop_pid)})
+        
+        # 3. Log Transaction -> FREE_AGENCY
         try:
-            ws_log = sh.worksheet("LOG_FREE_AGENCY")
+            ws_log = sh.worksheet("FREE_AGENCY")
         except:
-            ws_log = sh.add_worksheet("LOG_FREE_AGENCY", 1000, 5)
+            ws_log = sh.add_worksheet("FREE_AGENCY", 1000, 5)
             ws_log.append_row(['rodada', 'team_id', 'added_id', 'dropped_id', 'timestamp'])
             
         from datetime import datetime
@@ -297,7 +383,7 @@ def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
             rodada, 
             str(team_id), 
             str(pickup_pid), 
-            str(drop_pid), 
+            str(drop_pid) if not is_addition else "NENHUM", 
             str(datetime.now())
         ])
         
@@ -621,25 +707,46 @@ def app(is_admin=False):
                 # Get players for selected team
                 own_ids_fa = df_team[df_team['team_id'] == tid_fa]['player_id'].tolist()
                 own_details_fa = df_players[df_players['player_id'].isin(own_ids_fa)].copy()
+                roster_size_fa = len(own_ids_fa)
                 
+                st.caption(f"Elenco: {roster_size_fa} jogadores")
+
+                # Handle roster options
                 if not own_details_fa.empty:
                     own_details_fa['Label'] = own_details_fa['Nome'] + " (" + own_details_fa['Posição'] + ")"
-                    drop_player_label_fa = st.selectbox("Escolha quem sai", own_details_fa['Label'].tolist(), key="fa_drop")
-                    drop_pid_fa = own_details_fa[own_details_fa['Label'] == drop_player_label_fa]['player_id'].iloc[0]
+                    options_fa = list(own_details_fa['Label'].unique())
+                    
+                    # Allow EMPTY SLOT if roster < 18
+                    if roster_size_fa < 18:
+                         options_fa = ["Nenhum (Vaga Livre)"] + options_fa
+
+                    drop_player_label_fa = st.selectbox("Escolha quem sai", options_fa, key="fa_drop")
+                    
+                    if drop_player_label_fa == "Nenhum (Vaga Livre)":
+                        drop_pid_fa = "NENHUM"
+                    else:
+                        drop_pid_fa = own_details_fa[own_details_fa['Label'] == drop_player_label_fa]['player_id'].iloc[0]
                 else:
-                    st.warning("Seu time está vazio.")
-                    drop_pid_fa = None
+                    # Empty Team - Can add if < 18
+                    if roster_size_fa < 18:
+                         drop_pid_fa = "NENHUM"
+                         st.info("Vaga Livre disponível.")
+                    else:
+                         st.warning("Seu time está vazio (mas cheio?). Erro de lógica.")
+                         drop_pid_fa = None
 
         st.divider()
         if st.button("🔄 Confirmar Troca (Free)", type="primary", disabled=not state_fa['free_open']):
             if not state_fa['free_open']:
                 st.error("Free Agency Fechada para esta rodada.")
-            elif not drop_pid_fa or not pickup_pid_fa:
-                st.error("Selecione os dois jogadores.")
+            elif not pickup_pid_fa:
+                 st.error("Selecione quem entra.")
+            elif not drop_pid_fa:
+                 st.error("Selecione quem sai (ou Vaga Livre).")
             else:
                 # Validation based on SELECTED round
                 if execute_free_swap(tid_fa, drop_pid_fa, pickup_pid_fa, rodada_fa):
                     st.balloons()
-                    st.success("Troca realizada! Tabelas atualizadas.")
+                    st.success("Operação realizada! Tabelas atualizadas.")
                     st.cache_data.clear()
                     st.rerun()
