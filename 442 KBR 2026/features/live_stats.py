@@ -4,7 +4,7 @@ import requests
 import datetime
 import time
 import numpy as np
-from features.auth import get_client, BASE_DIR
+from features.auth import get_client, BASE_DIR, get_players_file
 import sys
 import subprocess
 
@@ -314,7 +314,47 @@ def fetch_sofascore_lineups(game_id):
         pass
     return None
 
-def extract_stats(player_data, game_id, team_side, home_score, away_score):
+@st.cache_data(ttl=3600)
+def get_player_pos_map():
+    """
+    Reads Players.csv and returns a dict: {str(id): 'G'/'D'/'M'/'F'}
+    """
+    try:
+        f = get_players_file()
+        if not f.exists(): return {}
+        
+        df = pd.read_csv(f)
+        
+        # Helper to extract ID
+        def extract_id(val):
+            s = str(val)
+            if '/' in s: return s.split('/')[-1]
+            return s
+            
+        df['pid'] = df['player_id'].apply(extract_id)
+        
+        # Map PT -> EN structure
+        # GK->G, DEF->D, MEI->M, ATA->F
+        pos_map_dict = {
+            'GK': 'G',
+            'DEF': 'D',
+            'MEI': 'M',
+            'ATA': 'F'
+        }
+        
+        # Create map
+        pmap = {}
+        for _, row in df.iterrows():
+            clean_pos = row['Posição'].strip().upper() if isinstance(row['Posição'], str) else ''
+            mapped = pos_map_dict.get(clean_pos, 'M') # Default to M if unknown
+            pmap[str(row['pid'])] = mapped
+            
+        return pmap
+    except Exception as e:
+        print(f"Error loading player map: {e}")
+        return {}
+
+def extract_stats(player_data, game_id, team_side, home_score, away_score, pos_map=None):
     """
     Extracts flat stats and enriched data for scoring.
     team_side: 'home' or 'away'
@@ -322,9 +362,17 @@ def extract_stats(player_data, game_id, team_side, home_score, away_score):
     """
     p = player_data.get('player', {})
     stats = player_data.get('statistics', {})
-    pos = p.get('position', 'M') # Default Midfielder if missing
     
-    pid = p.get('id', '')
+    pid = str(p.get('id', ''))
+    
+    # 1. POSITION OVERRIDE
+    api_pos = p.get('position', 'M')
+    real_pos = api_pos
+    if pos_map and pid in pos_map:
+        real_pos = pos_map[pid]
+        
+    pos = real_pos
+    
     slug = p.get('slug', '')
     
     # Calculate Gols Sofridos (Conceded)
@@ -598,6 +646,9 @@ def run_auto_update(force=False):
     all_game_stats = []
     enriched_data_for_calc = []
     
+    # Load Map Once
+    pos_map = get_player_pos_map()
+    
     for item in active_ids:
         # Compatibility check if getting mixed types (shouldn't happen but safety first)
         if isinstance(item, dict):
@@ -631,7 +682,7 @@ def run_auto_update(force=False):
             
             # Home Team -> team_side='home'
             # PASS RAW ID FOR SAVING
-            row = extract_stats(p, raw_id, 'home', home_score, away_score)
+            row = extract_stats(p, raw_id, 'home', home_score, away_score, pos_map)
             all_game_stats.append(row)
             enriched_data_for_calc.append(row)
             
@@ -640,7 +691,7 @@ def run_auto_update(force=False):
         for p in away_players:
             # Away Team -> team_side='away'
              # PASS RAW ID FOR SAVING
-            row = extract_stats(p, raw_id, 'away', home_score, away_score)
+            row = extract_stats(p, raw_id, 'away', home_score, away_score, pos_map)
             all_game_stats.append(row)
             enriched_data_for_calc.append(row)
             
