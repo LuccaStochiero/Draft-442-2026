@@ -155,7 +155,7 @@ def get_active_games_cached():
                     # st.toast(f"🎯 ALVO ENCONTRADO: {gid}. Data: {game_start}. Diff: {diff} min. (Janela: 0-200)", icon="🎯")
                     pass
                 
-                if 0 < diff < 200: 
+                if 0 < diff < 130: 
                     # Return both RAW ID (for saving) and API ID (for fetching)
                     active_games.append({'raw': raw_id, 'api': gid})
                 else:
@@ -569,7 +569,7 @@ def save_points_to_sheet(points_df):
         print(f"Error saving points (overwrite): {e}")
         # st.toast(f"Erro ao salvar Pontos: {e}", icon="🚩")
 
-def run_auto_update():
+def run_auto_update(force=False):
     """Main entry point called by Players.py"""
     
     # 0. Daily Sync Check
@@ -585,7 +585,7 @@ def run_auto_update():
     
     # 2. Check Cache
     # 2. Check Cache
-    if not check_if_needs_update(len(active_ids)):
+    if not force and not check_if_needs_update(len(active_ids)):
         # st.toast(f"Live Stats: {len(active_ids)} jogos ativos (Cache mantido).", icon="ℹ️")
         return 
         
