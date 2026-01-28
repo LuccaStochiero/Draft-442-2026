@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 from features.auth import get_client, get_players_file
 
-@st.cache_data(ttl=60)
-def load_data():
+@st.cache_data(ttl=3600) # Cache Static Data for 1 Hour
+def load_static_data():
     players_file = get_players_file()
     if players_file.exists():
         df_players = pd.read_csv(players_file)
@@ -21,28 +21,7 @@ def load_data():
             df_gw.columns = df_gw.columns.str.lower()
             if 'rodada' in df_gw.columns:
                 df_gw['rodada'] = pd.to_numeric(df_gw['rodada'], errors='coerce')
-        
-        # Load PLAYER_POINTS
-        try:
-             ws_pts = sh.worksheet("PLAYER_POINTS")
-             df_pts = pd.DataFrame(ws_pts.get_all_records())
-             if not df_pts.empty:
-                 df_pts['player_id'] = df_pts['player_id'].astype(str)
-                 df_pts['game_id'] = df_pts['game_id'].astype(str)
-                 df_pts['pontuacao'] = pd.to_numeric(df_pts['pontuacao'], errors='coerce').fillna(0)
-        except:
-             df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
 
-        # Load PLAYER_STATS
-        try:
-             ws_stats = sh.worksheet("PLAYERS_STATS")
-             df_stats = pd.DataFrame(ws_stats.get_all_records())
-             if not df_stats.empty:
-                  df_stats['player_id'] = df_stats['player_id'].astype(str)
-                  df_stats['game_id'] = df_stats['game_id'].astype(str)
-        except:
-             df_stats = pd.DataFrame(columns=['game_id', 'player_id'])
-             
         # Load H2H - ROUNDS
         try:
              ws_h2h = sh.worksheet("H2H - ROUNDS")
@@ -77,18 +56,52 @@ def load_data():
                 df_squad['team_id_norm'] = df_squad[id_col].astype(str)
         except:
             df_squad = pd.DataFrame()
-              
-    except Exception as e:
-        st.error(f"Erro ao carregar dados: {e}")
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(columns=['game_id', 'player_id']), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+            
+        return df_players, df_gw, df_h2h, df_lineup, df_squad
         
-    # Validation: Ensure columns exist even if df empty or malformed
-    for df, req_cols in [(df_pts, ['game_id', 'player_id', 'pontuacao']), (df_stats, ['game_id', 'player_id'])]:
-        for c in req_cols:
-            if c not in df.columns:
-                df[c] = pd.Series(dtype='str' if c != 'pontuacao' else 'float')
-                
-    return df_players, df_gw, df_pts, df_stats, df_h2h, df_lineup, df_squad
+    except Exception as e:
+        st.error(f"Erro ao carregar dados estáticos: {e}")
+        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+
+@st.cache_data(ttl=60) # Cache Live Data for 1 min
+def load_live_data(_client=None, _sh=None):
+    # Pass client/sh or get new? Getting new ensures freshness if auth expires, but costly.
+    # Auth get_client caches itself usually.
+    try:
+        client, sh = get_client()
+        
+        # Load PLAYER_POINTS
+        try:
+             ws_pts = sh.worksheet("PLAYER_POINTS")
+             df_pts = pd.DataFrame(ws_pts.get_all_records())
+             if not df_pts.empty:
+                 df_pts['player_id'] = df_pts['player_id'].astype(str)
+                 df_pts['game_id'] = df_pts['game_id'].astype(str)
+                 df_pts['pontuacao'] = pd.to_numeric(df_pts['pontuacao'], errors='coerce').fillna(0)
+        except:
+             df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
+
+        # Load PLAYER_STATS
+        try:
+             ws_stats = sh.worksheet("PLAYERS_STATS")
+             df_stats = pd.DataFrame(ws_stats.get_all_records())
+             if not df_stats.empty:
+                  df_stats['player_id'] = df_stats['player_id'].astype(str)
+                  df_stats['game_id'] = df_stats['game_id'].astype(str)
+        except:
+             df_stats = pd.DataFrame(columns=['game_id', 'player_id'])
+             
+        # Validation
+        for df, req_cols in [(df_pts, ['game_id', 'player_id', 'pontuacao']), (df_stats, ['game_id', 'player_id'])]:
+            for c in req_cols:
+                if c not in df.columns:
+                    df[c] = pd.Series(dtype='str' if c != 'pontuacao' else 'float')
+                    
+        return df_pts, df_stats
+        
+    except Exception as e:
+        st.warning(f"Erro ao carregar Live Data: {e}") # Warning instead of Error to not break UI if quota limit
+        return pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao']), pd.DataFrame(columns=['game_id', 'player_id'])
 
 def clean_pos(p):
     mapping = {'Goalkeeper': 'GK', 'Defender': 'DEF', 'Midfielder': 'MEI', 'Forward': 'ATA'}
@@ -299,7 +312,9 @@ def render_player_row(row, stats_row):
 def app():
     st.title("📊 Pontuações da Rodada")
     
-    df_players, df_gw, df_pts, df_stats, df_h2h, df_lineup, df_squad = load_data()
+    # Load Data (Split for Optimization)
+    df_players, df_gw, df_h2h, df_lineup, df_squad = load_static_data()
+    df_pts, df_stats = load_live_data()
     
     if df_gw.empty:
         st.warning("Sem jogos carregados (GAMEWEEK vazia).")
