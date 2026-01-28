@@ -15,7 +15,7 @@ def main():
         "Jogadores Livres": livres.app,
         "Jogadores Livres": livres.app,
         "Pontuações": pontuacao.app,
-        "Escalação": escalacao_main.app,
+        "Escalação": lambda: escalacao_main.app(is_admin=True),
         "Leilão / Free Agency": lambda: leilao.app(is_admin=True),
         "Trade / Drop": trade.app
     }

@@ -132,6 +132,65 @@ def get_saved_lineup_data(team_id, rodada):
         # st.error(f"Erro ao ler escalação: {e}") # Silently fail or log?
         return pd.DataFrame()
 
+def verify_lineup_integrity(rodada):
+    """
+    Verifies if all players in TEAM_LINEUP for the given round 
+    are actually currently in the TEAM table.
+    If not, removes them from TEAM_LINEUP (sets to blank/removes row).
+    """
+    try:
+        client, sh = get_client()
+        ws_lineup = sh.worksheet("TEAM_LINEUP")
+        ws_team = sh.worksheet("TEAM")
+        
+        # Load all data
+        lineup_recs = ws_lineup.get_all_records()
+        team_recs = ws_team.get_all_records()
+        
+        if not lineup_recs: return
+        
+        # Build Set of (TeamID, PlayerID) existing
+        # Ensure Types match (str)
+        valid_pairs = set()
+        for r in team_recs:
+             valid_pairs.add((str(r['team_id']), str(r['player_id'])))
+             
+        # Identify Invalid Rows
+        rows_to_keep = []
+        changes_made = False
+        
+        # Header for reconstruction
+        header = ['team_id', 'player_id', 'rodada', 'formacao', 'lineup', 'posicao', 'cap']
+        
+        # We need to preserve indices if we were using delete_rows, but rewriting is safer for bulk logic
+        for r in lineup_recs:
+            # Check Round
+            r_rod = r.get('rodada')
+            if str(r_rod) == str(rodada):
+                # Verify
+                tid = str(r.get('team_id'))
+                pid = str(r.get('player_id'))
+                
+                if (tid, pid) not in valid_pairs:
+                    # INVALID! Player no longer in team.
+                    # We Skip this row (Delete)
+                    print(f"Removing invalid lineup entry: {tid} - {pid}")
+                    changes_made = True
+                    continue 
+
+            rows_to_keep.append([r.get(h, '') for h in header])
+            
+        if changes_made:
+            ws_lineup.clear()
+            ws_lineup.append_row(header)
+            ws_lineup.append_rows(rows_to_keep)
+            return True, f"Verificação concluída. Inconsistências corrigidas na Rodada {rodada}."
+            
+        return False, "Nenhuma inconsistência encontrada."
+
+    except Exception as e:
+        return False, f"Erro na verificação: {e}"
+
 def render_card_header(label, bg_color, text_color):
     st.markdown(
         f"""
@@ -175,9 +234,41 @@ def render_saved_player(name, pos, cap, status, bg_color):
         unsafe_allow_html=True
     )
 
-def app():
+def app(is_admin=False):
     st.title("⚽ Escalar Time")
     
+    if is_admin:
+        st.info("👮 Painel Admin Habilitado")
+        
+        # --- AUTO-VERIFY LOGIC ---
+        import features.calendar_utils as calendar_utils
+        curr_state = calendar_utils.get_game_state()
+        
+        # If market is closed for a round, ensure lineups are clean for that round
+        if curr_state['status'] == 'LOCKED' and curr_state.get('next_round'):
+            target_r = curr_state['next_round']
+            check_key = f"integrity_checked_R{target_r}"
+            
+            # Avoid spamming continuously, but check once per session/interaction
+            if check_key not in st.session_state:
+                changed, msg = verify_lineup_integrity(target_r)
+                st.session_state[check_key] = True
+                if changed:
+                    st.toast(f"🧹 Auto-Limpeza: {msg}", icon="✅")
+                    # Optional: Rerun to refresh view? 
+                    # st.rerun() 
+        
+        # Admin Tools
+        with st.expander("Ferramentas de Validação (Admin)", expanded=False):
+            adm_rod = st.number_input("Rodada para Verificar", 1, 38, curr_state.get('next_round', 1), key="adm_check_rod")
+            if st.button("Verificar Integridade da Escalação"):
+                changed, msg = verify_lineup_integrity(adm_rod)
+                if changed:
+                    st.success(msg)
+                else:
+                    st.info(msg)
+        st.divider()
+
     df_players, df_team, df_squad = load_data()
     
     if df_team.empty or df_squad.empty:
