@@ -626,7 +626,77 @@ def app(is_admin=False):
                 st.error("Selecione o jogador.")
             else:
                 if save_bid(tid, rodada_auc, pid_free, pid_drop, price):
-                    st.success("Lance enviado!")
+                    # --- COMPROVANTE ---
+                    st.success("✅ Lance Registrado com Sucesso!")
+                    
+                    # Detalhes do Lance
+                    target_name = free_details_auc[free_details_auc['player_id'] == pid_free]['Label'].iloc[0] if not free_details_auc.empty else pid_free
+                    
+                    from datetime import datetime
+                    now_str = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
+                    
+                    st.markdown(
+                        f"""
+                        <div style="background-color: #e6fffa; padding: 20px; border-radius: 10px; border: 1px solid #00664d; margin-top: 10px;">
+                            <h3 style="color: #00664d; margin-top: 0;">🧾 Comprovante de Lance</h3>
+                            <hr style="margin: 10px 0; border-color: #00664d;">
+                            <p><strong>Clube:</strong> {sel_team}</p>
+                            <p><strong>Jogador Alvo:</strong> {target_name}</p>
+                            <p><strong>Valor do Lance:</strong> $ {price:.1f}</p>
+                            <p><strong>Jogador a Dispensar:</strong> {drop_name}</p>
+                            <p><strong>Rodada:</strong> {rodada_auc}</p>
+                            <p><strong>Data/Hora:</strong> {now_str}</p>
+                            <hr style="margin: 10px 0; border-color: #00664d;">
+                            <small style="color: #004d3a;">Este lance foi registrado no sistema. Guarde este comprovante se necessário.</small>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+
+        st.divider()
+        st.markdown("### 📜 Histórico de Lances")
+        
+        # Checkbox for safety
+        if st.checkbox(f"Ver Histórico de Lances de {sel_team} (Rodada {rodada_auc})", key="show_hist"):
+            st.warning(f"⚠️ Atenção: Você tem certeza que deseja visualizar o histórico de lances do time **{sel_team}** na **Rodada {rodada_auc}**?")
+            
+            if st.button("Confirmar Visualização", type="secondary"):
+                try:
+                    client, sh = get_client()
+                    ws_lances = sh.worksheet("LEILAO_LANCES")
+                    vals = ws_lances.get_all_values()
+                    
+                    if len(vals) > 1:
+                        headers = vals[0]
+                        df_lances = pd.DataFrame(vals[1:], columns=headers)
+                        
+                        # Filter by Team and Round
+                        # Ensure types match
+                        df_lances['rodada'] = pd.to_numeric(df_lances['rodada'], errors='coerce').fillna(0).astype(int)
+                        
+                        # Filter
+                        df_filt = df_lances[
+                            (df_lances['team_id'] == str(tid)) & 
+                            (df_lances['rodada'] == int(rodada_auc))
+                        ].copy()
+                        
+                        if not df_filt.empty:
+                            # Display nice table
+                            st.write(f"Encontrados {len(df_filt)} lances:")
+                            
+                            # Select/Rename columns for display
+                            cols_show = ['player_id_free', 'price', 'player_id_team', 'status']
+                            df_show = df_filt[cols_show].copy()
+                            df_show.columns = ['Jogador Alvo (ID)', 'Valor ($)', 'Drop (ID)', 'Status']
+                            
+                            st.dataframe(df_show, hide_index=True, use_container_width=True)
+                        else:
+                            st.info("Nenhum lance encontrado para este time nesta rodada.")
+                    else:
+                        st.info("Nenhum histórico disponível.")
+                except Exception as e:
+                    st.error(f"Erro ao carregar histórico: {e}")
 
     # --- TAB 2: FREE AGENCY ---
     with tab_free:
