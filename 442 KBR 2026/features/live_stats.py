@@ -701,12 +701,8 @@ def run_auto_update(force=False):
         
         # 5. Calculate and Save Points
         df_calc = pd.DataFrame(enriched_data_for_calc)
-        # 5. Calculate and Save Points
-        df_calc = pd.DataFrame(enriched_data_for_calc)
         points_df = calculate_points(df_calc)
         save_points_to_sheet(points_df)
         
-        save_points_to_sheet(points_df)
-        
-        # update_cache_time() # Moved to start to prevent concurrency
+        update_cache_time()
         # st.toast(f"✅ Atualizado: Stats e Pontos salvos.", icon="💾")
