@@ -172,7 +172,7 @@ def get_active_games_cached():
         # st.toast(f"❌ Erro Crítico planilha GAMEWEEK: {e}", icon="💥")
         return []
 
-@st.cache_data(ttl=300) # Cache the LAST UPDATE Check for 5 mins in RAM
+@st.cache_data(ttl=60) # Cache the LAST UPDATE Check for 1 min to allow frequent re-checks
 def check_if_needs_update(active_games_count):
     """
     Checks CACHE_LIVE sheet.
@@ -589,6 +589,9 @@ def run_auto_update():
         # st.toast(f"Live Stats: {len(active_ids)} jogos ativos (Cache mantido).", icon="ℹ️")
         return 
         
+    # LOCK IMMEDIATELY: Update time to prevent others from entering while this processes
+    update_cache_time()
+    
     # st.toast(f"🔄 Atualizando Stats e Pontos de {len(active_ids)} jogos...", icon="⏳")
     
     # 3. Process
@@ -652,5 +655,7 @@ def run_auto_update():
         points_df = calculate_points(df_calc)
         save_points_to_sheet(points_df)
         
-        update_cache_time()
+        save_points_to_sheet(points_df)
+        
+        # update_cache_time() # Moved to start to prevent concurrency
         # st.toast(f"✅ Atualizado: Stats e Pontos salvos.", icon="💾")
