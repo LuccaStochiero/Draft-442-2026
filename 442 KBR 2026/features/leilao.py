@@ -397,7 +397,7 @@ def execute_free_swap(team_id, drop_pid, pickup_pid, rodada):
         # Get headers to know order? Or just append dict values?
         # append_row takes list. 
         # TEAM format: team_id, player_id...
-        ws_team.append_row([str(team_id), str(pickup_pid)])
+        ws_team.append_row([str(pickup_pid), str(team_id)])
         
         # --- PHASE 3: LOG ---
         try:
