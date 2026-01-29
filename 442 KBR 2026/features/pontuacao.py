@@ -464,7 +464,7 @@ def app():
                     lineup_a = round_lineups[round_lineups['team_id'] == tid_a]
                     
                     # Store processed players to render later
-                    # List of (player_row, stats_dict, score, is_captain, raw_score_optional)
+                    # List of (player_row, stats_dict, score)
                     proc_h = []
                     proc_a = []
                     
@@ -482,24 +482,17 @@ def app():
                             if p_rows.empty: continue
                             p_row = p_rows.iloc[0].to_dict()
                             
-                            # Use robust float utility if available, else standard float
-                            raw_score_val = get_pid_score(pid)
-                            
-                            # Check Captain
-                            is_captain = str(p.get('cap', '')).upper() == 'CAPITAO'
-                            
-                            final_score = raw_score_val
-                            if is_captain:
-                                final_score = raw_score_val * 1.5
-                            
-                            total_h += final_score
-                            if final_score != 0: any_pts_h = True
+                            # Score & Stats
+                            score = get_pid_score(pid)
+                            total_h += score
+                            if score != 0: any_pts_h = True
                             
                             s_row = round_stats[round_stats['player_id'] == pid]
                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                             
-                            p_row['pontuacao'] = final_score
-                            proc_h.append((p_row, s_dict, final_score, is_captain, raw_score_val if is_captain else None))
+                            # Inject score into p_row for render color logic if needed or just display
+                            p_row['pontuacao'] = score
+                            proc_h.append((p_row, s_dict, score))
                             
                         # Sort by Score Desc
                         proc_h.sort(key=lambda x: x[2], reverse=True)
@@ -512,69 +505,38 @@ def app():
                             if p_rows.empty: continue
                             p_row = p_rows.iloc[0].to_dict()
                             
-                            raw_score_val = get_pid_score(pid)
-                            
-                            is_captain = str(p.get('cap', '')).upper() == 'CAPITAO'
-                            
-                            final_score = raw_score_val
-                            if is_captain:
-                                final_score = raw_score_val * 1.5
-                                
-                            total_a += final_score
-                            if final_score != 0: any_pts_a = True
+                            score = get_pid_score(pid)
+                            total_a += score
+                            if score != 0: any_pts_a = True
                             
                             s_row = round_stats[round_stats['player_id'] == pid]
                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                             
-                            p_row['pontuacao'] = final_score
-                            proc_a.append((p_row, s_dict, final_score, is_captain, raw_score_val if is_captain else None))
+                            p_row['pontuacao'] = score
+                            proc_a.append((p_row, s_dict, score))
                             
                         proc_a.sort(key=lambda x: x[2], reverse=True)
 
                     # RENDER EXPANDER
+                    # "enquanto nao tiver pontuação... nao é pra mostrar nenhuma escalação"
                     show_details = any_pts_h or any_pts_a
                     
-                    # Enhanced Header with Totals
-                    # Highlight colors for header
-                    header_str = f"**{name_h}** ({total_h:.2f})  x  ({total_a:.2f}) **{name_a}**"
-                    
-                    # Create custom header visualization if desired, but expander label is text only usually without markdown support in older streamlit
-                    # Streamlit expander label supports markdown in newer versions, checking if we can trust it.
-                    # Safest is simple string for expander label, but user asked for "destaque maior".
-                    # We can put a big header ABOVE the expander, or inside?
-                    # "antes de abrir pras pontuacoes iniciais" implies the collapsed state (label) should be prominent.
-                    # Or use a container. Let's try to just make the label Descriptive.
-                    
-                    # Let's try using st.expander check:
-                    # Actually, we can use markdown inside the expander for big summary.
-                    # But the requirement is likely about the summary being visible easily.
+                    header_str = f"{name_h} x {name_a}"
                     
                     with st.expander(header_str, expanded=False):
                         if show_details:
-                           # Detailed Summary at Top of Open Expander
-                           st.markdown(
-                               f"""
-                               <div style="display: flex; justify-content: space-around; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; background-color: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
-                                   <div style="color: #4CAF50;">{total_h:.2f}</div>
-                                   <div style="color: #888;">vs</div>
-                                   <div style="color: #4CAF50;">{total_a:.2f}</div>
-                               </div>
-                               """,
-                               unsafe_allow_html=True
-                           )
-                           
                            c_h, c_a = st.columns(2)
                            with c_h:
-                               st.subheader(name_h)
+                               st.markdown(f"**{name_h}**")
                                if not proc_h: st.caption("Não escalou.")
-                               for pr, sr, _, is_cap, raw_sc in proc_h:
-                                   render_player_row(pr, sr, is_captain=is_cap, raw_score=raw_sc)
+                               for pr, sr, _ in proc_h:
+                                   render_player_row(pr, sr)
                                    
                            with c_a:
-                               st.subheader(name_a)
+                               st.markdown(f"**{name_a}**")
                                if not proc_a: st.caption("Não escalou.")
-                               for pr, sr, _, is_cap, raw_sc in proc_a:
-                                   render_player_row(pr, sr, is_captain=is_cap, raw_score=raw_sc)
+                               for pr, sr, _ in proc_a:
+                                   render_player_row(pr, sr)
                         else:
                             st.info("Aguardando pontuações...")
     # --- TAB 1: JOGOS ---

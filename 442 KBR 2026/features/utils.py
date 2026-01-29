@@ -15,10 +15,12 @@ def robust_to_float(x):
 
 def format_br_decimal(x):
     """
-    Formats a float to a string with 4 decimal places and comma separator.
+    Returns float to let Google Sheets handle formatting.
+    Sending strings caused interpretation errors (e.g. 1,50 -> 150).
     """
     try:
-        val = float(x)
-        return f"{val:.4f}".replace('.', ',')
+        if isinstance(x, str):
+            x = x.replace(',', '.')
+        return float(x)
     except:
-        return "0,0000"
+        return 0.0

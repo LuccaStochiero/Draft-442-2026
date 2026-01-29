@@ -711,25 +711,27 @@ def run_auto_update(force=False):
     """Main entry point called by Players.py"""
     
     # 0. Daily Sync Check
-    check_and_run_daily_sync()
+    # check_and_run_daily_sync()
 
     # 1. Check Active Games
-    active_ids = get_active_games_cached()
+    # active_ids = get_active_games_cached()
     
     # VISIBLE DEBUG
     # st.info(f"DEBUG LIVE: Jogos Ativos Encontrados: {len(active_ids)}. IDs: {active_ids}")
     
-    if not active_ids: return # No games, nothing to do
+    # if not active_ids: return # No games, nothing to do
     
     # 2. Check Cache & Lock
-    if not force:
-        locked, lock_id = try_acquire_lock(len(active_ids))
-        if not locked:
-            # Lock held by someone else or not time yet
-            return
-    else:
-        # If force, we proceed but log it?
-        pass
+    # if not force:
+    #    locked, lock_id = try_acquire_lock(len(active_ids))
+    #    if not locked:
+    #        # Lock held by someone else or not time yet
+    #        return
+    # else:
+    #    # If force, we proceed but log it?
+    #    pass
+    
+    pass
     
     # st.toast(f"🔄 Atualizando Stats e Pontos de {len(active_ids)} jogos...", icon="⏳")
     

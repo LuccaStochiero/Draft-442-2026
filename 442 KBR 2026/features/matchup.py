@@ -160,31 +160,23 @@ def app():
                     
                     escalado = str(row.get('escalado')).upper() == 'TRUE'
                     if str(row.get('escalado')) == '1': escalado = True
+                    
+                    # Read Captain from TP
+                    cap_val = str(row.get('cap', '')).upper()
+                    is_captain = (cap_val == 'CAPITAO')
+                    
                 else:
                     # Fallback Calc
-                    # Get Score from df_pts logic (similar to team_points.py get_score)
-                    # For UI speed, we can reuse `pontuacao` logic: get all game_ids for round...
-                    # Simplified: Use `df_pts` loaded in `load_live_data`
-                    
-                    # Need game_ids for this round again
-                    # This is heavy to do per player.
-                    # Let's try to lookup in df_pts directly if unique enough
-                    # OR, assume if TP is missing, scores are likely 0 or not calculated yet?
-                    # No, user might look at Matchup before auto-update runs substitution logic?
-                    # Ideally auto-update runs frequently.
-                    # Let's assume we fetch live score from df_pts if TP missing.
-                    
-                    # Score fetch
                     pts_rows = df_pts[df_pts['player_id'] == pid] 
-                    # Filter by round? We need logic. 
-                    # Reuse get_pid_score logic from pontuacao.py
-                    # (Simplified)
-                    score = pts_rows['pontuacao'].sum() # risky if multiple rounds active?
-                    # Correct: Filter by game_ids of the round.
-                    # (Code needs reference to round_matches)
+                    score = pts_rows['pontuacao'].sum()
                     
                     lineup_val = row.get('lineup', 'TITULAR')
-                    escalado = (lineup_val == 'TITULAR') # Default assumption
+                    escalado = (lineup_val == 'TITULAR') 
+                    
+                    # Check Captain in Lineup
+                    is_captain = str(row.get('cap', '')).upper() == 'CAPITAO'
+                    if is_captain:
+                        score = score * 1.5
                     
                 # Add to total if escalado
                 if escalado: total += score
@@ -199,11 +191,18 @@ def app():
                 # Enrich p_info for renderer
                 p_info['pontuacao'] = score
                 
+                # Raw Score for Display
+                raw_score_disp = score
+                if is_captain and score != 0:
+                    raw_score_disp = score / 1.5
+                
                 processed.append({
                     'p_info': p_info,
                     's_dict': s_dict,
                     'score': score,
-                    'escalado': escalado
+                    'escalado': escalado,
+                    'is_captain': is_captain,
+                    'raw_score': raw_score_disp
                 })
                 
             # SORTING LOGIC
@@ -232,7 +231,21 @@ def app():
         data_a, score_a = get_team_data(tid_a)
         
         # RENDER
-        with st.expander(f"{name_h} ({score_h:.2f})  x  ({score_a:.2f}) {name_a}", expanded=True):
+        # RENDER
+        header_str = f"**{name_h}** ({score_h:.2f})  x  ({score_a:.2f}) **{name_a}**"
+        
+        with st.expander(header_str, expanded=True):
+             st.markdown(
+               f"""
+               <div style="display: flex; justify-content: space-around; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; background-color: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                   <div style="color: #4CAF50;">{score_h:.2f}</div>
+                   <div style="color: #888;">vs</div>
+                   <div style="color: #4CAF50;">{score_a:.2f}</div>
+               </div>
+               """,
+               unsafe_allow_html=True
+             )
+             
              c1, c2 = st.columns(2)
              
              def render_list(data_list):
@@ -244,7 +257,11 @@ def app():
                  if starters:
                      st.markdown("**TITULARES**")
                      for item in starters:
-                         render_player_row(item['p_info'], item['s_dict'])
+                         render_player_row(
+                             item['p_info'], item['s_dict'], 
+                             is_captain=item.get('is_captain', False), 
+                             raw_score=item.get('raw_score')
+                         )
                          
                  if bench:
                      st.markdown("---")
@@ -252,7 +269,11 @@ def app():
                      for item in bench:
                          # Render with opacity
                          st.markdown(f"<div style='opacity: 0.5;'>", unsafe_allow_html=True)
-                         render_player_row(item['p_info'], item['s_dict'])
+                         render_player_row(
+                             item['p_info'], item['s_dict'],
+                             is_captain=item.get('is_captain', False),
+                             raw_score=item.get('raw_score')
+                         )
                          st.markdown("</div>", unsafe_allow_html=True)
 
              with c1:

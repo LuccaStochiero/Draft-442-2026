@@ -240,13 +240,14 @@ def calculate_team_points(target_round=None):
                 if is_captain and in_active:
                     score = score * 1.5  # Captain bonus
                 
-                # User wants: ["team_id", "player_id", "rodada", "pontuacao", "entrou_titular"]
+                # User wants: ["team_id", "player_id", "rodada", "pontuacao", "escalado", "cap"]
                 final_rows.append({
                     "team_id": tid,
                     "player_id": pid,
                     "rodada": r,
                     "pontuacao": score,
-                    "escalado": in_active # "se ele entrou na escalacao titular" -> The final active lineup
+                    "escalado": in_active, # "se ele entrou na escalacao titular" -> The final active lineup
+                    "cap": 'CAPITAO' if is_captain else ''
                 })
 
     # 4. Save
