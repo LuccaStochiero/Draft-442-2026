@@ -227,18 +227,22 @@ def app():
              
              def render_list(data_list):
                  if not data_list: return
-                 for item in data_list:
-                     p = item['p_info']
-                     s = item['s_dict']
-                     esc = item['escalado']
-                     
-                     # Visual Queue for Bench/Out
-                     if not esc:
+                 
+                 starters = [x for x in data_list if x['escalado']]
+                 bench = [x for x in data_list if not x['escalado']]
+                 
+                 if starters:
+                     st.markdown("**TITULARES**")
+                     for item in starters:
+                         render_player_row(item['p_info'], item['s_dict'])
+                         
+                 if bench:
+                     st.markdown("---")
+                     st.markdown("**BANCO DE RESERVAS**")
+                     for item in bench:
+                         # Render with opacity
                          st.markdown(f"<div style='opacity: 0.5;'>", unsafe_allow_html=True)
-                     
-                     render_player_row(p, s)
-                     
-                     if not esc:
+                         render_player_row(item['p_info'], item['s_dict'])
                          st.markdown("</div>", unsafe_allow_html=True)
 
              with c1:
