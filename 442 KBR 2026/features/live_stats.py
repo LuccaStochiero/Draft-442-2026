@@ -246,7 +246,6 @@ def release_lock(lock_id):
     # So we don't need to do anything else.
     pass
 
-@st.cache_data(ttl=3600, show_spinner=False)
 def check_and_run_daily_sync():
     """
     Checks if General Sync (B2 in CACHE_LIVE) runs for today.
