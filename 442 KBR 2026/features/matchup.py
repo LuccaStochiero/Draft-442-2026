@@ -211,7 +211,7 @@ def app():
             # 2. Position (GK, DEF, MID, FWD)
             # 3. Score Desc
             
-            POS_ORDER = {'GK': 0, 'G': 0, 'DEF': 1, 'D': 1, 'MID': 2, 'M': 2, 'FWD': 3, 'F': 3, 'ATT': 3}
+            POS_ORDER = {'GK': 0, 'G': 0, 'GOL': 0, 'DEF': 1, 'D': 1, 'MID': 2, 'M': 2, 'MEI': 2, 'FWD': 3, 'F': 3, 'ATT': 3, 'ATA': 3}
             
             def get_sort_key(item):
                 # Escalado: True -> 0, False -> 1 (so True comes first)
