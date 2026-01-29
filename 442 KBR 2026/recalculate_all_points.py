@@ -24,15 +24,6 @@ def recalculate_all():
     print("Recalculating points...")
     points_df = calculate_points(df_stats)
     
-    # 3. Save (Overwrite mode usually needed for full update)
-    # save_points_to_sheet logic usually merges active games. 
-    # But since we are passing EVERYTHING, we can just dump it?
-    # save_points_to_sheet has logic:
-    #   if existing:
-    #       mask = ~existing['game_id'].isin(updated_game_ids)
-    #       final = concat(existing[mask], new)
-    # If we pass ALL game_ids, 'mask' will be empty (all overridden), which is exactly what we want.
-    
     if points_df.empty:
         print("Calculation resulted in empty DataFrame.")
         return

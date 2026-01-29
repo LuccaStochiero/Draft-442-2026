@@ -250,7 +250,6 @@ def calculate_team_points(target_round=None):
     # Format pontuacao as string with comma for PT-BR locale sheets
     if 'pontuacao' in df_out.columns:
         df_out['pontuacao'] = pd.to_numeric(df_out['pontuacao'], errors='coerce').fillna(0.0)
-        df_out['pontuacao'] = df_out['pontuacao'].apply(lambda x: f"{x:.2f}".replace('.', ','))
 
     # Write to H2H - TEAM_POINTS
     try:

@@ -681,10 +681,8 @@ def save_points_to_sheet(points_df):
         # Write back
         header = ['game_id', 'player_id', 'pontuacao']
         if 'pontuacao' in final_df.columns:
-            # Convert pontuacao to string with comma to align with BR locale in Sheets
-            # Prevents 17.4 from becoming 174
+            # Ensure pontuacao is float
             final_df['pontuacao'] = pd.to_numeric(final_df['pontuacao'], errors='coerce').fillna(0.0)
-            final_df['pontuacao'] = final_df['pontuacao'].apply(lambda x: f"{x:.2f}".replace('.', ','))
         
         # Write back (convert rest to str)
         header = ['game_id', 'player_id', 'pontuacao']
@@ -692,7 +690,7 @@ def save_points_to_sheet(points_df):
         # Ensure correct order
         final_df = final_df[header]
         
-        final_values = [header] + final_df.astype(str).values.tolist()
+        final_values = [header] + final_df.values.tolist()
         
         ws.clear()
         ws.update('A1', final_values)
