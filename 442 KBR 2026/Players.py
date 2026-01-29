@@ -9,20 +9,20 @@ import time
 
 def main():
     # Background Service: Check Live Stats (Safe Concurrency)
-    # Throttling: Only run every 60 seconds per session to avoid UI stutter on page changes
+    # DISABLED PER USER REQUEST
     if 'last_sync_ts' not in st.session_state:
         st.session_state['last_sync_ts'] = 0
         
-    now = time.time()
-    if now - st.session_state['last_sync_ts'] > 60:
-        try:
-            # Using a status container is less intrusive than a full spinner for background checks
-            with st.status("🔄 Verificando dados...", expanded=False) as status:
-                live_stats.run_auto_update()
-                status.update(label="✅ Dados verificados.", state="complete", expanded=False)
-            st.session_state['last_sync_ts'] = now
-        except Exception as e:
-            st.error(f"Erro na atualização automática: {e}")
+    # now = time.time()
+    # if now - st.session_state['last_sync_ts'] > 60:
+    #     try:
+    #         # Using a status container is less intrusive than a full spinner for background checks
+    #         with st.status("🔄 Verificando dados...", expanded=False) as status:
+    #             live_stats.run_auto_update()
+    #             status.update(label="✅ Dados verificados.", state="complete", expanded=False)
+    #         st.session_state['last_sync_ts'] = now
+    #     except Exception as e:
+    #         st.error(f"Erro na atualização automática: {e}")
     
     st.sidebar.title("⚽ Players Area")
     
