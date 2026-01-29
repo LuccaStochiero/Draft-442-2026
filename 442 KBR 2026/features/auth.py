@@ -44,6 +44,21 @@ def get_client():
         raise Exception("No credentials found")
     
     client = gspread.authorize(creds)
+    
+    # Retry logic for Quota Exceeded
+    import time
+    for i in range(5):
+        try:
+            return client, client.open_by_key(SHEET_ID)
+        except gspread.exceptions.APIError as e:
+            if "429" in str(e) or "Quota exceeded" in str(e):
+                wait_time = (2 ** i) + 1 # 2, 3, 5, 9, 17s
+                print(f"Quota exceeded. Retrying in {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                raise e
+    
+    # Final try
     return client, client.open_by_key(SHEET_ID)
 
 def get_players_file():
