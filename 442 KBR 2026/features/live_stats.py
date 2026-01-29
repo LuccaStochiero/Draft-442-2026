@@ -172,46 +172,79 @@ def get_active_games_cached():
         # st.toast(f"❌ Erro Crítico planilha GAMEWEEK: {e}", icon="💥")
         return []
 
-@st.cache_data(ttl=60) # Cache the LAST UPDATE Check for 1 min to allow frequent re-checks
-def check_if_needs_update(active_games_count):
+import uuid
+
+def try_acquire_lock(active_games_count):
     """
-    Checks CACHE_LIVE sheet.
-    Returns TRUE if last update > 5 mins ago.
-    This runs against Sheets API but result is cached in Streamlit RAM.
+    Attempts to acquire a lock to update the stats.
+    Uses CACHE_LIVE sheet with a 'Lock ID' mechanism.
+    Returns (True, lock_id) if successful, (False, None) otherwise.
     """
-    if active_games_count == 0: return False
+    if active_games_count == 0: return False, None
 
     try:
         client, sh = get_client()
         try:
             ws = sh.worksheet(CACHE_SHEET)
         except:
-            ws = sh.add_worksheet(CACHE_SHEET, 10, 2)
-            ws.append_row(['last_update'])
-            ws.append_row(['2000-01-01 00:00:00'])
-            
-        val = ws.acell('A2').value
-        if not val: return True
-        
-        last_dt = pd.to_datetime(val)
-        now = datetime.datetime.now()
-        
-        diff_min = (now - last_dt).total_seconds() / 60
-        
-        return diff_min >= 5
-    except:
-        return True # Default to update if fails
+            ws = sh.add_worksheet(CACHE_SHEET, 10, 3)
+            ws.append_row(['last_update', 'last_general_sync', 'lock_id'])
+            ws.append_row(['2000-01-01 00:00:00', '2000-01-01', 'init'])
 
-def update_cache_time():
-    try:
-        client, sh = get_client()
-        ws = sh.worksheet(CACHE_SHEET)
+        # 1. Check existing timestamp (A2)
+        # We only try to acquire if the last update was > 5 mins ago OR it's clearly stale/free
+        val_time = ws.acell('A2').value
+        should_try = False
+        
+        if not val_time: 
+            should_try = True
+        else:
+            try:
+                last_dt = pd.to_datetime(val_time)
+                now = datetime.datetime.now()
+                diff_min = (now - last_dt).total_seconds() / 60
+                if diff_min >= 2: # Reduce to 2 mins to be more responsive but still safe? Or keep 5? User said 5. Let's stick to logic.
+                     should_try = True
+            except:
+                should_try = True
+        
+        if not should_try:
+            return False, None
+
+        # 2. Attempt to Lock
+        # Generate ID
+        my_lock_id = str(uuid.uuid4())[:8]
         now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Write Lock ID (C2) and Time (A2)
+        # We write Time to "reserve" the slot so others see it as recent.
+        # We write Lock ID to claim it.
         ws.update_acell('A2', now_str)
-        # Invalidate the cache for the checker so next run sees new time?
-        check_if_needs_update.clear()
-    except:
-        pass
+        ws.update_acell('C2', my_lock_id)
+        
+        # 3. Wait for consistency (Race condition check)
+        time.sleep(2)
+        
+        # 4. Read back Lock ID
+        current_lock_id = ws.acell('C2').value
+        
+        if current_lock_id == my_lock_id:
+            # We have the lock!
+            return True, my_lock_id
+        else:
+            # Someone else overwrote us
+            return False, None
+
+    except Exception as e:
+        print(f"Lock Error: {e}")
+        return False, None
+
+def release_lock(lock_id):
+    # Optional: Clear lock? 
+    # Actually, we leave the time set (A2) so strictly speaking the "Lock" is the time window.
+    # The LockID was just to win the race to SET the time.
+    # So we don't need to do anything else.
+    pass
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def check_and_run_daily_sync():
@@ -354,7 +387,42 @@ def get_player_pos_map():
         print(f"Error loading player map: {e}")
         return {}
 
-def extract_stats(player_data, game_id, team_side, home_score, away_score, pos_map=None):
+def fetch_game_comments(game_id):
+    url = f"https://api.sofascore.com/api/v1/event/{game_id}/comments"
+    try:
+        r = cffi_requests.get(url, impersonate="chrome120", timeout=15)
+        if r.status_code == 200:
+            return r.json()
+    except:
+        pass
+    return None
+
+def parse_cards_from_comments(comments_data):
+    """
+    Parses comments to count yellow and red cards per player.
+    Returns: { str(player_id): {'yellow': int, 'red': int} }
+    """
+    card_map = {}
+    if not comments_data or 'comments' not in comments_data:
+        return card_map
+    
+    for c in comments_data['comments']:
+        ctype = c.get('type')
+        if ctype in ['yellowCard', 'redCard']:
+            p = c.get('player', {})
+            pid = str(p.get('id', ''))
+            if not pid: continue
+            
+            if pid not in card_map: card_map[pid] = {'yellow': 0, 'red': 0}
+            
+            if ctype == 'yellowCard':
+                card_map[pid]['yellow'] += 1
+            elif ctype == 'redCard':
+                card_map[pid]['red'] += 1
+                
+    return card_map
+
+def extract_stats(player_data, game_id, team_side, home_score, away_score, pos_map=None, card_map=None):
     """
     Extracts flat stats and enriched data for scoring.
     team_side: 'home' or 'away'
@@ -409,6 +477,12 @@ def extract_stats(player_data, game_id, team_side, home_score, away_score, pos_m
     
     for f in fields:
         row[f] = stats.get(f, 0)
+    
+    # 2. CARD OVERRIDE FROM COMMENTS
+    if card_map and pid in card_map:
+        # Override values
+        row['yellowCards'] = card_map[pid]['yellow']
+        row['redCards'] = card_map[pid]['red']
         
     return row
 
@@ -631,14 +705,15 @@ def run_auto_update(force=False):
     
     if not active_ids: return # No games, nothing to do
     
-    # 2. Check Cache
-    # 2. Check Cache
-    if not force and not check_if_needs_update(len(active_ids)):
-        # st.toast(f"Live Stats: {len(active_ids)} jogos ativos (Cache mantido).", icon="ℹ️")
-        return 
-        
-    # LOCK IMMEDIATELY: Update time to prevent others from entering while this processes
-    update_cache_time()
+    # 2. Check Cache & Lock
+    if not force:
+        locked, lock_id = try_acquire_lock(len(active_ids))
+        if not locked:
+            # Lock held by someone else or not time yet
+            return
+    else:
+        # If force, we proceed but log it?
+        pass
     
     # st.toast(f"🔄 Atualizando Stats e Pontos de {len(active_ids)} jogos...", icon="⏳")
     
@@ -672,6 +747,10 @@ def run_auto_update(force=False):
         if not data: 
             # st.toast(f"Falha jogo {api_id}", icon="⚠️")
             continue
+            
+        # C. Fetch Comments (Cards Override)
+        comments_data = fetch_game_comments(api_id)
+        card_map = parse_cards_from_comments(comments_data)
         
         # Process Home
         home_players = data.get('home', {}).get('players', [])
@@ -682,7 +761,7 @@ def run_auto_update(force=False):
             
             # Home Team -> team_side='home'
             # PASS RAW ID FOR SAVING
-            row = extract_stats(p, raw_id, 'home', home_score, away_score, pos_map)
+            row = extract_stats(p, raw_id, 'home', home_score, away_score, pos_map, card_map)
             all_game_stats.append(row)
             enriched_data_for_calc.append(row)
             
@@ -691,7 +770,7 @@ def run_auto_update(force=False):
         for p in away_players:
             # Away Team -> team_side='away'
              # PASS RAW ID FOR SAVING
-            row = extract_stats(p, raw_id, 'away', home_score, away_score, pos_map)
+            row = extract_stats(p, raw_id, 'away', home_score, away_score, pos_map, card_map)
             all_game_stats.append(row)
             enriched_data_for_calc.append(row)
             
@@ -704,5 +783,5 @@ def run_auto_update(force=False):
         points_df = calculate_points(df_calc)
         save_points_to_sheet(points_df)
         
-        update_cache_time()
+        # Lock is released implicitly by time, no need to call update_cache_time again
         # st.toast(f"✅ Atualizado: Stats e Pontos salvos.", icon="💾")

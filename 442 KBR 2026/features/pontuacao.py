@@ -191,8 +191,15 @@ def render_player_row(row, stats_row):
         details.append("B_DRI")
 
     # 5. OFFENSIVE ACTIONS
-    shots_ontarget = g('onTargetScoringAttempt')
-    if shots_ontarget: details.append(f"{shots_ontarget}F.DEF") # Finalização Defendida/Gol (No Alvo)
+    # 5. OFFENSIVE ACTIONS
+    shots_ontarget = g('ontargetscoringattempt')
+    hit_wood = g('hitwoodwork') # standardized lowercase key
+    goals = g('goals')
+    
+    # Calculate "Real" Shots on Target for Display (F.DEF)
+    f_def_display = max(0, shots_ontarget - hit_wood - goals)
+    
+    if f_def_display > 0: details.append(f"{int(f_def_display)}F.DEF") # Finalização Defendida
     
     shots_offtarget = g('shotOffTarget')
     if shots_offtarget: details.append(f"{shots_offtarget}F.FOR") # Finalização Fora
