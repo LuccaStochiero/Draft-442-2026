@@ -38,7 +38,26 @@ def app():
         
     # Standard Filters (Round)
     all_rounds = sorted(df_gw['rodada'].unique()) if 'rodada' in df_gw.columns else []
-    sel_round = st.selectbox("Rodada", all_rounds, index=len(all_rounds)-1 if all_rounds else 0)
+    
+    # Determine default index (Round closest to today)
+    default_idx = 0
+    if all_rounds and 'data_hora' in df_gw.columns and not df_gw.empty:
+        try:
+            now = pd.Timestamp.now()
+            # Convert GW dates
+            df_gw['dt'] = pd.to_datetime(df_gw['data_hora'], dayfirst=True, errors='coerce')
+            # Find future or active games
+            future = df_gw[df_gw['dt'] >= (now - pd.Timedelta(days=2))] # Include recent past
+            if not future.empty:
+                next_round = future.sort_values('dt').iloc[0]['rodada']
+                if next_round in all_rounds:
+                    default_idx = all_rounds.index(next_round)
+            else:
+                default_idx = len(all_rounds) - 1
+        except:
+            default_idx = len(all_rounds) - 1
+
+    sel_round = st.selectbox("Rodada", all_rounds, index=default_idx)
     
     if df_h2h.empty:
         st.info("Sem confrontos.")
