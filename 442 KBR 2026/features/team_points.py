@@ -240,6 +240,11 @@ def calculate_team_points(target_round=None):
                 
                 in_active = (pid in active_pids)
                 
+                # Check if player is captain (cap column = 'CAPITAO')
+                is_captain = str(p.get('cap', '')).upper() == 'CAPITAO'
+                if is_captain and in_active:
+                    score = score * 1.5  # Captain bonus
+                
                 # User wants: ["team_id", "player_id", "rodada", "pontuacao", "entrou_titular"]
                 final_rows.append({
                     "team_id": tid,
