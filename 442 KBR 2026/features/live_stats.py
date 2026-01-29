@@ -782,6 +782,13 @@ def run_auto_update(force=False):
         df_calc = pd.DataFrame(enriched_data_for_calc)
         points_df = calculate_points(df_calc)
         save_points_to_sheet(points_df)
+
+        # 6. Update Team Points (Substitutions)
+        try:
+             from features.team_points import calculate_team_points
+             calculate_team_points() 
+        except Exception as e:
+             print(f"Error updating team points: {e}")
         
         # Lock is released implicitly by time, no need to call update_cache_time again
         # st.toast(f"✅ Atualizado: Stats e Pontos salvos.", icon="💾")
