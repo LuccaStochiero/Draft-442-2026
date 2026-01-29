@@ -24,8 +24,13 @@ def calculate_team_points(target_round=None):
         ws_gw = sh.worksheet("GAMEWEEK")
         df_gw = pd.DataFrame(ws_gw.get_all_records())
         
+        # Use get_values for POINTS_SHEET to preserve comma-decimal strings
         ws_pts = sh.worksheet(POINTS_SHEET)
-        df_pts = pd.DataFrame(ws_pts.get_all_records())
+        pts_values = ws_pts.get_values()
+        if pts_values and len(pts_values) > 1:
+            df_pts = pd.DataFrame(pts_values[1:], columns=pts_values[0])
+        else:
+            df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
         
         ws_stats = sh.worksheet(STATS_SHEET)
         df_stats = pd.DataFrame(ws_stats.get_all_records())
@@ -250,6 +255,8 @@ def calculate_team_points(target_round=None):
     # Format pontuacao as string with comma for PT-BR locale sheets
     if 'pontuacao' in df_out.columns:
         df_out['pontuacao'] = pd.to_numeric(df_out['pontuacao'], errors='coerce').fillna(0.0)
+        # Convert to string with comma as decimal separator for BR locale sheets
+        df_out['pontuacao'] = df_out['pontuacao'].apply(lambda x: f"{x:.4f}".replace('.', ','))
 
     # Write to H2H - TEAM_POINTS
     try:
@@ -259,7 +266,8 @@ def calculate_team_points(target_round=None):
             ws_out = sh.add_worksheet(TEAM_POINTS_SHEET, 1000, 5)
             
         ws_out.clear()
-        ws_out.update([df_out.columns.values.tolist()] + df_out.values.tolist())
+        # Use USER_ENTERED to respect sheet locale for decimal interpretation
+        ws_out.update([df_out.columns.values.tolist()] + df_out.values.tolist(), value_input_option='USER_ENTERED')
         print("Updated H2H - TEAM_POINTS")
     except Exception as e:
         print(f"Error saving: {e}")

@@ -9,14 +9,24 @@ def load_matchup_data():
     client, sh = get_client()
     try:
         ws = sh.worksheet("H2H - TEAM_POINTS")
-        df_tp = pd.DataFrame(ws.get_all_records())
+        # Use get_values to preserve comma-decimal strings
+        raw_values = ws.get_values()
+        if raw_values and len(raw_values) > 1:
+            df_tp = pd.DataFrame(raw_values[1:], columns=raw_values[0])
+        else:
+            df_tp = pd.DataFrame()
+        
         # Normalize
         if not df_tp.empty:
              df_tp.columns = [c.lower() for c in df_tp.columns]
              # Columns: team_id, player_id, rodada, pontuacao, escalado
              df_tp['player_id'] = df_tp['player_id'].astype(str)
              df_tp['team_id'] = df_tp['team_id'].astype(str)
-             # escalado might be boolean or TRUE/FALSE string
+             # Convert pontuacao comma-string to float
+             if 'pontuacao' in df_tp.columns:
+                 df_tp['pontuacao'] = df_tp['pontuacao'].apply(
+                     lambda x: float(str(x).replace(',', '.')) if x else 0.0
+                 )
              # Ensure numeric round
              df_tp['rodada'] = pd.to_numeric(df_tp['rodada'], errors='coerce')
     except:

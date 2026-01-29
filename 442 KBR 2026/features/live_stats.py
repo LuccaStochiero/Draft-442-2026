@@ -681,11 +681,10 @@ def save_points_to_sheet(points_df):
         # Write back
         header = ['game_id', 'player_id', 'pontuacao']
         if 'pontuacao' in final_df.columns:
-            # Ensure pontuacao is float
+            # Ensure pontuacao is float first
             final_df['pontuacao'] = pd.to_numeric(final_df['pontuacao'], errors='coerce').fillna(0.0)
-        
-        # Write back (convert rest to str)
-        header = ['game_id', 'player_id', 'pontuacao']
+            # Convert to string with comma as decimal separator for BR locale sheets
+            final_df['pontuacao'] = final_df['pontuacao'].apply(lambda x: f"{x:.4f}".replace('.', ','))
         
         # Ensure correct order
         final_df = final_df[header]
@@ -693,7 +692,8 @@ def save_points_to_sheet(points_df):
         final_values = [header] + final_df.values.tolist()
         
         ws.clear()
-        ws.update('A1', final_values)
+        # Use USER_ENTERED to respect sheet locale for decimal interpretation
+        ws.update('A1', final_values, value_input_option='USER_ENTERED')
         # st.toast(f"Pontos salvos na aba '{POINTS_SHEET}': {len(final_df)} registros.", icon="✅")
 
     except Exception as e:
