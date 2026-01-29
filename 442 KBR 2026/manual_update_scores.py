@@ -16,11 +16,10 @@ from features.live_stats import (
 from features.team_points import calculate_team_points
 
 # Configuration
-TARGET_DATE_STR = "28/01/2026"  # YESTERDAY
-# TARGET_DATE_STR = "29/01/2026" # TODAY (For testing if needed)
+TARGET_DATES = ["28/01/2026", "29/01/2026"]
 
 def manual_update_scores():
-    print(f"--- Manual Score Update for {TARGET_DATE_STR} ---")
+    print(f"--- Manual Score Update for {TARGET_DATES} ---")
 
     # 1. Get Games for Target Date
     client, sh = get_client()
@@ -29,22 +28,20 @@ def manual_update_scores():
     df_gw = pd.DataFrame(gw_data)
     
     # Filter by date
-    # data_hora format expected: "DD/MM/YYYY HH:MM"
-    # We match the date part
     target_games = []
     
     print(f"Scanning {len(df_gw)} games in GAMEWEEK...")
     
     for _, row in df_gw.iterrows():
         dt_str = str(row.get('data_hora', ''))
-        if TARGET_DATE_STR in dt_str:
+        if any(d in dt_str for d in TARGET_DATES):
             target_games.append(row)
             
     if not target_games:
-        print(f"No games found for date {TARGET_DATE_STR}.")
+        print(f"No games found for dates {TARGET_DATES}.")
         return
 
-    print(f"Found {len(target_games)} games for {TARGET_DATE_STR}.")
+    print(f"Found {len(target_games)} games for {TARGET_DATES}.")
     
     # 2. Extract Stats
     all_game_stats = []
