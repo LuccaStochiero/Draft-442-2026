@@ -513,10 +513,11 @@ def calculate_points(df):
     df['L_nota'] = np.select(cond_nota, val_nota, default=0)
 
     # 2. Pontos Negativos
+    real_fouls = (df['fouls'] - df['penaltyConceded']).clip(lower=0)
     df['L_negativos'] = (
         (df['ownGoals'] * -2) + (df['yellowCards'] * -1) + (df['totalOffside'] * -0.25) +
         (df['dispossessed'] * -0.25) + (df['penaltyConceded'] * -2) + 
-        (df['penaltyMiss'] * -3) + (df['fouls'] * -0.5)
+        (df['penaltyMiss'] * -3) + (real_fouls * -0.5)
     )
     
     # 3. Cartão Vermelho

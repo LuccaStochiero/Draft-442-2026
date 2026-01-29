@@ -248,7 +248,12 @@ def render_player_row(row, stats_row):
     if offsides: details.append(f"{offsides}IMP")
     
     fouls_commited = g('fouls')
-    if fouls_commited: details.append(f"{fouls_commited}FC")
+    pen_conceded = g('penaltyconceded') or g('penaltyConceded')
+    
+    # Adjust for display so we don't double count penalty in fouls count visual
+    real_fouls_disp = max(0, fouls_commited - pen_conceded)
+    
+    if real_fouls_disp: details.append(f"{real_fouls_disp}FC")
     
     pen_conceded = g('penaltyConceded')
     if pen_conceded: details.append(f"{pen_conceded}PC")
