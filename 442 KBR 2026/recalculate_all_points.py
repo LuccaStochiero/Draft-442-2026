@@ -2,6 +2,7 @@
 import pandas as pd
 from features.auth import get_client
 from features.live_stats import calculate_points, STATS_SHEET, POINTS_SHEET
+from features.utils import robust_to_float, format_br_decimal
 
 def recalculate_all():
     print("--- Recalculating Points for ALL Games (FULL OVERWRITE) ---")
@@ -33,8 +34,8 @@ def recalculate_all():
     
     # 3. Format pontuacao for BR locale (comma as decimal separator)
     print("Formatting pontuacao for BR locale...")
-    points_df['pontuacao'] = pd.to_numeric(points_df['pontuacao'], errors='coerce').fillna(0.0)
-    points_df['pontuacao'] = points_df['pontuacao'].apply(lambda x: f"{x:.4f}".replace('.', ','))
+    points_df['pontuacao'] = points_df['pontuacao'].apply(robust_to_float)
+    points_df['pontuacao'] = points_df['pontuacao'].apply(format_br_decimal)
     
     # 4. COMPLETE OVERWRITE - do NOT merge with existing data
     print(f"Saving {len(points_df)} points rows (FULL OVERWRITE)...")

@@ -3,6 +3,7 @@ import datetime
 import re
 from features.auth import get_client
 from features.live_stats import STATS_SHEET, POINTS_SHEET
+from features.utils import robust_to_float, format_br_decimal
 
 TEAM_POINTS_SHEET = "H2H - TEAM_POINTS"
 
@@ -46,13 +47,7 @@ def calculate_team_points(target_round=None):
     
     # Robust numeric conversion for points
     if 'pontuacao' in df_pts.columns:
-        def to_float(x):
-            try:
-                if isinstance(x, str): x = x.replace(',', '.')
-                return float(x)
-            except:
-                return 0.0
-        df_pts['pontuacao'] = df_pts['pontuacao'].apply(to_float)
+        df_pts['pontuacao'] = df_pts['pontuacao'].apply(robust_to_float)
 
     
     # Ensure IDs are strings
@@ -259,9 +254,9 @@ def calculate_team_points(target_round=None):
     
     # Format pontuacao as string with comma for PT-BR locale sheets
     if 'pontuacao' in df_out.columns:
-        df_out['pontuacao'] = pd.to_numeric(df_out['pontuacao'], errors='coerce').fillna(0.0)
+        df_out['pontuacao'] = df_out['pontuacao'].apply(robust_to_float)
         # Convert to string with comma as decimal separator for BR locale sheets
-        df_out['pontuacao'] = df_out['pontuacao'].apply(lambda x: f"{x:.4f}".replace('.', ','))
+        df_out['pontuacao'] = df_out['pontuacao'].apply(format_br_decimal)
 
     # Write to H2H - TEAM_POINTS
     try:

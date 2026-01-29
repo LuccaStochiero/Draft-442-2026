@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from features.auth import get_client, get_players_file
+from features.utils import robust_to_float
 
 @st.cache_data(ttl=3600) # Cache Static Data for 1 Hour
 def load_static_data():
@@ -82,9 +83,7 @@ def load_live_data(_client=None, _sh=None):
                  df_pts['player_id'] = df_pts['player_id'].astype(str)
                  df_pts['game_id'] = df_pts['game_id'].astype(str)
                  # Parse pontuacao from comma-decimal string
-                 df_pts['pontuacao'] = df_pts['pontuacao'].apply(
-                     lambda x: float(str(x).replace(',', '.')) if x else 0.0
-                 )
+                 df_pts['pontuacao'] = df_pts['pontuacao'].apply(robust_to_float)
         except:
              df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
 
@@ -124,7 +123,7 @@ def render_player_row(row, stats_row):
     
     details = []
     
-def render_player_row(row, stats_row):
+def render_player_row(row, stats_row, is_captain=False, raw_score=None):
     # Normalize keys to lower case for easier access
     s = {k.lower(): v for k, v in stats_row.items()}
     
@@ -287,6 +286,17 @@ def render_player_row(row, stats_row):
     if pts > 8: pts_color = "#006600" # High score
     elif pts < 0: pts_color = "#cc0000" # Negative
     
+    # Captain Logic
+    name_display = row.get('Nome', 'Desconhecido')
+    points_display_str = f"{pts:.2f}"
+    
+    if is_captain:
+        name_display += " ©"
+        if raw_score is not None:
+             points_display_str = f"{pts:.2f} ({raw_score:.2f})"
+        else:
+             points_display_str = f"{pts:.2f}"
+    
     st.markdown(
         f"""
         <div style="
@@ -311,7 +321,7 @@ def render_player_row(row, stats_row):
                 {pos}
             </div>
             <div style="flex-grow: 1;">
-                <div style="font-weight: 600; color: #ffffff;">{row.get('Nome', 'Desconhecido')}</div>
+                <div style="font-weight: 600; color: #ffffff;">{name_display}</div>
                 <div style="font-size: 0.75em; color: #eeeeee;">{detail_str}</div>
             </div>
             <div style="
@@ -321,7 +331,7 @@ def render_player_row(row, stats_row):
                 min-width: 40px;
                 text-align: right;
             ">
-                {pts:.2f}
+                {points_display_str}
             </div>
         </div>
         """,
@@ -454,7 +464,7 @@ def app():
                     lineup_a = round_lineups[round_lineups['team_id'] == tid_a]
                     
                     # Store processed players to render later
-                    # List of (player_row, stats_dict, score)
+                    # List of (player_row, stats_dict, score, is_captain, raw_score_optional)
                     proc_h = []
                     proc_a = []
                     
@@ -472,17 +482,24 @@ def app():
                             if p_rows.empty: continue
                             p_row = p_rows.iloc[0].to_dict()
                             
-                            # Score & Stats
-                            score = get_pid_score(pid)
-                            total_h += score
-                            if score != 0: any_pts_h = True
+                            # Use robust float utility if available, else standard float
+                            raw_score_val = get_pid_score(pid)
+                            
+                            # Check Captain
+                            is_captain = str(p.get('cap', '')).upper() == 'CAPITAO'
+                            
+                            final_score = raw_score_val
+                            if is_captain:
+                                final_score = raw_score_val * 1.5
+                            
+                            total_h += final_score
+                            if final_score != 0: any_pts_h = True
                             
                             s_row = round_stats[round_stats['player_id'] == pid]
                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                             
-                            # Inject score into p_row for render color logic if needed or just display
-                            p_row['pontuacao'] = score
-                            proc_h.append((p_row, s_dict, score))
+                            p_row['pontuacao'] = final_score
+                            proc_h.append((p_row, s_dict, final_score, is_captain, raw_score_val if is_captain else None))
                             
                         # Sort by Score Desc
                         proc_h.sort(key=lambda x: x[2], reverse=True)
@@ -495,38 +512,69 @@ def app():
                             if p_rows.empty: continue
                             p_row = p_rows.iloc[0].to_dict()
                             
-                            score = get_pid_score(pid)
-                            total_a += score
-                            if score != 0: any_pts_a = True
+                            raw_score_val = get_pid_score(pid)
+                            
+                            is_captain = str(p.get('cap', '')).upper() == 'CAPITAO'
+                            
+                            final_score = raw_score_val
+                            if is_captain:
+                                final_score = raw_score_val * 1.5
+                                
+                            total_a += final_score
+                            if final_score != 0: any_pts_a = True
                             
                             s_row = round_stats[round_stats['player_id'] == pid]
                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                             
-                            p_row['pontuacao'] = score
-                            proc_a.append((p_row, s_dict, score))
+                            p_row['pontuacao'] = final_score
+                            proc_a.append((p_row, s_dict, final_score, is_captain, raw_score_val if is_captain else None))
                             
                         proc_a.sort(key=lambda x: x[2], reverse=True)
 
                     # RENDER EXPANDER
-                    # "enquanto nao tiver pontuação... nao é pra mostrar nenhuma escalação"
                     show_details = any_pts_h or any_pts_a
                     
-                    header_str = f"{name_h} x {name_a}"
+                    # Enhanced Header with Totals
+                    # Highlight colors for header
+                    header_str = f"**{name_h}** ({total_h:.2f})  x  ({total_a:.2f}) **{name_a}**"
+                    
+                    # Create custom header visualization if desired, but expander label is text only usually without markdown support in older streamlit
+                    # Streamlit expander label supports markdown in newer versions, checking if we can trust it.
+                    # Safest is simple string for expander label, but user asked for "destaque maior".
+                    # We can put a big header ABOVE the expander, or inside?
+                    # "antes de abrir pras pontuacoes iniciais" implies the collapsed state (label) should be prominent.
+                    # Or use a container. Let's try to just make the label Descriptive.
+                    
+                    # Let's try using st.expander check:
+                    # Actually, we can use markdown inside the expander for big summary.
+                    # But the requirement is likely about the summary being visible easily.
                     
                     with st.expander(header_str, expanded=False):
                         if show_details:
+                           # Detailed Summary at Top of Open Expander
+                           st.markdown(
+                               f"""
+                               <div style="display: flex; justify-content: space-around; font-size: 1.5em; font-weight: bold; margin-bottom: 20px; background-color: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                                   <div style="color: #4CAF50;">{total_h:.2f}</div>
+                                   <div style="color: #888;">vs</div>
+                                   <div style="color: #4CAF50;">{total_a:.2f}</div>
+                               </div>
+                               """,
+                               unsafe_allow_html=True
+                           )
+                           
                            c_h, c_a = st.columns(2)
                            with c_h:
-                               st.markdown(f"**{name_h}**")
+                               st.subheader(name_h)
                                if not proc_h: st.caption("Não escalou.")
-                               for pr, sr, _ in proc_h:
-                                   render_player_row(pr, sr)
+                               for pr, sr, _, is_cap, raw_sc in proc_h:
+                                   render_player_row(pr, sr, is_captain=is_cap, raw_score=raw_sc)
                                    
                            with c_a:
-                               st.markdown(f"**{name_a}**")
+                               st.subheader(name_a)
                                if not proc_a: st.caption("Não escalou.")
-                               for pr, sr, _ in proc_a:
-                                   render_player_row(pr, sr)
+                               for pr, sr, _, is_cap, raw_sc in proc_a:
+                                   render_player_row(pr, sr, is_captain=is_cap, raw_score=raw_sc)
                         else:
                             st.info("Aguardando pontuações...")
     # --- TAB 1: JOGOS ---

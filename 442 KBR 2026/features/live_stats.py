@@ -652,6 +652,8 @@ def save_stats_to_sheet(all_stats_rows):
     except Exception as e:
         print(f"Error saving stats (overwrite): {e}")
 
+from features.utils import robust_to_float, format_br_decimal
+
 def save_points_to_sheet(points_df):
     if points_df.empty: return
     try:
@@ -685,10 +687,10 @@ def save_points_to_sheet(points_df):
         # Write back
         header = ['game_id', 'player_id', 'pontuacao']
         if 'pontuacao' in final_df.columns:
-            # Ensure pontuacao is float first
-            final_df['pontuacao'] = pd.to_numeric(final_df['pontuacao'], errors='coerce').fillna(0.0)
-            # Convert to string with comma as decimal separator for BR locale sheets
-            final_df['pontuacao'] = final_df['pontuacao'].apply(lambda x: f"{x:.4f}".replace('.', ','))
+            # ROBUST FLOAT CONVERSION
+            final_df['pontuacao'] = final_df['pontuacao'].apply(robust_to_float)
+            # FORMAT FOR BR LOCALE
+            final_df['pontuacao'] = final_df['pontuacao'].apply(format_br_decimal)
         
         # Ensure correct order
         final_df = final_df[header]
@@ -698,6 +700,7 @@ def save_points_to_sheet(points_df):
         ws.clear()
         # Use USER_ENTERED to respect sheet locale for decimal interpretation
         ws.update('A1', final_values, value_input_option='USER_ENTERED')
+
         # st.toast(f"Pontos salvos na aba '{POINTS_SHEET}': {len(final_df)} registros.", icon="✅")
 
     except Exception as e:
