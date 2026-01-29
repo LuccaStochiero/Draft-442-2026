@@ -247,10 +247,9 @@ def calculate_team_points(target_round=None):
     # 4. Save
     df_out = pd.DataFrame(final_rows)
     
-    # Format pontuacao as string with comma for PT-BR locale sheets
-    # This prevents 8.5 from becoming 85
+    # Ensure pontuacao is float
     if 'pontuacao' in df_out.columns:
-        df_out['pontuacao'] = df_out['pontuacao'].apply(lambda x: str(x).replace('.', ','))
+        df_out['pontuacao'] = pd.to_numeric(df_out['pontuacao'], errors='coerce').fillna(0.0)
 
     # Write to H2H - TEAM_POINTS
     try:
