@@ -711,12 +711,3 @@ def run_auto_update(force=False):
     """Main entry point called by Players.py - DISABLED PER USER REQUEST"""
     pass
 
-        # 6. Update Team Points (Substitutions)
-        try:
-             from features.team_points import calculate_team_points
-             calculate_team_points() 
-        except Exception as e:
-             print(f"Error updating team points: {e}")
-        
-        # Lock is released implicitly by time, no need to call update_cache_time again
-        # st.toast(f"✅ Atualizado: Stats e Pontos salvos.", icon="💾")
