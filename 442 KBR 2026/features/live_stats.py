@@ -591,9 +591,13 @@ def calculate_points(df):
         default=0
     )
     
-    # Gols Sofridos (Defense only)
+    # Gols Sofridos (Defense only) - Only count if player played > 0 minutes
     # np.where(df['Posição'].isin(['G','D']), df['gols_sofridos_partida']*-0.5, 0)
-    def_conceded = np.where(df['Posição'].isin(['G','D']), df['gols_sofridos_partida'] * -0.5, 0)
+    def_conceded = np.where(
+        (df['Posição'].isin(['G','D'])) & (df['minutesPlayed'] > 0), 
+        df['gols_sofridos_partida'] * -0.5, 
+        0
+    )
     
     df['L_pos'] = pts_goals + pts_assists + sg_pts + def_conceded
 
