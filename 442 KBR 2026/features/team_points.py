@@ -39,6 +39,17 @@ def calculate_team_points(target_round=None):
     df_pts.columns = [c.lower() for c in df_pts.columns] # game_id, player_id, pontuacao
     df_stats.columns = [c.lower() for c in df_stats.columns] # game_id, player_id, minutesplayed...
     
+    # Robust numeric conversion for points
+    if 'pontuacao' in df_pts.columns:
+        def to_float(x):
+            try:
+                if isinstance(x, str): x = x.replace(',', '.')
+                return float(x)
+            except:
+                return 0.0
+        df_pts['pontuacao'] = df_pts['pontuacao'].apply(to_float)
+
+    
     # Ensure IDs are strings
     df_lineup['player_id'] = df_lineup['player_id'].astype(str)
     df_lineup['team_id'] = df_lineup['team_id'].astype(str)

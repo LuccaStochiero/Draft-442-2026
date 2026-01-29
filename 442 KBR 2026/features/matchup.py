@@ -120,9 +120,16 @@ def app():
                 # Assuming TP is up to date.
                 
                 if use_tp:
-                    score = float(row.get('pontuacao', 0))
+                    raw_score = row.get('pontuacao', 0)
+                    try:
+                        score = float(raw_score)
+                    except:
+                        try:
+                            score = float(str(raw_score).replace(',', '.'))
+                        except:
+                            score = 0.0
+                    
                     escalado = str(row.get('escalado')).upper() == 'TRUE'
-                    # Or maybe 1/0
                     if str(row.get('escalado')) == '1': escalado = True
                 else:
                     # Fallback Calc
