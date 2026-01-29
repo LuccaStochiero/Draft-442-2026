@@ -161,7 +161,9 @@ def app():
                 if escalado: total += score
                 
                 # Stats for Render
-                s_row = df_stats[df_stats['player_id'] == pid] # Need filter?
+                # df_stats might have player_id as int or float
+                df_stats['player_id'] = df_stats['player_id'].astype(str)
+                s_row = df_stats[df_stats['player_id'] == pid] 
                 # Using last known stats for PID.
                 s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                 
@@ -175,8 +177,24 @@ def app():
                     'escalado': escalado
                 })
                 
-            # Sort: Active First, then Score Desc
-            processed.sort(key=lambda x: (not x['escalado'], -x['score']))
+            # SORTING LOGIC
+            # 1. Active (Escalado) First
+            # 2. Position (GK, DEF, MID, FWD)
+            # 3. Score Desc
+            
+            POS_ORDER = {'GK': 0, 'G': 0, 'DEF': 1, 'D': 1, 'MID': 2, 'M': 2, 'FWD': 3, 'F': 3, 'ATT': 3}
+            
+            def get_sort_key(item):
+                # Escalado: True -> 0, False -> 1 (so True comes first)
+                is_bench = not item['escalado']
+                
+                # Position
+                pos_val = clean_pos(item['p_info'].get('Posição', ''))
+                pos_idx = POS_ORDER.get(pos_val, 99)
+                
+                return (is_bench, pos_idx, -item['score'])
+
+            processed.sort(key=get_sort_key)
             
             return processed, total
 
