@@ -36,6 +36,7 @@ def get_credentials():
     st.error(f"No credentials found. Checked: {SERVICE_ACCOUNT_FILE}")
     return None
 
+@st.cache_resource(ttl=3600)
 def get_client():
     """Get authenticated gspread client and spreadsheet"""
     creds = get_credentials()
