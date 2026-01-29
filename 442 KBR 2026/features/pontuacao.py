@@ -70,14 +70,21 @@ def load_live_data(_client=None, _sh=None):
     try:
         client, sh = get_client()
         
-        # Load PLAYER_POINTS
+        # Load PLAYER_POINTS - use get_values to preserve comma-decimal strings
         try:
              ws_pts = sh.worksheet("PLAYER_POINTS")
-             df_pts = pd.DataFrame(ws_pts.get_all_records())
+             pts_values = ws_pts.get_values()
+             if pts_values and len(pts_values) > 1:
+                 df_pts = pd.DataFrame(pts_values[1:], columns=pts_values[0])
+             else:
+                 df_pts = pd.DataFrame()
              if not df_pts.empty:
                  df_pts['player_id'] = df_pts['player_id'].astype(str)
                  df_pts['game_id'] = df_pts['game_id'].astype(str)
-                 df_pts['pontuacao'] = pd.to_numeric(df_pts['pontuacao'], errors='coerce').fillna(0)
+                 # Parse pontuacao from comma-decimal string
+                 df_pts['pontuacao'] = df_pts['pontuacao'].apply(
+                     lambda x: float(str(x).replace(',', '.')) if x else 0.0
+                 )
         except:
              df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
 
