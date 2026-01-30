@@ -719,34 +719,7 @@ def app():
                 
             html += "</tbody></table>"
             st.markdown(html, unsafe_allow_html=True)
-                    # Merge Points
-                    details = details.merge(match_pts[['player_id', 'pontuacao']], on='player_id', how='left').fillna({'pontuacao': 0})
-                    
-                    col_home, col_away = st.columns(2)
-                    
-                    def match_club(p_team, filter_team):
-                        if not isinstance(p_team, str) or not isinstance(filter_team, str): return False
-                        return p_team.lower() in filter_team.lower() or filter_team.lower() in p_team.lower()
 
-                    home_players = details[details['Team'].apply(lambda x: match_club(x, home))].sort_values(by='pontuacao', ascending=False)
-                    away_players = details[details['Team'].apply(lambda x: match_club(x, away))].sort_values(by='pontuacao', ascending=False)
-                    
-                    # --- RENDER HOME ---
-                    with col_home:
-                        st.markdown(f"**{home}**")
-                        for i, (_, p) in enumerate(home_players.iterrows()):
-                            s_row = match_stats[match_stats['player_id'] == p['player_id']]
-                            s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
-                            
-                            render_player_row(p, s_dict)
-                            
-                    # --- RENDER AWAY ---
-                    with col_away:
-                        st.markdown(f"**{away}**")
-                        for _, p in away_players.iterrows():
-                            s_row = match_stats[match_stats['player_id'] == p['player_id']]
-                            s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
-                            render_player_row(p, s_dict)
 
     # --- TAB 2: LISTA (GENERAL SCALE) ---
     with tab_lista:
