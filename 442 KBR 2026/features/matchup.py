@@ -252,7 +252,7 @@ def app():
         if df_table.empty:
             st.info("Tabela ainda não gerada.")
         else:
-            html = \"\"\"
+            html = """
             <style>
                 .league-table {
                     width: 100%;
@@ -288,7 +288,7 @@ def app():
                     </tr>
                 </thead>
                 <tbody>
-            \"\"\"
+            """
             
             total_rows = len(df_table)
             
@@ -311,7 +311,7 @@ def app():
                 
                 apr_val = row.get('aproveitamento', '0%')
                 
-                html += f\"\"\"
+                html += f"""
                     <tr style="{bg_style}">
                         <td>{rank}</td>
                         <td class="col-team">{team_display}</td>
@@ -321,7 +321,7 @@ def app():
                         <td style="font-size:0.8em; color:#bbb;">{row.get('pf')}</td>
                         <td style="font-size:0.8em; color:#bbb;">{row.get('ps')}</td>
                     </tr>
-                \"\"\"
+                """
                 
             html += "</tbody></table>"
             st.markdown(html, unsafe_allow_html=True)
