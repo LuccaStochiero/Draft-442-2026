@@ -3,7 +3,7 @@ import streamlit as st
 # Must be the first streamlit command
 st.set_page_config(page_title="4-4-2 Manager (Players)", layout="wide")
 
-from features import escalacao_main, elenco, leilao, livres, trade, live_stats, pontuacao, matchup
+from features import escalacao_main, elenco, leilao, livres, trade, live_stats, pontuacao, matchup, scout
 
 import time
 
@@ -29,6 +29,7 @@ def main():
     # Navigation
     options = {
         "Visualização Elenco": elenco.app,
+        "Scout": scout.app,
         "Jogadores Livres": livres.app,
         "Jogadores Livres": livres.app,
         "Pontuações": pontuacao.app,
