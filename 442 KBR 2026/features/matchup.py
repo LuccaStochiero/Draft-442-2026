@@ -294,6 +294,11 @@ def app():
             final_cols = [c for c in cols_order if c in df_display.columns]
             df_display = df_display[final_cols]
             
+            # Format values to Float
+            for col in ['PF', 'PS']:
+                if col in df_display.columns:
+                     df_display[col] = pd.to_numeric(df_display[col], errors='coerce').fillna(0.0)
+
             # Styling
             def highlight_rows(row):
                 # row is a Series. name is the index.
@@ -306,9 +311,13 @@ def app():
                 elif rank == total_rows:
                     return ['background-color: rgba(139, 0, 0, 0.4)'] * len(row)
                 return styles
+            
+            # Format dict
+            fmt_dict = {'PF': "{:.2f}", 'PS': "{:.2f}"}
 
             st.dataframe(
-                df_display.style.apply(highlight_rows, axis=1),
+                df_display.style.apply(highlight_rows, axis=1).format(fmt_dict),
                 hide_index=True,
-                use_container_width=True
+                use_container_width=True,
+                height=35 * (len(df_display) + 1)
             )
