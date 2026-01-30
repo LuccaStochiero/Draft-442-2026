@@ -252,76 +252,63 @@ def app():
         if df_table.empty:
             st.info("Tabela ainda não gerada.")
         else:
-            html = """
-            <style>
-                .league-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-family: sans-serif;
-                    font-size: 0.9em;
-                }
-                .league-table th {
-                    background-color: #333;
-                    color: white;
-                    padding: 8px;
-                    text-align: center;
-                }
-                .league-table td {
-                    padding: 6px 8px;
-                    border-bottom: 1px solid #444;
-                    color: #e0e0e0;
-                    text-align: center;
-                }
-                .col-team { text-align: left !important; }
-                .rank-gold { color: #FFD700; font-weight: bold; }
-            </style>
-            <table class="league-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th class="col-team">Time</th>
-                        <th>Pts</th>
-                        <th>J</th>
-                        <th>Apr</th>
-                        <th>PF</th>
-                        <th>PS</th>
-                    </tr>
-                </thead>
-                <tbody>
-            """
+            # Prepare for display
+            df_display = df_table.copy()
             
-            total_rows = len(df_table)
+            # Map columns to user friendly names if needed
+            # Assuming 'team' or 'team_id' is the name. Let's ensure 'Time' column exists.
+            col_map = {
+                'team': 'Time', 'p': 'Pts', 'j': 'J', 'v': 'V', 'e': 'E', 'd': 'D', 
+                'aproveitamento': 'Apr', 'pf': 'PF', 'ps': 'PS'
+            }
+            # Rename existing columns
+            df_display.rename(columns=col_map, inplace=True)
             
-            for i, row in df_table.iterrows():
-                rank = i + 1
-                bg_style = ""
-                
-                # Colors
-                if rank <= 7:
-                    bg_style = "background-color: rgba(0, 100, 0, 0.4);" # Green
-                elif rank == total_rows:
-                    bg_style = "background-color: rgba(139, 0, 0, 0.4);" # Red
-                
-                # Special content
-                team_display = row.get('team', row.get('team_id', '?'))
+            # Ensure 'Time' column exists
+            if 'Time' not in df_display.columns:
+                 if 'team_id' in df_display.columns:
+                     df_display['Time'] = df_display['team_id']
+                 else:
+                     df_display['Time'] = "Unknown"
+
+            # Add Rank column locally for display logic
+            df_display.reset_index(drop=True, inplace=True)
+            df_display['#'] = df_display.index + 1
+            
+            # Add Emojis
+            total_rows = len(df_display)
+            def add_emoji(row):
+                rank = row['#']
+                name = row['Time']
                 if rank == 1:
-                     team_display = f'<span class="rank-gold">🥇 {team_display}</span>'
+                    return f"🥇 {name}"
                 elif rank == total_rows:
-                     team_display = f"💩 {team_display}"
+                    return f"💩 {name}"
+                return name
+            
+            df_display['Time'] = df_display.apply(add_emoji, axis=1)
+            
+            # Reorder columns
+            cols_order = ['#', 'Time', 'Pts', 'J', 'Apr', 'PF', 'PS']
+            # Filter to available columns
+            final_cols = [c for c in cols_order if c in df_display.columns]
+            df_display = df_display[final_cols]
+            
+            # Styling
+            def highlight_rows(row):
+                # row is a Series. name is the index.
+                # Since we reset index, name is 0..N-1
+                rank = row.name + 1
+                styles = [''] * len(row)
                 
-                apr_val = row.get('aproveitamento', '0%')
-                
-                html += f"""
-                    <tr style="{bg_style}">
-                        <td>{rank}</td>
-                        <td class="col-team">{team_display}</td>
-                        <td><strong>{row.get('p')}</strong></td>
-                        <td>{row.get('j')}</td>
-                        <td>{apr_val}</td>
-                        <td style="font-size:0.8em; color:#bbb;">{row.get('pf')}</td>
-                        <td style="font-size:0.8em; color:#bbb;">{row.get('ps')}</td>
-                    </tr>
-                """
-                
-            html += "</tbody></table>"
-            st.markdown(html, unsafe_allow_html=True)
+                if rank <= 7:
+                    return ['background-color: rgba(0, 100, 0, 0.4)'] * len(row)
+                elif rank == total_rows:
+                    return ['background-color: rgba(139, 0, 0, 0.4)'] * len(row)
+                return styles
+
+            st.dataframe(
+                df_display.style.apply(highlight_rows, axis=1),
+                hide_index=True,
+                use_container_width=True
+            )
