@@ -100,8 +100,22 @@ def update_league_table():
     df_tp['team_id'] = df_tp['team_id'].astype(str)
     
     # Pre-calc Team Points per Round
+    # FILTER: Only 'escalado' == True
+    # 'escalado' column might be boolean or string 'TRUE'/'FALSE' or '1'/'0'
+    # We should normalize/check
+    if 'escalado' in df_tp.columns:
+         # Convert to string and upper case for safety
+         df_tp['escalado_str'] = df_tp['escalado'].astype(str).str.upper()
+         # Filter
+         df_active = df_tp[df_tp['escalado_str'].isin(['TRUE', '1'])]
+    else:
+         # If column missing, assume all? OR none? Safest is warn and empty?
+         # But manual update script creates it.
+         print("Warning: 'escalado' column missing in TEAM_POINTS. Using all.")
+         df_active = df_tp
+
     # Group by Team, Round -> Sum Points
-    round_scores = df_tp.groupby(['team_id', 'rodada'])['pontuacao'].sum().to_dict() # Key: (tid, rod)
+    round_scores = df_active.groupby(['team_id', 'rodada'])['pontuacao'].sum().to_dict() # Key: (tid, rod)
     
     # Init Table Data
     # Key: TeamID
