@@ -229,7 +229,7 @@ def update_league_table():
     
     # FORMAT FOR DISPLAY/SAVING
     # Reorder columns
-    cols_order = ['Team', 'P', 'J', 'V', 'E', 'D', 'Aproveitamento', 'PF', 'PS']
+    cols_order = ['team_id', 'Team', 'P', 'J', 'V', 'E', 'D', 'Aproveitamento', 'PF', 'PS']
     df_final = df_table[cols_order].copy()
     
     # Format decimals
