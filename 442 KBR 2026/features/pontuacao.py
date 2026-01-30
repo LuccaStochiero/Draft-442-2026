@@ -4,7 +4,7 @@ from features.auth import get_client, get_players_file
 from features.utils import robust_to_float
 
 @st.cache_data(ttl=60) # Cache Static Data for 1 Minute
-def load_static_data():
+def load_data_v2():
     players_file = get_players_file()
     if players_file.exists():
         df_players = pd.read_csv(players_file)
@@ -355,7 +355,7 @@ def app():
     st.title("📊 Pontuações da Rodada")
     
     # Load Data (Split for Optimization)
-    df_players, df_gw, df_h2h, df_lineup, df_squad, df_table = load_static_data()
+    df_players, df_gw, df_h2h, df_lineup, df_squad, df_table = load_data_v2()
     df_pts, df_stats = load_live_data()
     
     if df_gw.empty:

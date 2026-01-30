@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from features.auth import get_client, get_players_file
-from features.pontuacao import render_player_row, load_static_data, load_live_data, clean_pos
+from features.pontuacao import render_player_row, load_data_v2, load_live_data, clean_pos
 
 # Reuse data loading structure from pontuacao, but we need TEAM_POINTS too
 @st.cache_data(ttl=60) 
@@ -38,7 +38,7 @@ def app():
     st.title("🆚 MATCHUP")
     
     # Loads
-    df_players, df_gw, df_h2h, df_lineup, df_squad, df_table = load_static_data() # From pontuacao
+    df_players, df_gw, df_h2h, df_lineup, df_squad, df_table = load_data_v2() # From pontuacao
     df_pts, df_stats = load_live_data() # From pontuacao
     df_team_points = load_matchup_data()
     
