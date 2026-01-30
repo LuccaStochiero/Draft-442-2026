@@ -59,15 +59,28 @@ def load_data_v2():
             df_squad = pd.DataFrame()
             
         # Load H2H - TABLE
+        # Load H2H - TABLE
         try:
              ws_table = sh.worksheet("H2H - TABLE")
-             df_table = pd.DataFrame(ws_table.get_all_records())
-             # Clean columns
-             if not df_table.empty:
-                df_table.columns = df_table.columns.str.lower()
-                # Ensure numerics for sorting/display
-                # P, J, V, E, D, PF, PS
-                cols_num = ['p', 'j', 'v', 'e', 'd', 'pf', 'ps'] # team_id is str
+             # Use get_all_values to fetch RAW strings and avoid gspread auto-numericising "87,57" as 8757
+             raw_data = ws_table.get_all_values()
+             
+             if raw_data and len(raw_data) > 1:
+                 df_table = pd.DataFrame(raw_data[1:], columns=raw_data[0])
+                 df_table.columns = df_table.columns.str.lower()
+                 
+                 # Clean Numerics (Brazilian Format: 12,34 -> 12.34)
+                 for col in ['pf', 'ps']:
+                     if col in df_table.columns:
+                         df_table[col] = df_table[col].astype(str).str.replace(',', '.')
+                         df_table[col] = pd.to_numeric(df_table[col], errors='coerce').fillna(0.0)
+                 
+                 # Standard Integers
+                 for col in ['p', 'j', 'v', 'e', 'd']:
+                     if col in df_table.columns:
+                         df_table[col] = pd.to_numeric(df_table[col], errors='coerce').fillna(0).astype(int)
+             else:
+                 df_table = pd.DataFrame()
         except:
              df_table = pd.DataFrame()
             
