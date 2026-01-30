@@ -3,7 +3,7 @@ import pandas as pd
 from features.auth import get_client, get_players_file
 from features.utils import robust_to_float
 
-@st.cache_data(ttl=3600) # Cache Static Data for 1 Hour
+@st.cache_data(ttl=60) # Cache Static Data for 1 Minute
 def load_static_data():
     players_file = get_players_file()
     if players_file.exists():
