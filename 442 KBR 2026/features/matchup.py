@@ -38,7 +38,7 @@ def app():
     st.title("🆚 MATCHUP")
     
     # Loads
-    df_players, df_gw, df_h2h, df_lineup, df_squad = load_static_data() # From pontuacao
+    df_players, df_gw, df_h2h, df_lineup, df_squad, _ = load_static_data() # From pontuacao
     df_pts, df_stats = load_live_data() # From pontuacao
     df_team_points = load_matchup_data()
     
