@@ -67,16 +67,16 @@ def app():
         except:
             default_idx = len(all_rounds) - 1
 
-    # --- SPLIT LAYOUT ---
-    left_col, right_col = st.columns([2, 1.2])
+    # --- TABS LAYOUT ---
+    tab_matchups, tab_table = st.tabs(["⚔️ Confrontos", "🏆 Tabela 2026"])
 
-    with left_col:
+    with tab_matchups:
         c_filter, c_title = st.columns([1, 2])
         with c_filter:
-            sel_round = st.selectbox("Rodada", all_rounds, index=default_idx)
+            sel_round = st.selectbox("Rodada", all_rounds, index=default_idx, key="unique_round_filter_key")
         with c_title:
-            st.subheader("Confrontos")
-            
+             st.subheader(f"Rodada {sel_round}")
+
         if df_h2h.empty:
             st.info("Sem confrontos.")
         else:
@@ -246,14 +246,82 @@ def app():
                              st.subheader(f"{name_a}")
                              render_list(data_a)
 
-    with right_col:
+    with tab_table:
         st.markdown("### 🏆 Tabela 442 KBR 2026")
         
-        # Since I can't edit non-contiguous lines easily without multi-replace (which I should check if I can use),
-        # I will assume I'll fix the unpacking in a separate tool call OR I will re-call load_static_data here just for the table (it's cached anyway).
-        # Let's re-call for now to be safe and simple, or just grab it.
-        # Efficient way: Fix the top unpacking.
-        # But I can't edit line 41 and line 72+ in one `replace_file_content`.
-        # I will use `df_table_local` here for now and fix the top later? 
-        # No, better: I will use multi_replace_file_content to fix BOTH the top unpacking AND the main body.
-        pass
+        if df_table.empty:
+            st.info("Tabela ainda não gerada.")
+        else:
+            html = \"\"\"
+            <style>
+                .league-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-family: sans-serif;
+                    font-size: 0.9em;
+                }
+                .league-table th {
+                    background-color: #333;
+                    color: white;
+                    padding: 8px;
+                    text-align: center;
+                }
+                .league-table td {
+                    padding: 6px 8px;
+                    border-bottom: 1px solid #444;
+                    color: #e0e0e0;
+                    text-align: center;
+                }
+                .col-team { text-align: left !important; }
+                .rank-gold { color: #FFD700; font-weight: bold; }
+            </style>
+            <table class="league-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="col-team">Time</th>
+                        <th>Pts</th>
+                        <th>J</th>
+                        <th>Apr</th>
+                        <th>PF</th>
+                        <th>PS</th>
+                    </tr>
+                </thead>
+                <tbody>
+            \"\"\"
+            
+            total_rows = len(df_table)
+            
+            for i, row in df_table.iterrows():
+                rank = i + 1
+                bg_style = ""
+                
+                # Colors
+                if rank <= 7:
+                    bg_style = "background-color: rgba(0, 100, 0, 0.4);" # Green
+                elif rank == total_rows:
+                    bg_style = "background-color: rgba(139, 0, 0, 0.4);" # Red
+                
+                # Special content
+                team_display = row.get('team', row.get('team_id', '?'))
+                if rank == 1:
+                     team_display = f'<span class="rank-gold">🥇 {team_display}</span>'
+                elif rank == total_rows:
+                     team_display = f"💩 {team_display}"
+                
+                apr_val = row.get('aproveitamento', '0%')
+                
+                html += f\"\"\"
+                    <tr style="{bg_style}">
+                        <td>{rank}</td>
+                        <td class="col-team">{team_display}</td>
+                        <td><strong>{row.get('p')}</strong></td>
+                        <td>{row.get('j')}</td>
+                        <td>{apr_val}</td>
+                        <td style="font-size:0.8em; color:#bbb;">{row.get('pf')}</td>
+                        <td style="font-size:0.8em; color:#bbb;">{row.get('ps')}</td>
+                    </tr>
+                \"\"\"
+                
+            html += "</tbody></table>"
+            st.markdown(html, unsafe_allow_html=True)
