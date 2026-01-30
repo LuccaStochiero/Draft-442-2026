@@ -67,13 +67,16 @@ def app():
         except:
             default_idx = len(all_rounds) - 1
 
-    sel_round = st.selectbox("Rodada", all_rounds, index=default_idx)
-    
     # --- SPLIT LAYOUT ---
     left_col, right_col = st.columns([2, 1.2])
 
     with left_col:
-        st.subheader("Confrontos da Rodada")
+        c_filter, c_title = st.columns([1, 2])
+        with c_filter:
+            sel_round = st.selectbox("Rodada", all_rounds, index=default_idx)
+        with c_title:
+            st.subheader("Confrontos")
+            
         if df_h2h.empty:
             st.info("Sem confrontos.")
         else:
