@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 import re
-from features.auth import get_client
+from features.auth import get_client, get_players_file
 from features.live_stats import STATS_SHEET, POINTS_SHEET
 from features.utils import robust_to_float, format_br_decimal
 
@@ -35,15 +35,24 @@ def calculate_team_points(target_round=None):
         
         ws_stats = sh.worksheet(STATS_SHEET)
         df_stats = pd.DataFrame(ws_stats.get_all_records())
+        
+        # NEW: Load Players to link ID -> Club -> Game (for DNP check)
+        pf = get_players_file()
+        if pf.exists():
+            df_players = pd.read_csv(pf)
+        else:
+            df_players = pd.DataFrame()
+        
     except Exception as e:
         print(f"Error loading sheets: {e}")
         return
 
     # Normalize Columns
-    df_lineup.columns = [c.lower() for c in df_lineup.columns] # team_id, player_id, rodada, lineup...
-    df_gw.columns = [c.lower() for c in df_gw.columns] # id_jogo, ... data_hora
-    df_pts.columns = [c.lower() for c in df_pts.columns] # game_id, player_id, pontuacao
-    df_stats.columns = [c.lower() for c in df_stats.columns] # game_id, player_id, minutesplayed...
+    df_lineup.columns = [c.lower() for c in df_lineup.columns] 
+    df_gw.columns = [c.lower() for c in df_gw.columns] 
+    df_pts.columns = [c.lower() for c in df_pts.columns] 
+    df_stats.columns = [c.lower() for c in df_stats.columns] 
+    df_players.columns = [c.lower() for c in df_players.columns]
     
     # Robust numeric conversion for points
     if 'pontuacao' in df_pts.columns:
@@ -55,11 +64,17 @@ def calculate_team_points(target_round=None):
     df_lineup['team_id'] = df_lineup['team_id'].astype(str)
     df_pts['player_id'] = df_pts['player_id'].astype(str)
     df_stats['player_id'] = df_stats['player_id'].astype(str)
+    df_players['player_id'] = df_players['player_id'].astype(str)
+
+    # Map Player -> Club
+    # normalization: verify 'club' or 'clube' or 'time' column in players
+    club_col = next((c for c in df_players.columns if c in ['club', 'clube', 'team', 'time']), None)
+    pid_to_club = {}
+    if club_col:
+        pid_to_club = pd.Series(df_players[club_col].values, index=df_players['player_id']).to_dict()
 
     # 2. Filter Round
     if target_round is None:
-        # If not specified, do all? Or just current? User said "agora", maybe all known line ups?
-        # Let's process ALL rounds found in Lineup.
         rounds = df_lineup['rodada'].unique()
     else:
         rounds = [target_round]
@@ -68,43 +83,20 @@ def calculate_team_points(target_round=None):
     
     now = datetime.datetime.now()
     
-    # Helper for Game Status
-    # We need to link player -> game -> time
-    # PLAYER_STATS has game_id. GAMEWEEK has game_id + time.
-    # We can map player_id -> game_id (via stats) -> start_time
-    
-    # Create Player -> Game Info Map (Last known game for the round?)
-    # A player might play only one game per round.
-    # Merge Stats with Gw
-    
-    # Needs to handle "id:" prefix logic
     def clean_id(x): return str(x).split("id:")[-1]
     
     df_gw['simple_id'] = df_gw['id_jogo'].apply(clean_id)
     df_stats['simple_id'] = df_stats['game_id'].apply(clean_id)
     
     # Merge Stats + GW
-    # We need: Player ID -> {Minutes, StartTime, FinishedBoolean}
-    # Caution: df_stats has raw data.
-    
-    df_merged = df_stats.merge(df_gw[['simple_id', 'data_hora']], on='simple_id', how='left')
-    # If merged fails, we might miss time (e.g. game not in gameweek). 
+    df_merged_full = df_stats.merge(df_gw[['simple_id', 'data_hora', 'rodada']], on='simple_id', how='left')
     
     player_game_map = {} # (pid, round) -> {minutes, is_finished}
     
-    # Iterate merged to build map
-    for _, row in df_merged.iterrows():
-        # recover round from GW? We merged on ID, but we need round.
-        # df_gw has rodada.
-        pass
-        
-    # Better: Join Stats with GW on simple_id AND retrieve rodada
-    df_merged_full = df_stats.merge(df_gw[['simple_id', 'data_hora', 'rodada']], on='simple_id', how='left')
-    
-    # Build Lookup
-    # Key: (player_id, rodada)
-    # Val: {minutes, is_finished}
-    
+    # Also build Club -> GameInfo map per round to catch DNP
+    # (Club, Round) -> {is_finished, start_time}
+    club_round_status = {}
+
     for _, row in df_merged_full.iterrows():
         pid = str(row['player_id'])
         rod = row.get('rodada')
@@ -117,29 +109,22 @@ def calculate_team_points(target_round=None):
         if start_str:
             dt = parse_time(start_str)
             if dt:
-                # Finished if Start + 2h < Now
                 if (dt + datetime.timedelta(hours=2)) < now:
                     is_finished = True
         
-        # Store
+        # Store Player Status
         player_game_map[(pid, int(rod))] = {'min': mins, 'finished': is_finished}
         
-    # Helper to get score
+        # Store Club Status (Iteratively update)
+        # We know this player's club played this game
+        p_club = pid_to_club.get(pid)
+        if p_club:
+            club_round_status[(p_club, int(rod))] = {'finished': is_finished}
+
+    # ... get_score helper ...
     def get_score(pid, rod):
-        # We need to find the game for this player in this round
-        # df_pts doesn't have rodada directly usually? 
-        # Actually df_pts linked to game_id.
-        # We can try to sum points for that player in that round
-        # But wait, df_pts is raw points.
-        # Let's filter df_pts by game_ids that belong to the round?
-        
-        # Get GameIDs for the round
         gids_in_round = df_gw[df_gw['rodada'] == rod]['simple_id'].tolist()
-        
-        # Filter PTS
-        # We need simple_id on pts
         df_pts['simple_id'] = df_pts['game_id'].apply(clean_id)
-        
         subset = df_pts[ (df_pts['player_id'] == pid) & (df_pts['simple_id'].isin(gids_in_round)) ]
         if subset.empty: return 0.0
         return float(subset['pontuacao'].sum())
@@ -159,15 +144,12 @@ def calculate_team_points(target_round=None):
             starters = team_players[team_players['lineup'] == 'TITULAR'].copy()
             subs = team_players[team_players['lineup'].str.startswith('PRI', na=False)].copy()
             
-            # Sort Subs by Priority
             def get_pri(x):
                 try: return int(str(x).split()[-1])
                 except: return 99
             subs['pri_num'] = subs['lineup'].apply(get_pri)
             subs = subs.sort_values('pri_num')
             
-            # We track who is "Final Active"
-            # Initially all starters are active
             active_pids = starters['player_id'].tolist()
             
             # Check Substitutions
@@ -175,33 +157,28 @@ def calculate_team_points(target_round=None):
                 sid = starter['player_id']
                 spos = starter['posicao']
                 
-                # Check performance
-                info = player_game_map.get((sid, r), {'min': 0, 'finished': True}) # Default to 0 min, finished if no data? Or finished=False?
-                # If no data (game didn't happen or id mismatch), usually 0 pts.
-                # If game hasn't happened yet, is_finished=False.
-                # If game happened and he wasn't in stats (DNP), min=0, finished=True (if simple_id matches gw).
-                # Warning: if player not in Stats at all, he played 0 mins.
-                # But is his game finished? Use team's game status? 
-                # Complex. Assume if not in Stats, he DNP. Check if ANY game in round finished?
-                # Simplified: Use map. If not in map, assume 0 min.
-                # But is_finished? If we don't know the game, we can't substitute him yet?
-                # Actually, user said "se o jogo já terminou".
-                # If we can't find the game, we assume it hasn't started or we assume nothing.
-                # If we assume nothing, we don't sub.
+                # DETERMINE STATUS
+                is_finished = False
+                mins = 0
                 
-                # We need to know if his specific match finished.
-                # If not in map, check if his TEAM (real life) played?
-                # This requires Player->Team mapping.
-                # For now, rely on map. If not in map, we can't confirm game finished, so NO SUB.
+                # 1. Direct Stats Lookup
+                if (sid, r) in player_game_map:
+                    s_data = player_game_map[(sid, r)]
+                    is_finished = s_data['finished']
+                    mins = s_data['min']
+                else:
+                    # 2. Fallback: Check Club Status
+                    s_club = pid_to_club.get(sid)
+                    if s_club and (s_club, r) in club_round_status:
+                        # Club played?
+                        c_status = club_round_status[(s_club, r)]
+                        if c_status['finished']:
+                            is_finished = True
+                            mins = 0 # DNP
+                    # If Club not known or game not mapped, assume not finished -> No Sub
                 
-                if (sid, r) not in player_game_map:
-                     # Check if we can find game via other players in same game? No too hard.
-                     # Skip sub if unknown.
-                     continue
-                     
-                s_data = player_game_map[(sid, r)]
-                
-                if s_data['finished'] and s_data['min'] == 0:
+                if is_finished and mins == 0:
+                     # MATCHES DNP CRITERIA
                     # CANDIDATE FOR SUB
                     # Find replacement
                     # Same Position, Highest Priority, (Played > 0 min? User implied valid score?)

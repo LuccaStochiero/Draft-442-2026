@@ -14,6 +14,7 @@ from features.live_stats import (
     GAMEWEEK_SHEET
 )
 from features.team_points import calculate_team_points
+from features.league_table import update_league_table
 
 # Configuration
 TARGET_DATES = ["28/01/2026", "29/01/2026"]
@@ -113,6 +114,9 @@ def manual_update_scores():
         # 5. Update Team Points (H2H)
         print("Updating H2H - TEAM_POINTS...")
         calculate_team_points()
+        
+        # 6. Update League Table
+        update_league_table()
         
     else:
         print("No stats extracted.")
