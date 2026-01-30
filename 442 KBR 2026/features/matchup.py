@@ -295,8 +295,11 @@ def app():
             df_display = df_display[final_cols]
             
             # Format values to Float
+            # Format values to Float
             for col in ['PF', 'PS']:
                 if col in df_display.columns:
+                     # Robust conversion: string -> replace comma -> float
+                     df_display[col] = df_display[col].astype(str).str.replace(',', '.')
                      df_display[col] = pd.to_numeric(df_display[col], errors='coerce').fillna(0.0)
 
             # Styling
