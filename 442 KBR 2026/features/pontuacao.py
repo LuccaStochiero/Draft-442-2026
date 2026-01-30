@@ -362,363 +362,255 @@ def app():
         st.warning("Sem jogos carregados (GAMEWEEK vazia).")
         return
 
-    # --- SPLIT LAYOUT ---
-    left_col, right_col = st.columns([2, 1.2])
+    # --- FILTERS ---
+    c1, c2, c3 = st.columns([1, 2, 2])
+    
+    import datetime
+    
+    with c1:
+        # Standardize Rodada to Int
+        all_rounds = sorted(df_gw['rodada'].unique()) if 'rodada' in df_gw.columns else []
+        
+        # Determine Default Round (Latest started round)
+        default_idx = 0
+        if all_rounds and 'data_hora' in df_gw.columns:
+            try:
+                # Convert to datetime for comparison
+                df_gw['dt_obj'] = pd.to_datetime(df_gw['data_hora'], dayfirst=True, errors='coerce')
+                now = datetime.datetime.now()
+                # Find max round where at least one game has started
+                started_rounds = df_gw[df_gw['dt_obj'] <= now]['rodada'].unique()
+                if len(started_rounds) > 0:
+                    last_started = max(started_rounds)
+                    if last_started in all_rounds:
+                         default_idx = all_rounds.index(last_started)
+            except Exception as e:
+                pass
 
-    with left_col:
-        # --- FILTERS ---
-        c1, c2, c3 = st.columns([1, 2, 2])
+        sel_round = st.selectbox("Rodada", all_rounds, index=default_idx)
         
-        import datetime
+    with c2:
+        # Filter Matches by Team (Home or Away)
+        # Get teams present in this round
+        round_matches = df_gw[df_gw['rodada'] == sel_round].copy()
+        teams = set(round_matches['home_team'].unique()) | set(round_matches['away_team'].unique())
+        sel_team = st.selectbox("Filtrar por Clube", ["Todos"] + sorted(list(teams)))
+
+    with c3:
+        # Filter by Position
+        valid_pos = ["GK", "DEF", "MEI", "ATA"]
+        sel_pos = st.multiselect("Filtrar por Posição", valid_pos, default=valid_pos)
+
+    # Apply Filters
+    if sel_team != "Todos":
+        mask_team = (round_matches['home_team'] == sel_team) | (round_matches['away_team'] == sel_team)
+        matches_to_show = round_matches[mask_team]
+    else:
+        matches_to_show = round_matches
         
-        with c1:
-            # Standardize Rodada to Int
-            all_rounds = sorted(df_gw['rodada'].unique()) if 'rodada' in df_gw.columns else []
-            
-            # Determine Default Round (Latest started round)
-            default_idx = 0
-            if all_rounds and 'data_hora' in df_gw.columns:
+    # Create Tabs
+    tab_confrontos, tab_jogos, tab_lista = st.tabs(["⚔️ Confrontos", "Jogos", "Lista"])
+
+    # --- TAB 0: CONFRONTOS (New) ---
+    with tab_confrontos:
+        if df_h2h.empty:
+            st.info("Sem dados de confrontos.")
+        else:
+            # 1. Prepare Team Map
+            team_map = {}
+            if not df_squad.empty:
+                 name_col = next((c for c in df_squad.columns if c in ['team_name', 'name', 'nome', 'team', 'time']), None)
+                 if name_col:
+                     team_map = pd.Series(df_squad[name_col].values, index=df_squad['team_id_norm']).to_dict()
+
+            # 2. Filter H2H for Selected Round
+            if 'rodada' in df_h2h.columns:
+                round_h2h = df_h2h[df_h2h['rodada'] == sel_round].copy()
+            else:
+                round_h2h = pd.DataFrame()
+
+            if round_h2h.empty:
+                st.info(f"Sem confrontos para Rodada {sel_round}.")
+            else:
+                # 3. Filter Lineups for this round
+                round_lineups = df_lineup[df_lineup['rodada'] == sel_round].copy() if not df_lineup.empty else pd.DataFrame()
+                
+                # Prepare Round Stats for full details
+                r_games = df_gw[df_gw['rodada'] == sel_round]
+                gids_full = r_games['id_jogo'].astype(str).tolist()
+                gids_simple = []
+                for x in gids_full:
+                    if "id:" in x: gids_simple.append(x.split("id:")[-1])
+                
+                valid_gids = set(gids_full) | set(gids_simple)
+
+                # Filter Points to only this round
+                round_pts_all = df_pts[
+                    (df_pts['game_id'].astype(str).isin(valid_gids))
+                ].copy()
+                
+                # Helper to get score for a pid
+                def get_pid_score(pid):
+                    # Sum in case of duplicates (weird edge case), usually one entry
+                    row = round_pts_all[round_pts_all['player_id'] == str(pid)]
+                    return row['pontuacao'].sum() if not row.empty else 0.0
+
+                mask_stats = (df_stats['game_id'].astype(str).isin(valid_gids))
+                round_stats = df_stats[mask_stats].copy()
+
+                # Iterate Matchups
+                for _, match in round_h2h.iterrows():
+                    # Identify Columns
+                    h_col = next((c for c in round_h2h.columns if c in ['home_team_id', 'home', 'mandante']), None)
+                    a_col = next((c for c in round_h2h.columns if c in ['away_team_id', 'away', 'visitante']), None)
+                    
+                    if not h_col or not a_col: continue
+                    
+                    tid_h = str(match[h_col]).strip()
+                    tid_a = str(match[a_col]).strip()
+                    
+                    name_h = team_map.get(tid_h, tid_h)
+                    name_a = team_map.get(tid_a, tid_a)
+                    
+                    # Get Lineups
+                    lineup_h = round_lineups[round_lineups['team_id'] == tid_h]
+                    lineup_a = round_lineups[round_lineups['team_id'] == tid_a]
+                    
+                    # Store processed players to render later
+                    # List of (player_row, stats_dict, score)
+                    proc_h = []
+                    proc_a = []
+                    
+                    total_h = 0.0
+                    total_a = 0.0
+                    
+                    any_pts_h = False
+                    any_pts_a = False
+
+                    # Process Home
+                    if not lineup_h.empty:
+                        for _, p in lineup_h.iterrows():
+                            pid = str(p['player_id'])
+                            p_rows = df_players[df_players['player_id'] == pid]
+                            if p_rows.empty: continue
+                            p_row = p_rows.iloc[0].to_dict()
+                            
+                            # Score & Stats
+                            score = get_pid_score(pid)
+                            total_h += score
+                            if score != 0: any_pts_h = True
+                            
+                            s_row = round_stats[round_stats['player_id'] == pid]
+                            s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
+                            
+                            # Inject score into p_row for render color logic if needed or just display
+                            p_row['pontuacao'] = score
+                            proc_h.append((p_row, s_dict, score))
+                            
+                        # Sort by Score Desc
+                        proc_h.sort(key=lambda x: x[2], reverse=True)
+
+                    # Process Away
+                    if not lineup_a.empty:
+                        for _, p in lineup_a.iterrows():
+                            pid = str(p['player_id'])
+                            p_rows = df_players[df_players['player_id'] == pid]
+                            if p_rows.empty: continue
+                            p_row = p_rows.iloc[0].to_dict()
+                            
+                            score = get_pid_score(pid)
+                            total_a += score
+                            if score != 0: any_pts_a = True
+                            
+                            s_row = round_stats[round_stats['player_id'] == pid]
+                            s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
+                            
+                            p_row['pontuacao'] = score
+                            proc_a.append((p_row, s_dict, score))
+                            
+                        proc_a.sort(key=lambda x: x[2], reverse=True)
+
+                    # RENDER EXPANDER
+                    # "enquanto nao tiver pontuação... nao é pra mostrar nenhuma escalação"
+                    show_details = any_pts_h or any_pts_a
+                    
+                    header_str = f"{name_h} x {name_a}"
+                    
+                    with st.expander(header_str, expanded=False):
+                        if show_details:
+                           c_h, c_a = st.columns(2)
+                           with c_h:
+                               st.markdown(f"**{name_h}**")
+                               if not proc_h: st.caption("Não escalou.")
+                               for pr, sr, _ in proc_h:
+                                   render_player_row(pr, sr)
+                                   
+                           with c_a:
+                               st.markdown(f"**{name_a}**")
+                               if not proc_a: st.caption("Não escalou.")
+                               for pr, sr, _ in proc_a:
+                                   render_player_row(pr, sr)
+                        else:
+                            st.info("Aguardando pontuações...")
+    # --- TAB 1: JOGOS ---
+    with tab_jogos:
+        if matches_to_show.empty:
+            st.info("Nenhum jogo encontrado.")
+        else:
+            # Normalize Columns for Stats
+            if not df_stats.empty:
+                df_stats.columns = df_stats.columns.str.lower()
+                
+            # --- RENDER MATCHES ---
+            for _, match in matches_to_show.sort_values(by='data_hora').iterrows():
+                # Match Header
+                home = match['home_team']
+                away = match['away_team']
+                time_str = match.get('data_hora', '')
+                game_id_full = str(match.get('id_jogo', '')) # URL
+                
+                # Filter: Only show if game_id exists
+                if not game_id_full or game_id_full == 'nan':
+                    continue
+
+                # Extract ID from URL for matching stats
                 try:
-                    # Convert to datetime for comparison
-                    df_gw['dt_obj'] = pd.to_datetime(df_gw['data_hora'], dayfirst=True, errors='coerce')
-                    now = datetime.datetime.now()
-                    # Find max round where at least one game has started
-                    started_rounds = df_gw[df_gw['dt_obj'] <= now]['rodada'].unique()
-                    if len(started_rounds) > 0:
-                        last_started = max(started_rounds)
-                        if last_started in all_rounds:
-                             default_idx = all_rounds.index(last_started)
-                except Exception as e:
-                    pass
-    
-            sel_round = st.selectbox("Rodada", all_rounds, index=default_idx)
-            
-        with c2:
-            # Filter Matches by Team (Home or Away)
-            # Get teams present in this round
-            round_matches = df_gw[df_gw['rodada'] == sel_round].copy()
-            teams = set(round_matches['home_team'].unique()) | set(round_matches['away_team'].unique())
-            sel_team = st.selectbox("Filtrar por Clube", ["Todos"] + sorted(list(teams)))
-    
-        with c3:
-            # Filter by Position
-            valid_pos = ["GK", "DEF", "MEI", "ATA"]
-            sel_pos = st.multiselect("Filtrar por Posição", valid_pos, default=valid_pos)
-    
-        # Apply Filters
-        if sel_team != "Todos":
-            mask_team = (round_matches['home_team'] == sel_team) | (round_matches['away_team'] == sel_team)
-            matches_to_show = round_matches[mask_team]
-        else:
-            matches_to_show = round_matches
-            
-        # Create Tabs
-        tab_confrontos, tab_jogos, tab_lista = st.tabs(["⚔️ Confrontos", "Jogos", "Lista"])
-    
-        # --- TAB 0: CONFRONTOS (New) ---
-        with tab_confrontos:
-            if df_h2h.empty:
-                st.info("Sem dados de confrontos.")
-            else:
-                # 1. Prepare Team Map
-                team_map = {}
-                if not df_squad.empty:
-                     name_col = next((c for c in df_squad.columns if c in ['team_name', 'name', 'nome', 'team', 'time']), None)
-                     if name_col:
-                         team_map = pd.Series(df_squad[name_col].values, index=df_squad['team_id_norm']).to_dict()
-    
-                # 2. Filter H2H for Selected Round
-                if 'rodada' in df_h2h.columns:
-                    round_h2h = df_h2h[df_h2h['rodada'] == sel_round].copy()
-                else:
-                    round_h2h = pd.DataFrame()
-    
-                if round_h2h.empty:
-                    st.info(f"Sem confrontos para Rodada {sel_round}.")
-                else:
-                    # 3. Filter Lineups for this round
-                    round_lineups = df_lineup[df_lineup['rodada'] == sel_round].copy() if not df_lineup.empty else pd.DataFrame()
+                     game_id_simple = game_id_full.split("id:")[-1]
+                except:
+                     game_id_simple = "0"
+                     
+                # Match Container
+                with st.expander(f"{home} x {away}  |  {time_str}", expanded=False):
                     
-                    # Prepare Round Stats for full details
-                    r_games = df_gw[df_gw['rodada'] == sel_round]
-                    gids_full = r_games['id_jogo'].astype(str).tolist()
-                    gids_simple = []
-                    for x in gids_full:
-                        if "id:" in x: gids_simple.append(x.split("id:")[-1])
+                    # Match Logic:
+                    match_pts = df_pts[df_pts['game_id'].astype(str) == game_id_full]
+                    match_stats = df_stats[df_stats['game_id'].astype(str) == game_id_full]
                     
-                    valid_gids = set(gids_full) | set(gids_simple)
-    
-                    # Filter Points to only this round
-                    round_pts_all = df_pts[
-                        (df_pts['game_id'].astype(str).isin(valid_gids))
-                    ].copy()
+                    if match_pts.empty and match_stats.empty:
+                         match_pts = df_pts[df_pts['game_id'].astype(str) == game_id_simple]
+                         match_stats = df_stats[df_stats['game_id'].astype(str) == game_id_simple]
                     
-                    # Helper to get score for a pid
-                    def get_pid_score(pid):
-                        # Sum in case of duplicates (weird edge case), usually one entry
-                        row = round_pts_all[round_pts_all['player_id'] == str(pid)]
-                        return row['pontuacao'].sum() if not row.empty else 0.0
-    
-                    mask_stats = (df_stats['game_id'].astype(str).isin(valid_gids))
-                    round_stats = df_stats[mask_stats].copy()
-    
-                    # Iterate Matchups
-                    for _, match in round_h2h.iterrows():
-                        # Identify Columns
-                        h_col = next((c for c in round_h2h.columns if c in ['home_team_id', 'home', 'mandante']), None)
-                        a_col = next((c for c in round_h2h.columns if c in ['away_team_id', 'away', 'visitante']), None)
-                        
-                        if not h_col or not a_col: continue
-                        
-                        tid_h = str(match[h_col]).strip()
-                        tid_a = str(match[a_col]).strip()
-                        
-                        name_h = team_map.get(tid_h, tid_h)
-                        name_a = team_map.get(tid_a, tid_a)
-                        
-                        # Get Lineups
-                        lineup_h = round_lineups[round_lineups['team_id'] == tid_h]
-                        lineup_a = round_lineups[round_lineups['team_id'] == tid_a]
-                        
-                        # Store processed players to render later
-                        # List of (player_row, stats_dict, score)
-                        proc_h = []
-                        proc_a = []
-                        
-                        total_h = 0.0
-                        total_a = 0.0
-                        
-                        any_pts_h = False
-                        any_pts_a = False
-    
-                        # Process Home
-                        if not lineup_h.empty:
-                            for _, p in lineup_h.iterrows():
-                                pid = str(p['player_id'])
-                                p_rows = df_players[df_players['player_id'] == pid]
-                                if p_rows.empty: continue
-                                p_row = p_rows.iloc[0].to_dict()
-                                
-                                # Score & Stats
-                                score = get_pid_score(pid)
-                                
-                                # Captain Logic for Points Summing (Display purposes mostly)
-                                is_cap = str(p.get('cap', '')).upper() == 'CAPITAO'
-                                final_score = score
-                                if is_cap: final_score = score * 1.5
-                                
-                                total_h += final_score
-                                if score != 0: any_pts_h = True
-                                
-                                s_row = round_stats[round_stats['player_id'] == pid]
-                                s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
-                                
-                                # Inject score into p_row
-                                p_row['pontuacao'] = score
-                                proc_h.append((p_row, s_dict, score, is_cap))
-                                
-                            # Sort by Score Desc
-                            proc_h.sort(key=lambda x: x[2], reverse=True)
-    
-                        # Process Away
-                        if not lineup_a.empty:
-                            for _, p in lineup_a.iterrows():
-                                pid = str(p['player_id'])
-                                p_rows = df_players[df_players['player_id'] == pid]
-                                if p_rows.empty: continue
-                                p_row = p_rows.iloc[0].to_dict()
-                                
-                                score = get_pid_score(pid)
-                                
-                                is_cap = str(p.get('cap', '')).upper() == 'CAPITAO'
-                                final_score = score
-                                if is_cap: final_score = score * 1.5
-                                
-                                total_a += final_score
-                                if score != 0: any_pts_a = True
-                                
-                                s_row = round_stats[round_stats['player_id'] == pid]
-                                s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
-                                
-                                p_row['pontuacao'] = score
-                                proc_a.append((p_row, s_dict, score, is_cap))
-                                
-                            proc_a.sort(key=lambda x: x[2], reverse=True)
-    
-                        # RENDER EXPANDER
-                        show_details = any_pts_h or any_pts_a
-                        
-                        # Header with Totals
-                        header_str = f"{name_h} ({total_h:.1f}) x ({total_a:.1f}) {name_a}"
-                        
-                        with st.expander(header_str, expanded=False):
-                            if show_details:
-                               c_h, c_a = st.columns(2)
-                               with c_h:
-                                   st.markdown(f"**{name_h}**")
-                                   if not proc_h: st.caption("Não escalou.")
-                                   for pr, sr, raw_sc, is_c in proc_h:
-                                       render_player_row(pr, sr, is_captain=is_c, raw_score=raw_sc if is_c else None)
-                                       
-                               with c_a:
-                                   st.markdown(f"**{name_a}**")
-                                   if not proc_a: st.caption("Não escalou.")
-                                   for pr, sr, raw_sc, is_c in proc_a:
-                                       render_player_row(pr, sr, is_captain=is_c, raw_score=raw_sc if is_c else None)
-                            else:
-                                st.info("Aguardando pontuações...")
-        # --- TAB 1: JOGOS ---
-        with tab_jogos:
-            if matches_to_show.empty:
-                st.info("Nenhum jogo encontrado.")
-            else:
-                if not df_stats.empty:
-                    df_stats.columns = df_stats.columns.str.lower()
-                    
-                for _, match in matches_to_show.sort_values(by='data_hora').iterrows():
-                    home = match['home_team']
-                    away = match['away_team']
-                    time_str = match.get('data_hora', '')
-                    game_id_full = str(match.get('id_jogo', ''))
-                    
-                    if not game_id_full or game_id_full == 'nan':
+                    if match_pts.empty and match_stats.empty:
+                        st.caption(f"Ainda sem pontuações para este jogo. (ID: {game_id_simple})")
                         continue
-    
-                    try:
-                         game_id_simple = game_id_full.split("id:")[-1]
-                    except:
-                         game_id_simple = "0"
-                         
-                    with st.expander(f"{home} x {away}  |  {time_str}", expanded=False):
-                        match_pts = df_pts[df_pts['game_id'].astype(str) == game_id_full]
-                        match_stats = df_stats[df_stats['game_id'].astype(str) == game_id_full]
                         
-                        if match_pts.empty and match_stats.empty:
-                             match_pts = df_pts[df_pts['game_id'].astype(str) == game_id_simple]
-                             match_stats = df_stats[df_stats['game_id'].astype(str) == game_id_simple]
-                        
-                        if match_pts.empty and match_stats.empty:
-                            st.caption(f"Ainda sem pontuações para este jogo. (ID: {game_id_simple})")
-                            continue
-                            
-                        pids_pts = match_pts['player_id'].unique()
-                        pids_stats = match_stats['player_id'].unique()
-                        all_pids = set(pids_pts) | set(pids_stats)
-                        
-                        details = df_players[df_players['player_id'].isin(all_pids)].copy()
-                        
-                        if details.empty:
-                            st.warning("IDs de jogadores não encontrados no banco de dados.")
-                            continue
-                        
-                        details['CleanPos'] = details['Posição'].apply(clean_pos)
-                        
-                        if sel_pos:
-                            details = details[details['CleanPos'].isin(sel_pos)]
-                            
-                        for _, p in details.iterrows():
-                             pid = str(p['player_id'])
-                             score = get_pid_score(pid)
-                             s_row = match_stats[match_stats['player_id'] == pid]
-                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
-                             p['pontuacao'] = score
-                             render_player_row(p.to_dict(), s_dict)
-    
-        # --- TAB 2: LISTA SIMPLE ---
-        with tab_lista:
-             # Basic list of all scorers in round
-             if df_pts.empty:
-                 st.info("Sem pontuações.")
-             else:
-                 # Filter by round games
-                 pass
-
-    # --- RIGHT COLUMN: LEAGUE TABLE ---
-    with right_col:
-        st.markdown("### 🏆 Tabela 442 KBR 2026")
-        
-        if df_table.empty:
-            st.info("Tabela ainda não gerada.")
-        else:
-            # HTML Table Construction
-            # Columns: Team, P, J, Aproveitamento, PF, PS
-            # We construct HTML string
-            
-            html = """
-            <style>
-                .league-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-family: sans-serif;
-                    font-size: 0.9em;
-                }
-                .league-table th {
-                    background-color: #333;
-                    color: white;
-                    padding: 8px;
-                    text-align: center;
-                }
-                .league-table td {
-                    padding: 6px 8px;
-                    border-bottom: 1px solid #444;
-                    color: #e0e0e0;
-                    text-align: center;
-                }
-                .col-team { text-align: left !important; }
-                .rank-gold { color: #FFD700; font-weight: bold; }
-            </style>
-            <table class="league-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th class="col-team">Time</th>
-                        <th>Pts</th>
-                        <th>J</th>
-                        <th>Apr</th>
-                        <th>PF</th>
-                        <th>PS</th>
-                    </tr>
-                </thead>
-                <tbody>
-            """
-            
-            total_rows = len(df_table)
-            
-            for i, row in df_table.iterrows():
-                rank = i + 1
-                bg_style = ""
-                
-                # Colors
-                if rank <= 7:
-                    bg_style = "background-color: rgba(0, 100, 0, 0.4);" # Green
-                elif rank == total_rows:
-                    bg_style = "background-color: rgba(139, 0, 0, 0.4);" # Red
-                
-                # Special content
-                team_display = row.get('team', row.get('team_id', '?'))
-                if rank == 1:
-                     # Gold logic handles via span class if needed, or just row style?
-                     # User said "1º em dourado". Let's style the text.
-                     team_display = f'<span class="rank-gold">🥇 {team_display}</span>'
-                elif rank == total_rows:
-                     team_display = f"💩 {team_display}"
-                
-                apr_val = row.get('aproveitamento', '0%')
-                
-                html += f"""
-                    <tr style="{bg_style}">
-                        <td>{rank}</td>
-                        <td class="col-team">{team_display}</td>
-                        <td><strong>{row.get('p')}</strong></td>
-                        <td>{row.get('j')}</td>
-                        <td>{apr_val}</td>
-                        <td style="font-size:0.8em; color:#bbb;">{row.get('pf')}</td>
-                        <td style="font-size:0.8em; color:#bbb;">{row.get('ps')}</td>
-                    </tr>
-                """
-                
-            html += "</tbody></table>"
-            st.markdown(html, unsafe_allow_html=True)
+                    # Merge with Player Details
+                    pids_pts = match_pts['player_id'].unique()
+                    pids_stats = match_stats['player_id'].unique()
+                    all_pids = set(pids_pts) | set(pids_stats)
+                    
+                    details = df_players[df_players['player_id'].isin(all_pids)].copy()
+                    
+                    if details.empty:
+                        st.warning("IDs de jogadores não encontrados no banco de dados.")
+                        continue
+                    
+                    # Apply Position Clean
+                    details['CleanPos'] = details['Posição'].apply(clean_pos)
+                    
+                    # Filter by Position (UI Filter)
+                    if sel_pos:
+                        details = details[details['CleanPos'].isin(sel_pos)]
 
 
     # --- TAB 2: LISTA (GENERAL SCALE) ---
