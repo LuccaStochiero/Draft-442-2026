@@ -107,7 +107,10 @@ def app():
                      # If no valid games for this round, live points should be empty
                      df_pts_round = pd.DataFrame(columns=df_pts.columns)
                 else:
+                else:
                      df_pts_round = df_pts[df_pts['game_id'].astype(str).isin(valid_gids)].copy()
+                     # Also filter df_stats
+                     df_stats_round = df_stats[df_stats['game_id'].astype(str).isin(valid_gids)].copy() if not df_stats.empty else pd.DataFrame(columns=df_stats.columns)
                 # -----------------------------------------------
 
                 # Prepare Team Name Map
@@ -183,8 +186,8 @@ def app():
                                 
                             if escalado: total += score
                             
-                            df_stats['player_id'] = df_stats['player_id'].astype(str)
-                            s_row = df_stats[df_stats['player_id'] == pid] 
+                            df_stats_round['player_id'] = df_stats_round['player_id'].astype(str)
+                            s_row = df_stats_round[df_stats_round['player_id'] == pid] 
                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                             
                             p_info['pontuacao'] = score
