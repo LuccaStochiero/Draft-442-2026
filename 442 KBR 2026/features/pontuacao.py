@@ -143,12 +143,7 @@ def get_pos_color(pos):
     colors = {'GK': '#E3F2FD', 'DEF': '#E8F5E9', 'MEI': '#FFF9C4', 'ATA': '#FFEBEE'}
     return colors.get(pos, '#f0f0f0')
 
-def render_player_row(row, stats_row):
-    # Normalize keys to lower case for easier access
-    s = {k.lower(): v for k, v in stats_row.items()}
-    
-    details = []
-    
+
 def render_player_row(row, stats_row, is_captain=False, raw_score=None):
     # Normalize keys to lower case for easier access
     s = {k.lower(): v for k, v in stats_row.items()}

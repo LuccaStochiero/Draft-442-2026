@@ -104,13 +104,12 @@ def app():
                 valid_gids = {x for x in valid_gids if x and str(x).lower() != 'nan' and str(x).strip() != ''}
 
                 if not valid_gids:
-                     # If no valid games for this round, live points should be empty
-                     df_pts_round = pd.DataFrame(columns=df_pts.columns)
+                    # If no valid games for this round, live points should be empty
+                    df_pts_round = pd.DataFrame(columns=df_pts.columns)
                 else:
-                else:
-                     df_pts_round = df_pts[df_pts['game_id'].astype(str).isin(valid_gids)].copy()
-                     # Also filter df_stats
-                     df_stats_round = df_stats[df_stats['game_id'].astype(str).isin(valid_gids)].copy() if not df_stats.empty else pd.DataFrame(columns=df_stats.columns)
+                    df_pts_round = df_pts[df_pts['game_id'].astype(str).isin(valid_gids)].copy()
+                    # Also filter df_stats
+                    df_stats_round = df_stats[df_stats['game_id'].astype(str).isin(valid_gids)].copy() if not df_stats.empty else pd.DataFrame(columns=df_stats.columns)
                 # -----------------------------------------------
 
                 # Prepare Team Name Map
