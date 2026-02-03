@@ -173,8 +173,18 @@ def app():
                                 is_captain = (cap_val == 'CAPITAO')
                                 
                             else:
+                            else:
                                 pts_rows = df_pts_round[df_pts_round['player_id'] == pid] 
-                                score = pts_rows['pontuacao'].sum()
+                                if not pts_rows.empty:
+                                    # --- CHANGE: Get MAX score instead of SUM ---
+                                    # If multiple games, take the highest score
+                                    pts_rows = pts_rows.sort_values(by='pontuacao', ascending=False)
+                                    best_row = pts_rows.iloc[0]
+                                    score = best_row['pontuacao']
+                                    best_game_id = str(best_row['game_id'])
+                                else:
+                                    score = 0.0
+                                    best_game_id = None
                                 
                                 lineup_val = row.get('lineup', 'TITULAR')
                                 escalado = (lineup_val == 'TITULAR') 
@@ -186,7 +196,20 @@ def app():
                             if escalado: total += score
                             
                             df_stats_round['player_id'] = df_stats_round['player_id'].astype(str)
-                            s_row = df_stats_round[df_stats_round['player_id'] == pid] 
+                            
+                            # --- CHANGE: Match Stats to Best Game ID ---
+                            if not use_tp and best_game_id:
+                                # Prioritize stats from the game that generated the max score
+                                s_row = df_stats_round[
+                                    (df_stats_round['player_id'] == pid) & 
+                                    (df_stats_round['game_id'].astype(str) == best_game_id)
+                                ]
+                                if s_row.empty:
+                                    # Fallback if ID match fails (shouldn't happen if consistent)
+                                    s_row = df_stats_round[df_stats_round['player_id'] == pid] 
+                            else:
+                                s_row = df_stats_round[df_stats_round['player_id'] == pid] 
+                                
                             s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
                             
                             p_info['pontuacao'] = score

@@ -657,6 +657,11 @@ def app():
                    (df_pts['game_id'].astype(str).isin(round_game_ids_simple))
         
         round_pts = df_pts[mask_pts].copy()
+        
+        # --- FIX: Deduplicate by Best Score ---
+        if not round_pts.empty:
+             round_pts = round_pts.sort_values(by='pontuacao', ascending=False).drop_duplicates(subset=['player_id'], keep='first')
+
 
         if not round_pts.empty:
             # 3. Merge with Player Details
@@ -685,9 +690,16 @@ def app():
                 p_dict['Nome'] = f"{p_dict.get('Nome', '')} ({team_name})"
                 
                 # Get Stats
-                # We need to match player_id AND game_id (in case a player plays twice? Unlikely in one round but safe).
-                # Actually round specific, one game per round usually. using player_id match in round_stats is safe enough.
-                s_row = round_stats[round_stats['player_id'] == p['player_id']]
+                # Need to match player_id AND game_id (Best Score Game)
+                gid = str(p.get('game_id', ''))
+                s_row = round_stats[
+                    (round_stats['player_id'] == p['player_id']) & 
+                    (round_stats['game_id'].astype(str) == gid)
+                ]
+                
+                # Fallback
+                if s_row.empty:
+                    s_row = round_stats[round_stats['player_id'] == p['player_id']]
                 
                 # Using the first found stats (closest match)
                 s_dict = s_row.iloc[0].to_dict() if not s_row.empty else {}
