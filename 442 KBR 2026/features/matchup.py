@@ -89,6 +89,27 @@ def app():
             if round_h2h.empty:
                 st.info("Confrontos não encontrados para esta rodada.")
             else:
+                # --- FIX: Filter Live Points by Round Games ---
+                round_matches_gw = df_gw[df_gw['rodada'] == sel_round].copy()
+                gids_full = round_matches_gw['id_jogo'].astype(str).tolist()
+                gids_simple = []
+                for x in gids_full:
+                     if "id:" in x: 
+                         val = x.split("id:")[-1]
+                         if val and val.strip(): gids_simple.append(val)
+                     elif x and x.strip() and str(x).lower() != 'nan':
+                         gids_simple.append(x)
+                
+                valid_gids = set(gids_full) | set(gids_simple)
+                valid_gids = {x for x in valid_gids if x and str(x).lower() != 'nan' and str(x).strip() != ''}
+
+                if not valid_gids:
+                     # If no valid games for this round, live points should be empty
+                     df_pts_round = pd.DataFrame(columns=df_pts.columns)
+                else:
+                     df_pts_round = df_pts[df_pts['game_id'].astype(str).isin(valid_gids)].copy()
+                # -----------------------------------------------
+
                 # Prepare Team Name Map
                 team_map = {}
                 if not df_squad.empty:
@@ -150,7 +171,7 @@ def app():
                                 is_captain = (cap_val == 'CAPITAO')
                                 
                             else:
-                                pts_rows = df_pts[df_pts['player_id'] == pid] 
+                                pts_rows = df_pts_round[df_pts_round['player_id'] == pid] 
                                 score = pts_rows['pontuacao'].sum()
                                 
                                 lineup_val = row.get('lineup', 'TITULAR')
