@@ -456,11 +456,17 @@ def app():
                     if "id:" in x: gids_simple.append(x.split("id:")[-1])
                 
                 valid_gids = set(gids_full) | set(gids_simple)
+                # Remove empty/invalid
+                valid_gids = {x for x in valid_gids if x and str(x).lower() != 'nan' and str(x).strip() != ''}
 
                 # Filter Points to only this round
-                round_pts_all = df_pts[
-                    (df_pts['game_id'].astype(str).isin(valid_gids))
-                ].copy()
+                # Ensure we are not matching on empty IDs
+                if not valid_gids:
+                     round_pts_all = pd.DataFrame(columns=df_pts.columns)
+                else:
+                    round_pts_all = df_pts[
+                        (df_pts['game_id'].astype(str).isin(valid_gids))
+                    ].copy()
                 
                 # Helper to get score for a pid
                 def get_pid_score(pid):
@@ -641,9 +647,15 @@ def app():
         round_game_ids_simple = []
         for raw in round_game_ids_full:
             try:
-                 if "id:" in raw: round_game_ids_simple.append(raw.split("id:")[-1])
-                 else: round_game_ids_simple.append(raw)
+                 if "id:" in raw: 
+                     val = raw.split("id:")[-1]
+                     if val and val.strip(): round_game_ids_simple.append(val)
+                 elif raw and raw.strip() and raw.lower() != 'nan': 
+                     round_game_ids_simple.append(raw)
             except: pass
+        
+        # Remove potential empty/nans from full list too just in case
+        round_game_ids_full = [x for x in round_game_ids_full if x and str(x).lower() != 'nan' and str(x).strip() != '']
 
         # 2. Filter df_pts
         mask_pts = (df_pts['game_id'].astype(str).isin(round_game_ids_full)) | \
