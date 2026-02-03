@@ -173,7 +173,7 @@ def app():
                                 is_captain = (cap_val == 'CAPITAO')
                                 
                             else:
-                            else:
+
                                 pts_rows = df_pts_round[df_pts_round['player_id'] == pid] 
                                 if not pts_rows.empty:
                                     # --- CHANGE: Get MAX score instead of SUM ---
