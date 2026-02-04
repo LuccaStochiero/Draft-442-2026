@@ -12,41 +12,40 @@ POS_MAPPING = {
 def clean_pos(p):
     return POS_MAPPING.get(p, p)
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=300)
 def load_data():
-    # 1. Load Local Players Data (Detailed info)
-    players_file = get_players_file()
-    if players_file.exists():
-        df_players = pd.read_csv(players_file)
-        df_players['player_id'] = df_players['player_id'].astype(str)
-        # Pre-calc
-        df_players['Posição Simplificada'] = df_players['Posição'].apply(clean_pos)
-    else:
-        st.error(f"Arquivo Players.csv não encontrado em: {players_file}")
-        return pd.DataFrame(), pd.DataFrame()
-
-    # 2. Load PLAYERS_FREE from Sheets (Availability)
-    import time
-    max_retries = 3
-    for attempt in range(max_retries):
-        try:
-            client, sh = get_client()
-            ws_free = sh.worksheet("PLAYERS_FREE")
-            data_free = ws_free.get_all_records()
-            df_free_ids = pd.DataFrame(data_free)
-            if not df_free_ids.empty:
-                df_free_ids.columns = df_free_ids.columns.str.lower()
-                df_free_ids['player_id'] = df_free_ids['player_id'].astype(str)
-            break # Success, exit loop
-        except Exception as e:
-            if attempt < max_retries - 1:
-                time.sleep(2)
-                continue
-            else:
-                st.error(f"Erro ao ler Google Sheet após {max_retries} tentativas: {e}")
-                return df_players, pd.DataFrame()
+    # Load ALL data from Sheets (Source of Truth) to avoid CSV desync
+    try:
+        client, sh = get_client()
         
-    return df_players, df_free_ids
+        # 1. Load Free IDs
+        ws_free = sh.worksheet("PLAYERS_FREE")
+        data_free = ws_free.get_all_records()
+        df_free_ids = pd.DataFrame(data_free)
+        if not df_free_ids.empty:
+            df_free_ids.columns = df_free_ids.columns.str.lower()
+            df_free_ids['player_id'] = df_free_ids['player_id'].astype(str)
+            
+        # 2. Load Base Data (ALL_PLAYERS) to replace CSV
+        ws_all = sh.worksheet("ALL_PLAYERS")
+        data_all = ws_all.get_all_records()
+        df_players = pd.DataFrame(data_all)
+        
+        if not df_players.empty:
+            df_players['player_id'] = df_players['player_id'].astype(str)
+            # Apply clean_pos
+            if 'Posição' in df_players.columns:
+                df_players['Posição Simplificada'] = df_players['Posição'].apply(clean_pos)
+            else:
+                df_players['Posição Simplificada'] = 'Unknown'
+        else:
+            return pd.DataFrame(), df_free_ids
+
+        return df_players, df_free_ids
+
+    except Exception as e:
+        st.error(f"Erro ao carregar dados do Google Sheets: {e}")
+        return pd.DataFrame(), pd.DataFrame()
 
 def app():
     st.title("🆓 Jogadores Livres (Lista)")
