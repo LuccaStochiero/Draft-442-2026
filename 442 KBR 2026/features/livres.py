@@ -26,18 +26,25 @@ def load_data():
         return pd.DataFrame(), pd.DataFrame()
 
     # 2. Load PLAYERS_FREE from Sheets (Availability)
-    try:
-        client, sh = get_client()
-        
-        ws_free = sh.worksheet("PLAYERS_FREE")
-        data_free = ws_free.get_all_records()
-        df_free_ids = pd.DataFrame(data_free)
-        if not df_free_ids.empty:
-            df_free_ids.columns = df_free_ids.columns.str.lower()
-            df_free_ids['player_id'] = df_free_ids['player_id'].astype(str)
-    except Exception as e:
-        st.error(f"Erro ao ler Google Sheet: {e}")
-        return df_players, pd.DataFrame()
+    import time
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            client, sh = get_client()
+            ws_free = sh.worksheet("PLAYERS_FREE")
+            data_free = ws_free.get_all_records()
+            df_free_ids = pd.DataFrame(data_free)
+            if not df_free_ids.empty:
+                df_free_ids.columns = df_free_ids.columns.str.lower()
+                df_free_ids['player_id'] = df_free_ids['player_id'].astype(str)
+            break # Success, exit loop
+        except Exception as e:
+            if attempt < max_retries - 1:
+                time.sleep(2)
+                continue
+            else:
+                st.error(f"Erro ao ler Google Sheet após {max_retries} tentativas: {e}")
+                return df_players, pd.DataFrame()
         
     return df_players, df_free_ids
 
@@ -45,6 +52,22 @@ def app():
     st.title("🆓 Jogadores Livres (Lista)")
     
     df_players, df_free_ids = load_data()
+
+    # --- Debug Utils ---
+    if st.sidebar.checkbox("🛠️ Debug Info", value=False):
+        st.sidebar.markdown("### 📊 Data Stats")
+        st.sidebar.info(f"Local Players (CSV): **{len(df_players)}**")
+        st.sidebar.info(f"Free Sheet (Rows): **{len(df_free_ids)}**")
+        
+        # Check intersection
+        if not df_players.empty and not df_free_ids.empty:
+            comm = df_players[df_players['player_id'].isin(set(df_free_ids['player_id'].unique()))]
+            st.sidebar.code(f"Intersection: {len(comm)}")
+            
+        if st.sidebar.button("🧹 Limpar Cache"):
+            st.cache_data.clear()
+            st.cache_resource.clear()
+            st.rerun()
     
     if df_players.empty or df_free_ids.empty:
         st.warning("Dados indisponíveis ou nenhum jogador livre no momento.")
