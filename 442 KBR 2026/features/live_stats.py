@@ -4,7 +4,7 @@ import requests
 import datetime
 import time
 import numpy as np
-from features.auth import get_client, BASE_DIR, get_players_file
+from features.auth import get_client, BASE_DIR
 import sys
 import subprocess
 
@@ -346,16 +346,16 @@ def fetch_sofascore_lineups(game_id):
         pass
     return None
 
+from features.data_cache import load_all_players_data
+
 @st.cache_data(ttl=3600)
 def get_player_pos_map():
     """
-    Reads Players.csv and returns a dict: {str(id): 'G'/'D'/'M'/'F'}
+    Reads ALL_PLAYERS from chache and returns a dict: {str(id): 'G'/'D'/'M'/'F'}
     """
     try:
-        f = get_players_file()
-        if not f.exists(): return {}
-        
-        df = pd.read_csv(f)
+        df = load_all_players_data()
+        if df.empty: return {}
         
         # Helper to extract ID
         def extract_id(val):
@@ -377,8 +377,20 @@ def get_player_pos_map():
         # Create map
         pmap = {}
         for _, row in df.iterrows():
-            clean_pos = row['Posição'].strip().upper() if isinstance(row['Posição'], str) else ''
-            mapped = pos_map_dict.get(clean_pos, 'M') # Default to M if unknown
+            # Check Posição or Posição Simplificada
+            # data_cache adds 'Posição Simplificada' (GK, DEF, MEI, ATA)
+            # But here we map to G, D, M, F.
+            
+            p_simp = row.get('Posição Simplificada', '')
+            if not p_simp:
+                 # Fallback to raw Posição
+                 p_raw = str(row.get('Posição', '')).strip().upper()
+                 # clean_pos from utils normally maps Goalkeeper->GK.
+                 # Assuming data_cache did its job, 'Posição Simplificada' should be GK/DEF/MEI/ATA.
+                 pass
+            
+            # Map GK->G
+            mapped = pos_map_dict.get(p_simp, 'M') # Default to M
             pmap[str(row['pid'])] = mapped
             
         return pmap

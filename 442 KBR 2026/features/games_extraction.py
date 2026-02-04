@@ -4,7 +4,7 @@ import gspread
 from playwright.async_api import async_playwright
 from datetime import datetime
 import streamlit as st
-from features.auth import get_client, get_players_file
+from features.auth import get_client
 
 # Constants
 BASE_URL = "https://www.sofascore.com"
@@ -494,14 +494,6 @@ def update_players_sheet(players_data):
         # Reorder
         df_p = df_p[cols]
         
-        # --- LOCAL SYNC ---
-        try:
-            local_file = get_players_file()
-            # Ensure proper encoding for special chars
-            df_p.to_csv(local_file, index=False, encoding='utf-8')
-            print(f"Updated local Players.csv with {len(df_p)} rows at {local_file}")
-        except Exception as e_csv:
-            print(f"Error updating local CSV: {e_csv}")
         
         # Upload
         data_up = [cols] + df_p.values.tolist()

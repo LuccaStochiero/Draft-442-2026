@@ -1,90 +1,22 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
+# from features.auth import get_client, get_players_file # Not needed anymore
+from features.data_cache import load_all_players_data, load_team_data, load_squad_data
+from features.utils import clean_pos
 
+# Constants
 POS_ORDER = ['GK', 'DEF', 'MEI', 'ATA']
-POS_MAPPING = {
-    'Goalkeeper': 'GK',
-    'Defender': 'DEF',
-    'Midfielder': 'MEI',
-    'Forward': 'ATA'
-}
 
-def clean_pos(p):
-    return POS_MAPPING.get(p, p)
-
-@st.cache_data(ttl=3600)
 def load_data():
-    players_file = get_players_file()
+    df_players = load_all_players_data()
+    df_team = load_team_data()
+    df_squad = load_squad_data()
     
-    # Init empty
-    df_players = pd.DataFrame()
-    df_team = pd.DataFrame()
-    df_squad = pd.DataFrame()
-
-    # 1. Load Players (Always Local)
-    if players_file.exists():
-        df_players = pd.read_csv(players_file)
-        if 'player_id' in df_players.columns:
-            df_players['player_id'] = df_players['player_id'].astype(str)
-    
-    # define cache paths
-    cache_team_path = players_file.parent / "cache_team.csv"
-    cache_squad_path = players_file.parent / "cache_squad.csv"
-
-    # 2. Try Load API
-    api_success = False
-    try:
-        client, sh = get_client()
-        
-        # Load TEAM
-        ws_team = sh.worksheet("TEAM")
-        df_team = pd.DataFrame(ws_team.get_all_records())
-        if not df_team.empty:
-            df_team.columns = df_team.columns.str.lower()
-            df_team['player_id'] = df_team['player_id'].astype(str)
-            df_team['team_id'] = df_team['team_id'].astype(str)
-            # Save to cache
-            df_team.to_csv(cache_team_path, index=False)
-
-        # Load SQUAD
-        ws_squad = sh.worksheet("SQUAD")
-        df_squad = pd.DataFrame(ws_squad.get_all_records())
-        if not df_squad.empty:
-            df_squad.columns = df_squad.columns.str.lower()
-            # Normalize ID col
-            id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
-            df_squad['team_id_norm'] = df_squad[id_col].astype(str)
-            # Save to cache
-            df_squad.to_csv(cache_squad_path, index=False)
+    # API success is effectively implicit if data frames are not empty
+    # If they are empty, it means fetch failed (or sheets empty)
+    is_api_fresh = not (df_players.empty or df_team.empty or df_squad.empty)
             
-        api_success = True
-
-    except Exception as e:
-        print(f"⚠️ Aviso: Não foi possível conectar ao Google Sheets (Erro: {e}). Tentando carregar cache local...")
-    
-    # 3. Fallback to Disk Cache if API failed or returned empty
-    if not api_success or df_team.empty:
-        if cache_team_path.exists():
-            try:
-                df_team = pd.read_csv(cache_team_path)
-                df_team['player_id'] = df_team['player_id'].astype(str)
-                df_team['team_id'] = df_team['team_id'].astype(str)
-                # st.info("Usando cache local para TEAM.")
-            except: pass
-            
-    if not api_success or df_squad.empty:
-        if cache_squad_path.exists():
-            try:
-                df_squad = pd.read_csv(cache_squad_path)
-                # Re-apply norm logic
-                if not df_squad.empty:
-                    id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
-                    df_squad['team_id_norm'] = df_squad[id_col].astype(str)
-                # st.info("Usando cache local para SQUAD.")
-            except: pass
-
-    return df_players, df_team, df_squad, api_success
+    return df_players, df_team, df_squad, is_api_fresh
 
 def app():
     st.markdown("### Visualização de Elenco")
@@ -123,7 +55,10 @@ def app():
     
     # Prepare all players data
     all_players = df_players.copy()
-    all_players['Pos'] = all_players['Posição'].apply(clean_pos)
+    all_players['Pos'] = all_players.get('Posição Simplificada', all_players.get('Posição', 'Unknown'))
+    # Ensure clean_pos is applied if we fell back to 'Posição' (though data_cache should have handled it)
+    if 'Posição Simplificada' not in all_players.columns and 'Posição' in all_players.columns:
+        all_players['Pos'] = all_players['Posição'].apply(clean_pos)
     all_players['Status'] = all_players.apply(make_status, axis=1)
     
     # Get team map

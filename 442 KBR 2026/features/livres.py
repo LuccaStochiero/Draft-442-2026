@@ -1,51 +1,24 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
+from features.auth import get_client
 
-POS_MAPPING = {
-    'Goalkeeper': 'GK',
-    'Defender': 'DEF',
-    'Midfielder': 'MEI',
-    'Forward': 'ATA'
-}
+from features.data_cache import load_all_players_data, load_free_players_ids
 
-def clean_pos(p):
-    return POS_MAPPING.get(p, p)
-
-@st.cache_data(ttl=300)
 def load_data():
-    # Load ALL data from Sheets (Source of Truth) to avoid CSV desync
-    try:
-        client, sh = get_client()
+    df_players = load_all_players_data()
+    free_ids = load_free_players_ids()
+    
+    # Convert set back to DataFrame for compatibility with existing code structure if needed
+    # Or actually, the existing code expects df_free_ids as a dataframe in column 'player_id'
+    # But wait, looking at my previous edit to livres.py, I made it return df_players and df_free_ids.
+    
+    # Let's reconstruct df_free_ids from the set to minimize code changes in app()
+    if free_ids:
+        df_free_ids = pd.DataFrame({'player_id': list(free_ids)})
+    else:
+        df_free_ids = pd.DataFrame(columns=['player_id'])
         
-        # 1. Load Free IDs
-        ws_free = sh.worksheet("PLAYERS_FREE")
-        data_free = ws_free.get_all_records()
-        df_free_ids = pd.DataFrame(data_free)
-        if not df_free_ids.empty:
-            df_free_ids.columns = df_free_ids.columns.str.lower()
-            df_free_ids['player_id'] = df_free_ids['player_id'].astype(str)
-            
-        # 2. Load Base Data (ALL_PLAYERS) to replace CSV
-        ws_all = sh.worksheet("ALL_PLAYERS")
-        data_all = ws_all.get_all_records()
-        df_players = pd.DataFrame(data_all)
-        
-        if not df_players.empty:
-            df_players['player_id'] = df_players['player_id'].astype(str)
-            # Apply clean_pos
-            if 'Posição' in df_players.columns:
-                df_players['Posição Simplificada'] = df_players['Posição'].apply(clean_pos)
-            else:
-                df_players['Posição Simplificada'] = 'Unknown'
-        else:
-            return pd.DataFrame(), df_free_ids
-
-        return df_players, df_free_ids
-
-    except Exception as e:
-        st.error(f"Erro ao carregar dados do Google Sheets: {e}")
-        return pd.DataFrame(), pd.DataFrame()
+    return df_players, df_free_ids
 
 def app():
     st.title("🆓 Jogadores Livres (Lista)")

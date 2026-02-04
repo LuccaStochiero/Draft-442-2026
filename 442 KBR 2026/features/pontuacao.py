@@ -1,139 +1,54 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
+from features.auth import get_client
 from features.utils import robust_to_float
 
-@st.cache_data(ttl=60) # Cache Static Data for 1 Minute
+from features.data_cache import (
+    load_all_players_data,
+    load_gameweek_data,
+    load_h2h_rounds_data,
+    load_team_lineup_data,
+    load_squad_data,
+    load_h2h_table_data,
+    load_player_points_data,
+    load_player_stats_data
+)
+
 def load_data_v2():
-    players_file = get_players_file()
-    if players_file.exists():
-        df_players = pd.read_csv(players_file)
-        df_players['player_id'] = df_players['player_id'].astype(str)
-    else:
-        df_players = pd.DataFrame()
+    """
+    Legacy wrapper for Matchup compatibility.
+    Loads: players, gw, h2h_rounds, lineup, squad, table
+    """
+    df_players = load_all_players_data()
+    df_gw = load_gameweek_data()
+    df_h2h = load_h2h_rounds_data()
+    df_lineup = load_team_lineup_data()
+    df_squad = load_squad_data()
+    df_table = load_h2h_table_data()
+    
+    return df_players, df_gw, df_h2h, df_lineup, df_squad, df_table
 
-    try:
-        client, sh = get_client()
-
-        # Load GAMEWEEK (Matches)
-        ws_gw = sh.worksheet("GAMEWEEK")
-        df_gw = pd.DataFrame(ws_gw.get_all_records())
-        if not df_gw.empty:
-            df_gw.columns = df_gw.columns.str.lower()
-            if 'rodada' in df_gw.columns:
-                df_gw['rodada'] = pd.to_numeric(df_gw['rodada'], errors='coerce')
-
-        # Load H2H - ROUNDS
-        try:
-             ws_h2h = sh.worksheet("H2H - ROUNDS")
-             df_h2h = pd.DataFrame(ws_h2h.get_all_records())
-             if not df_h2h.empty:
-                 df_h2h.columns = df_h2h.columns.str.lower()
-                 if 'rodada' in df_h2h.columns:
-                     df_h2h['rodada'] = pd.to_numeric(df_h2h['rodada'], errors='coerce')
-        except:
-             df_h2h = pd.DataFrame()
-
-        # Load TEAM_LINEUP (Who played)
-        try:
-             ws_lineup = sh.worksheet("TEAM_LINEUP")
-             df_lineup = pd.DataFrame(ws_lineup.get_all_records())
-             if not df_lineup.empty:
-                 df_lineup.columns = df_lineup.columns.str.lower()
-                 df_lineup['player_id'] = df_lineup['player_id'].astype(str)
-                 df_lineup['team_id'] = df_lineup['team_id'].astype(str)
-                 if 'rodada' in df_lineup.columns:
-                     df_lineup['rodada'] = pd.to_numeric(df_lineup['rodada'], errors='coerce')
-        except:
-             df_lineup = pd.DataFrame()
-
-        # Load SQUAD (for Team Names)
-        try:
-            ws_squad = sh.worksheet("SQUAD")
-            df_squad = pd.DataFrame(ws_squad.get_all_records())
-            if not df_squad.empty:
-                df_squad.columns = df_squad.columns.str.lower()
-                id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
-                df_squad['team_id_norm'] = df_squad[id_col].astype(str)
-        except:
-            df_squad = pd.DataFrame()
-            
-        # Load H2H - TABLE
-        # Load H2H - TABLE
-        try:
-             ws_table = sh.worksheet("H2H - TABLE")
-             # Use get_all_values to fetch RAW strings and avoid gspread auto-numericising "87,57" as 8757
-             raw_data = ws_table.get_all_values()
-             
-             if raw_data and len(raw_data) > 1:
-                 df_table = pd.DataFrame(raw_data[1:], columns=raw_data[0])
-                 df_table.columns = df_table.columns.str.lower()
-                 
-                 # Clean Numerics (Brazilian Format: 12,34 -> 12.34)
-                 for col in ['pf', 'ps']:
-                     if col in df_table.columns:
-                         df_table[col] = df_table[col].astype(str).str.replace(',', '.')
-                         df_table[col] = pd.to_numeric(df_table[col], errors='coerce').fillna(0.0)
-                 
-                 # Standard Integers
-                 for col in ['p', 'j', 'v', 'e', 'd']:
-                     if col in df_table.columns:
-                         df_table[col] = pd.to_numeric(df_table[col], errors='coerce').fillna(0).astype(int)
-             else:
-                 df_table = pd.DataFrame()
-        except:
-             df_table = pd.DataFrame()
-            
-        return df_players, df_gw, df_h2h, df_lineup, df_squad, df_table
-        
-    except Exception as e:
-        st.error(f"Erro ao carregar dados estáticos: {e}")
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
-
-@st.cache_data(ttl=60) # Cache Live Data for 1 min
 def load_live_data(_client=None, _sh=None):
-    # Pass client/sh or get new? Getting new ensures freshness if auth expires, but costly.
-    # Auth get_client caches itself usually.
-    try:
-        client, sh = get_client()
-        
-        # Load PLAYER_POINTS - use get_values to preserve comma-decimal strings
-        try:
-             ws_pts = sh.worksheet("PLAYER_POINTS")
-             pts_values = ws_pts.get_values()
-             if pts_values and len(pts_values) > 1:
-                 df_pts = pd.DataFrame(pts_values[1:], columns=pts_values[0])
-             else:
-                 df_pts = pd.DataFrame()
-             if not df_pts.empty:
-                 df_pts['player_id'] = df_pts['player_id'].astype(str)
-                 df_pts['game_id'] = df_pts['game_id'].astype(str)
-                 # Parse pontuacao from comma-decimal string
-                 df_pts['pontuacao'] = df_pts['pontuacao'].apply(robust_to_float)
-        except:
-             df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
+    """
+    Legacy wrapper for Matchup compatibility.
+    Loads: points, stats
+    """
+    df_pts = load_player_points_data()
+    df_stats = load_player_stats_data()
+    
+    # Ensure columns exist if empty (Validation from old code)
+    if df_pts.empty:
+        df_pts = pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao'])
+    if df_stats.empty:
+        df_stats = pd.DataFrame(columns=['game_id', 'player_id'])
+    
+    # Ensure basic validation
+    for df, req_cols in [(df_pts, ['game_id', 'player_id', 'pontuacao']), (df_stats, ['game_id', 'player_id'])]:
+        for c in req_cols:
+             if c not in df.columns:
+                 df[c] = pd.Series(dtype='str' if c != 'pontuacao' else 'float')
 
-        # Load PLAYER_STATS
-        try:
-             ws_stats = sh.worksheet("PLAYERS_STATS")
-             df_stats = pd.DataFrame(ws_stats.get_all_records())
-             if not df_stats.empty:
-                  df_stats['player_id'] = df_stats['player_id'].astype(str)
-                  df_stats['game_id'] = df_stats['game_id'].astype(str)
-        except:
-             df_stats = pd.DataFrame(columns=['game_id', 'player_id'])
-             
-        # Validation
-        for df, req_cols in [(df_pts, ['game_id', 'player_id', 'pontuacao']), (df_stats, ['game_id', 'player_id'])]:
-            for c in req_cols:
-                if c not in df.columns:
-                    df[c] = pd.Series(dtype='str' if c != 'pontuacao' else 'float')
-                    
-        return df_pts, df_stats
-        
-    except Exception as e:
-        st.warning(f"Erro ao carregar Live Data: {e}") # Warning instead of Error to not break UI if quota limit
-        return pd.DataFrame(columns=['game_id', 'player_id', 'pontuacao']), pd.DataFrame(columns=['game_id', 'player_id'])
+    return df_pts, df_stats
 
 def clean_pos(p):
     mapping = {'Goalkeeper': 'GK', 'Defender': 'DEF', 'Midfielder': 'MEI', 'Forward': 'ATA'}

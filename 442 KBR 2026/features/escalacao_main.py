@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
+from features.auth import get_client
 
 FORMATIONS = {
     '5-4-1': {'DEF': 5, 'MEI': 4, 'ATA': 1},
@@ -22,39 +22,25 @@ POS_MAPPING = {
 def clean_pos(p):
     return POS_MAPPING.get(p, p)
 
-@st.cache_data(ttl=60)
+from features.data_cache import (
+    load_all_players_data,
+    load_team_data,
+    load_squad_data
+)
+
 def load_data():
-    players_file = get_players_file()
-    if players_file.exists():
-        df_players = pd.read_csv(players_file)
-        df_players['player_id'] = df_players['player_id'].astype(str)
-        df_players['SimplePos'] = df_players['Posição'].apply(clean_pos)
-    else:
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
-
-    try:
-        client, sh = get_client()
-        
-        # Load TEAM
-        ws_team = sh.worksheet("TEAM")
-        df_team = pd.DataFrame(ws_team.get_all_records())
-        if not df_team.empty:
-            df_team.columns = df_team.columns.str.lower()
-            df_team['player_id'] = df_team['player_id'].astype(str)
-            df_team['team_id'] = df_team['team_id'].astype(str)
-
-        # Load SQUAD
-        ws_squad = sh.worksheet("SQUAD")
-        df_squad = pd.DataFrame(ws_squad.get_all_records())
-        if not df_squad.empty:
-            df_squad.columns = df_squad.columns.str.lower()
-            id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
-            df_squad['team_id_norm'] = df_squad[id_col].astype(str)
-
-    except Exception as e:
-        st.error(f"Erro sheets: {e}")
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
-        
+    df_players = load_all_players_data()
+    # data_cache already adds 'Posição Simplificada'
+    if not df_players.empty:
+        if 'Posição Simplificada' in df_players.columns:
+             df_players['SimplePos'] = df_players['Posição Simplificada']
+        else:
+             # Fallback if cache logic changes (unlikely)
+             df_players['SimplePos'] = df_players['Posição'].apply(clean_pos)
+    
+    df_team = load_team_data()
+    df_squad = load_squad_data()
+    
     return df_players, df_team, df_squad
 
 def save_lineup(team_id, rodada, formation, lineup_data):

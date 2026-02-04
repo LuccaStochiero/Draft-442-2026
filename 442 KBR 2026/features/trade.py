@@ -1,41 +1,18 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
+from features.auth import get_client
 
-@st.cache_data(ttl=60)
+from features.data_cache import (
+    load_all_players_data,
+    load_team_data,
+    load_squad_data
+)
+
 def load_data():
-    players_file = get_players_file()
-    if not players_file.exists():
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+    df_players = load_all_players_data()
+    df_team = load_team_data()
+    df_squad = load_squad_data()
     
-    df_players = pd.read_csv(players_file)
-    df_players['player_id'] = df_players['player_id'].astype(str)
-    
-    try:
-        client, sh = get_client()
-        
-        # Load TEAM
-        data_team = sh.worksheet("TEAM").get_all_records()
-        df_team = pd.DataFrame(data_team)
-        if not df_team.empty:
-            df_team.columns = df_team.columns.str.lower()
-            df_team['player_id'] = df_team['player_id'].astype(str)
-            df_team['team_id'] = df_team['team_id'].astype(str)
-            
-        # Load SQUAD
-        data_squad = sh.worksheet("SQUAD").get_all_records()
-        df_squad = pd.DataFrame(data_squad)
-        if not df_squad.empty:
-            df_squad.columns = df_squad.columns.str.lower()
-            id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
-            df_squad['team_id_norm'] = df_squad[id_col].astype(str)
-            if 'caixa' in df_squad.columns:
-                df_squad['caixa'] = pd.to_numeric(df_squad['caixa'].astype(str).str.replace(',','.'), errors='coerce').fillna(0)
-
-    except Exception as e:
-        st.error(f"Erro sheets: {e}")
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
-        
     return df_players, df_team, df_squad
 
 def execute_trade(rodada, team1_id, team1_players, team1_cash, team2_id, team2_players, team2_cash):

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
-from features.elenco import clean_pos
+# from features.auth import get_client, get_players_file
+from features.utils import clean_pos
 
 # --- CONSTANTS & MAPPING ---
 POS_ORDER = ['GK', 'DEF', 'MEI', 'ATA']
@@ -80,95 +80,53 @@ def get_mapping_options():
         "Pontuação": ["pontuacao"]
     }
 
+from features.data_cache import (
+    load_all_players_data, 
+    load_player_stats_data, 
+    load_player_points_data,
+    load_team_data,
+    load_squad_data,
+    load_gameweek_data
+)
+
 @st.cache_data(ttl=300)
 def load_scout_data():
     """
-    Loads all necessary data for the Scout tab:
-    1. Players (CSV)
-    2. Stats (Google Sheet: PLAYERS_STATS)
-    3. Teams (Google Sheet: TEAM / SQUAD) for mapping
-    4. Rounds (Google Sheet: GAMEWEEK) to know available rounds
+    Loads all necessary data for the Scout tab using centralized cache.
     """
     # 1. Players
-    players_file = get_players_file()
-    if players_file.exists():
-        df_players = pd.read_csv(players_file)
-        df_players['player_id'] = df_players['player_id'].astype(str)
-        df_players['Pos'] = df_players['Posição'].apply(clean_pos)
-    else:
-        df_players = pd.DataFrame()
+    df_players = load_all_players_data()
+    if not df_players.empty:
+         # Ensure Pos is cleaned (already done in data_cache but let's be safe if key is Pos vs Posição)
+         # data_cache adds 'Posição Simplificada'. Scout uses 'Pos'
+         if 'Posição Simplificada' in df_players.columns:
+             df_players['Pos'] = df_players['Posição Simplificada']
+         elif 'Posição' in df_players.columns:
+             df_players['Pos'] = df_players['Posição'].apply(clean_pos)
 
-    try:
-        client, sh = get_client()
 
-        # 2. Stats
-        ws_stats = sh.worksheet("PLAYERS_STATS")
-        df_stats = pd.DataFrame(ws_stats.get_all_records())
-        if not df_stats.empty:
-            df_stats.columns = df_stats.columns.str.lower()
-            df_stats['player_id'] = df_stats['player_id'].astype(str)
-            df_stats['game_id'] = df_stats['game_id'].astype(str)
-            # Ensure numeric cols are numeric
-            # We'll stick to a safe list of potential numeric columns to convert
-            for col in df_stats.columns:
-                if col not in ['player_id', 'game_id', 'fixture_id']:
-                    df_stats[col] = pd.to_numeric(df_stats[col], errors='coerce').fillna(0)
+    # 2. Stats
+    df_stats = load_player_stats_data()
 
-        # 2a. Points (New Requirement)
-        ws_pts = sh.worksheet("PLAYER_POINTS")
-        # Use get_values to assume strings and handle commas if needed
-        pts_vals = ws_pts.get_values()
-        if pts_vals and len(pts_vals) > 1:
-            df_pts = pd.DataFrame(pts_vals[1:], columns=pts_vals[0])
-            df_pts.columns = df_pts.columns.str.lower()
-            df_pts['player_id'] = df_pts['player_id'].astype(str)
-            df_pts['game_id'] = df_pts['game_id'].astype(str)
-            
-            # Helper to clean float
-            def robust_to_float_local(x):
-                try:
-                    return float(str(x).replace(',', '.'))
-                except:
-                    return 0.0
-            
-            df_pts['pontuacao'] = df_pts['pontuacao'].apply(robust_to_float_local)
-            
-            # Merge Points into Stats
-            # We merge on player_id and game_id
+    # 2a. Points
+    df_pts = load_player_points_data()
+    
+    # Merge Points into Stats
+    if not df_stats.empty:
+        if not df_pts.empty:
             if 'pontuacao' not in df_stats.columns:
                 df_stats = df_stats.merge(df_pts[['player_id', 'game_id', 'pontuacao']], on=['player_id', 'game_id'], how='left')
                 df_stats['pontuacao'] = df_stats['pontuacao'].fillna(0)
         else:
-            # If empty points, add 0 column
-            df_stats['pontuacao'] = 0.0
-
-        # 3. Teams (Ownership)
-        ws_team = sh.worksheet("TEAM")
-        df_team = pd.DataFrame(ws_team.get_all_records())
-        if not df_team.empty:
-            df_team.columns = df_team.columns.str.lower()
-            df_team['player_id'] = df_team['player_id'].astype(str)
-            df_team['team_id'] = df_team['team_id'].astype(str)
-
-        ws_squad = sh.worksheet("SQUAD")
-        df_squad = pd.DataFrame(ws_squad.get_all_records())
-        if not df_squad.empty:
-            df_squad.columns = df_squad.columns.str.lower()
-            id_col = next((c for c in df_squad.columns if c in ['team_id', 'id']), 'team_id')
-            df_squad['team_id_norm'] = df_squad[id_col].astype(str)
-
-        # 4. Gameweek (To map Game ID -> Round)
-        ws_gw = sh.worksheet("GAMEWEEK")
-        df_gw = pd.DataFrame(ws_gw.get_all_records())
-        if not df_gw.empty:
-            df_gw.columns = df_gw.columns.str.lower()
-            # We need a map of game_id -> round
-            # We handle 'id:xxxxx' format
-            pass
-
-    except Exception as e:
-        st.error(f"Erro ao carregar dados do Scout: {e}")
-        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+            if 'pontuacao' not in df_stats.columns:
+                df_stats['pontuacao'] = 0.0
+    
+    # 3. Teams
+    df_team = load_team_data()
+    df_squad = load_squad_data()
+    
+    # 4. Gameweek
+    df_gw = load_gameweek_data()
 
     return df_players, df_stats, df_team, df_squad, df_gw
 

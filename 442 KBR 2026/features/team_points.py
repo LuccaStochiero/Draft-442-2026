@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 import re
-from features.auth import get_client, get_players_file
+from features.auth import get_client
 from features.live_stats import STATS_SHEET, POINTS_SHEET
 from features.utils import robust_to_float, format_br_decimal
 
@@ -37,11 +37,11 @@ def calculate_team_points(target_round=None):
         df_stats = pd.DataFrame(ws_stats.get_all_records())
         
         # NEW: Load Players to link ID -> Club -> Game (for DNP check)
-        pf = get_players_file()
-        if pf.exists():
-            df_players = pd.read_csv(pf)
-        else:
-            df_players = pd.DataFrame()
+        try:
+             ws_all = sh.worksheet("ALL_PLAYERS")
+             df_players = pd.DataFrame(ws_all.get_all_records())
+        except:
+             df_players = pd.DataFrame()
         
     except Exception as e:
         print(f"Error loading sheets: {e}")

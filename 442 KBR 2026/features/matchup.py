@@ -1,46 +1,16 @@
 import streamlit as st
 import pandas as pd
-from features.auth import get_client, get_players_file
+# from features.auth import get_client, get_players_file
 from features.pontuacao import render_player_row, load_data_v2, load_live_data, clean_pos
-
-# Reuse data loading structure from pontuacao, but we need TEAM_POINTS too
-@st.cache_data(ttl=60) 
-def load_matchup_data():
-    client, sh = get_client()
-    try:
-        ws = sh.worksheet("H2H - TEAM_POINTS")
-        # Use get_values to preserve comma-decimal strings
-        raw_values = ws.get_values()
-        if raw_values and len(raw_values) > 1:
-            df_tp = pd.DataFrame(raw_values[1:], columns=raw_values[0])
-        else:
-            df_tp = pd.DataFrame()
-        
-        # Normalize
-        if not df_tp.empty:
-             df_tp.columns = [c.lower() for c in df_tp.columns]
-             # Columns: team_id, player_id, rodada, pontuacao, escalado
-             df_tp['player_id'] = df_tp['player_id'].astype(str)
-             df_tp['team_id'] = df_tp['team_id'].astype(str)
-             # Convert pontuacao comma-string to float
-             if 'pontuacao' in df_tp.columns:
-                 df_tp['pontuacao'] = df_tp['pontuacao'].apply(
-                     lambda x: float(str(x).replace(',', '.')) if x else 0.0
-                 )
-             # Ensure numeric round
-             df_tp['rodada'] = pd.to_numeric(df_tp['rodada'], errors='coerce')
-    except:
-        df_tp = pd.DataFrame()
-        
-    return df_tp
+from features.data_cache import load_h2h_team_points_data
 
 def app():
     st.title("🆚 MATCHUP")
     
     # Loads
-    df_players, df_gw, df_h2h, df_lineup, df_squad, df_table = load_data_v2() # From pontuacao
-    df_pts, df_stats = load_live_data() # From pontuacao
-    df_team_points = load_matchup_data()
+    df_players, df_gw, df_h2h, df_lineup, df_squad, df_table = load_data_v2() # From pontuacao (Cached)
+    df_pts, df_stats = load_live_data() # From pontuacao (Cached)
+    df_team_points = load_h2h_team_points_data() # Cached
     
     if df_gw.empty:
         st.warning("Sem dados de Gameweek.")

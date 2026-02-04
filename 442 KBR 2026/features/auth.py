@@ -8,7 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 BASE_DIR = Path(__file__).parent.parent
 SERVICE_ACCOUNT_FILE = BASE_DIR / "service_account.json"
 SHEET_ID = "1mG0XiZwzTyDncD592_XcpFwKeUwR97Gi8-tEh_XPW50"
-PLAYERS_LOCAL_FILE = BASE_DIR / "Dados" / "Players.csv"
+
 
 def get_credentials():
     """Get credentials from Streamlit secrets or local file"""
@@ -61,6 +61,4 @@ def get_client():
     # Final try
     return client, client.open_by_key(SHEET_ID)
 
-def get_players_file():
-    """Get the path to Players.csv"""
-    return PLAYERS_LOCAL_FILE
+

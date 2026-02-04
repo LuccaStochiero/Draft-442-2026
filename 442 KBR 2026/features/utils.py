@@ -24,3 +24,13 @@ def format_br_decimal(x):
         return float(x)
     except:
         return 0.0
+
+POS_MAPPING = {
+    'Goalkeeper': 'GK',
+    'Defender': 'DEF',
+    'Midfielder': 'MEI',
+    'Forward': 'ATA'
+}
+
+def clean_pos(p):
+    return POS_MAPPING.get(p, p)
