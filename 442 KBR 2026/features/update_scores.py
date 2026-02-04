@@ -16,6 +16,7 @@ from features.live_stats import (
 from features.auth import get_client
 from features.utils import robust_to_float, format_br_decimal
 from features.team_points import calculate_team_points
+from features.league_table import update_league_table
 
 def save_custom_stats(all_stats_rows, numeric_ids_to_purge):
     if not all_stats_rows: return
@@ -215,6 +216,11 @@ def run_update(target_round=None):
     # --- PHASE 2: TEAM POINTS ---
     print(f"--- Updating H2H Team Points for Round {target_round} ---")
     calculate_team_points(target_round=target_round)
+    
+    # --- PHASE 3: LEAGUE TABLE ---
+    print("--- Updating League Table ---")
+    update_league_table()
+    
     print("--- Unified Update Complete ---")
 
 if __name__ == "__main__":
