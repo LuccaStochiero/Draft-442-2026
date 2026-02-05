@@ -109,7 +109,7 @@ def calculate_team_points(target_round=None):
         if start_str:
             dt = parse_time(start_str)
             if dt:
-                if (dt + datetime.timedelta(hours=2)) < now:
+                if (dt + datetime.timedelta(hours=3)) < now:
                     is_finished = True
         
         # Store Player Status
@@ -240,6 +240,33 @@ def calculate_team_points(target_round=None):
     try:
         try:
             ws_out = sh.worksheet(TEAM_POINTS_SHEET)
+            # Load existing if we are doing a partial update
+            if target_round is not None:
+                # Use get_values to preserve formatting
+                existing_values = ws_out.get_values()
+                if existing_values and len(existing_values) > 1:
+                    df_existing = pd.DataFrame(existing_values[1:], columns=existing_values[0])
+                    # Generic cleanup of columns
+                    df_existing.columns = [c.lower() for c in df_existing.columns]
+                    
+                    # Ensure pontuacao is normalized to float first for filtering context
+                    # BUT for saving back, we want strings. 
+                    # Let's clean the column to standard format.
+                    if 'pontuacao' in df_existing.columns:
+                        df_existing['pontuacao'] = df_existing['pontuacao'].apply(robust_to_float).apply(format_br_decimal)
+
+                    # Filter out the round we are updating
+                    if 'rodada' in df_existing.columns:
+                        df_existing['rodada'] = pd.to_numeric(df_existing['rodada'], errors='coerce')
+                        # Keep rows NOT in target_round
+                        df_existing = df_existing[df_existing['rodada'] != int(target_round)]
+                        
+                        # Concatenate
+                        df_out = pd.concat([df_existing, df_out], ignore_index=True)
+                        
+                        # Sort by rodada, team_id for cleanliness
+                        df_out = df_out.sort_values(by=['rodada', 'team_id'])
+
         except:
             ws_out = sh.add_worksheet(TEAM_POINTS_SHEET, 1000, 5)
             

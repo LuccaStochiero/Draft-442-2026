@@ -15,15 +15,16 @@ def robust_to_float(x):
 
 def format_br_decimal(x):
     """
-    Returns float to let Google Sheets handle formatting.
-    Sending strings caused interpretation errors (e.g. 1,50 -> 150).
+    Returns STRING with comma decimal for PT-BR Sheets.
+    e.g. 10.5 -> '10,50'
     """
     try:
         if isinstance(x, str):
             x = x.replace(',', '.')
-        return float(x)
+        val = float(x)
+        return "{:.2f}".format(val).replace('.', ',')
     except:
-        return 0.0
+        return "0,00"
 
 POS_MAPPING = {
     'Goalkeeper': 'GK',
