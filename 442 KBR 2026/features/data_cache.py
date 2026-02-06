@@ -13,9 +13,11 @@ def load_all_players_data():
         client, sh = get_client()
         ws_all = sh.worksheet("ALL_PLAYERS")
         data_all = ws_all.get_all_records()
+        print(f"[DEBUG] ALL_PLAYERS raw records: {len(data_all)}")
         df_players = pd.DataFrame(data_all)
         
         if not df_players.empty:
+            print(f"[DEBUG] ALL_PLAYERS columns: {list(df_players.columns)}")
             df_players['player_id'] = df_players['player_id'].astype(str)
             
             # Ensure Posição exists
@@ -24,10 +26,29 @@ def load_all_players_data():
 
             # Apply clean_pos
             df_players['Posição Simplificada'] = df_players['Posição'].apply(clean_pos)
+            
+            # Convert Brazilian decimal format (comma) to float for Valor de Mercado
+            # Note: Google Sheets may have interpreted "7,5" as 75 (ignoring the comma)
+            # So we need to divide by 10 if the value is too high (> 20)
+            if 'Valor de Mercado' in df_players.columns:
+                print(f"[DEBUG] Raw Valor de Mercado (first 5): {df_players['Valor de Mercado'].head().tolist()}")
+                def fix_decimal_value(x):
+                    try:
+                        val = float(str(x).replace(',', '.'))
+                        # If value is greater than 20, it's likely missing the decimal
+                        # (e.g., 75 should be 7.5, 118 should be 11.8)
+                        if val > 20:
+                            val = val / 10
+                        return val
+                    except:
+                        return 0.0
+                df_players['Valor de Mercado'] = df_players['Valor de Mercado'].apply(fix_decimal_value)
+                print(f"[DEBUG] Converted Valor de Mercado (first 5): {df_players['Valor de Mercado'].head().tolist()}")
                 
             return df_players
             
         # Return empty with schema
+        print("[DEBUG] ALL_PLAYERS returned empty dataframe")
         return pd.DataFrame(columns=['player_id', 'Posição', 'Nome', 'Team', 'Status', 'Lesão', 'Valor de Mercado', 'Posição Simplificada'])
 
     except Exception as e:
