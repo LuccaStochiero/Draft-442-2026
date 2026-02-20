@@ -89,7 +89,7 @@ def calculate_team_points(target_round=None):
     df_stats['simple_id'] = df_stats['game_id'].apply(clean_id)
     
     # Merge Stats + GW
-    df_merged_full = df_stats.merge(df_gw[['simple_id', 'data_hora', 'rodada']], on='simple_id', how='left')
+    df_merged_full = df_stats.merge(df_gw[['simple_id', 'data_hora', 'rodada', 'home_team', 'away_team']], on='simple_id', how='left')
     
     player_game_map = {} # (pid, round) -> {minutes, is_finished}
     
@@ -118,8 +118,15 @@ def calculate_team_points(target_round=None):
         # Store Club Status (Iteratively update)
         # We know this player's club played this game
         p_club = pid_to_club.get(pid)
-        if p_club:
-            club_round_status[(p_club, int(rod))] = {'finished': is_finished}
+        
+        # FIX: Ensure this game actually involves the player's club
+        # This prevents players with wrong game_ids (or transferred players) 
+        # from marking their (new) club as 'finished' based on a game they didn't play as a team.
+        game_home = row.get('home_team')
+        game_away = row.get('away_team')
+        
+        if p_club and (p_club == game_home or p_club == game_away):
+             club_round_status[(p_club, int(rod))] = {'finished': is_finished}
 
     # ... get_score helper ...
     def get_score(pid, rod):
@@ -127,7 +134,7 @@ def calculate_team_points(target_round=None):
         df_pts['simple_id'] = df_pts['game_id'].apply(clean_id)
         subset = df_pts[ (df_pts['player_id'] == pid) & (df_pts['simple_id'].isin(gids_in_round)) ]
         if subset.empty: return 0.0
-        return float(subset['pontuacao'].sum())
+        return float(subset['pontuacao'].max())
 
     # 3. Process Per Team / Per Round
     for r in rounds:
@@ -141,16 +148,19 @@ def calculate_team_points(target_round=None):
             team_players = round_lineup[round_lineup['team_id'] == tid]
             
             # Separate Starters and Subs
-            starters = team_players[team_players['lineup'] == 'TITULAR'].copy()
+            # Identify Starters (Case-insensitive)
+            starters = team_players[team_players['lineup'].astype(str).str.upper() == 'TITULAR'].copy()
+            active_pids = starters['player_id'].astype(str).tolist()
             subs = team_players[team_players['lineup'].str.startswith('PRI', na=False)].copy()
             
             def get_pri(x):
-                try: return int(str(x).split()[-1])
-                except: return 99
-            subs['pri_num'] = subs['lineup'].apply(get_pri)
-            subs = subs.sort_values('pri_num')
+                try: 
+                    return int(str(x).split()[-1])
+                except: 
+                    return 99
             
-            active_pids = starters['player_id'].tolist()
+            subs['priority'] = subs['lineup'].apply(get_pri)
+            subs = subs.sort_values('priority')
             
             # Check Substitutions
             for _, starter in starters.iterrows():
@@ -169,6 +179,7 @@ def calculate_team_points(target_round=None):
                 else:
                     # 2. Fallback: Check Club Status
                     s_club = pid_to_club.get(sid)
+                    
                     if s_club and (s_club, r) in club_round_status:
                         # Club played?
                         c_status = club_round_status[(s_club, r)]
@@ -187,23 +198,31 @@ def calculate_team_points(target_round=None):
                     replacement = None
                     for _, sub in subs.iterrows():
                         sub_id = sub['player_id']
-                        if sub_id in active_pids: continue # Already used? (Sub can only enter once? Usually yes)
-                        # Wait, subs list is static. "active_pids" tracks the finals.
-                        # We shouldn't reuse a sub.
+                        if sub_id in active_pids: continue 
                         
                         if sub['posicao'] == spos:
-                            # Candidate found. Check if already used?
-                            # Need to track used subs.
-                            replacement = sub_id
-                            break
+                            # Candidate found. Check if they PLAYED.
+                            sub_mins = 0
+                            if (sub_id, r) in player_game_map:
+                                sub_mins = player_game_map[(sub_id, r)]['min']
+                            
+                            # Only accept if they played
+                            if sub_mins > 0:
+                                replacement = sub_id
+                                break
                     
                     if replacement:
-                        # PERFORM SUB
-                        active_pids.remove(sid)
-                        active_pids.append(replacement)
-                        # Mark sub as used so he can't sub for another?
-                        # Remove from 'subs' df or keep tracked set.
-                        subs = subs[subs['player_id'] != replacement] 
+                         # PERFORM SUB
+                         print(f"  [SUB] Player {pid_to_club.get(sid)} ID:{sid} (Mins: {mins}, Finished: {is_finished}) OUT.")
+                         print(f"  [SUB] Replacement ID:{replacement} IN.")
+                         
+                         active_pids.remove(sid)
+                         active_pids.append(replacement)
+                         # Remove from potential subs pool (though loop handles it via active_pids check)
+                         # But strictly speaking, a player can't be subbed IN twice anyway. 
+                    else:
+                        print(f"  [SUB FAIL] Player {pid_to_club.get(sid)} ID:{sid} DNP, but no valid sub found.")
+                        print(f"   - Checked {len(subs)} bench players. (Pos: {spos})")
                         
             # Final Generation
             for _, p in team_players.iterrows():
@@ -233,8 +252,7 @@ def calculate_team_points(target_round=None):
     # Format pontuacao as string with comma for PT-BR locale sheets
     if 'pontuacao' in df_out.columns:
         df_out['pontuacao'] = df_out['pontuacao'].apply(robust_to_float)
-        # Convert to string with comma as decimal separator for BR locale sheets
-        df_out['pontuacao'] = df_out['pontuacao'].apply(format_br_decimal)
+        # Removed format_br_decimal to pass raw float
 
     # Write to H2H - TEAM_POINTS
     try:
@@ -242,18 +260,15 @@ def calculate_team_points(target_round=None):
             ws_out = sh.worksheet(TEAM_POINTS_SHEET)
             # Load existing if we are doing a partial update
             if target_round is not None:
-                # Use get_values to preserve formatting
-                existing_values = ws_out.get_values()
+                # Use get_values to preserve formatting (UNFORMATTED to get floats)
+                existing_values = ws_out.get_values(value_render_option='UNFORMATTED_VALUE')
                 if existing_values and len(existing_values) > 1:
                     df_existing = pd.DataFrame(existing_values[1:], columns=existing_values[0])
                     # Generic cleanup of columns
                     df_existing.columns = [c.lower() for c in df_existing.columns]
                     
-                    # Ensure pontuacao is normalized to float first for filtering context
-                    # BUT for saving back, we want strings. 
-                    # Let's clean the column to standard format.
                     if 'pontuacao' in df_existing.columns:
-                        df_existing['pontuacao'] = df_existing['pontuacao'].apply(robust_to_float).apply(format_br_decimal)
+                         df_existing['pontuacao'] = df_existing['pontuacao'].apply(robust_to_float)
 
                     # Filter out the round we are updating
                     if 'rodada' in df_existing.columns:

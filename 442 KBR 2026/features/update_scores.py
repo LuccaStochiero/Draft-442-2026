@@ -25,9 +25,12 @@ def save_custom_stats(all_stats_rows, numeric_ids_to_purge):
         client, sh = get_client()
         ws = sh.worksheet(STATS_SHEET)
         
-        # 1. Get all existing records
-        existing_data = ws.get_all_records()
-        existing_df = pd.DataFrame(existing_data)
+        # 1. Get all existing records (UNFORMATTED)
+        existing_data = ws.get_values(value_render_option='UNFORMATTED_VALUE')
+        if existing_data:
+            existing_df = pd.DataFrame(existing_data[1:], columns=existing_data[0])
+        else:
+            existing_df = pd.DataFrame()
         
         # 2. Prepare New Data
         new_df = pd.DataFrame(all_stats_rows)
@@ -79,8 +82,12 @@ def save_custom_points(points_df, numeric_ids_to_purge):
         client, sh = get_client()
         ws = sh.worksheet(POINTS_SHEET)
         
-        existing_data = ws.get_all_records()
-        existing_df = pd.DataFrame(existing_data)
+        # 1. Get all existing records (UNFORMATTED)
+        existing_data = ws.get_values(value_render_option='UNFORMATTED_VALUE')
+        if existing_data:
+            existing_df = pd.DataFrame(existing_data[1:], columns=existing_data[0])
+        else:
+            existing_df = pd.DataFrame()
         
         updated_ids = points_df['game_id'].unique().astype(str).tolist()
         purge_ids = [str(x) for x in numeric_ids_to_purge]
@@ -98,7 +105,7 @@ def save_custom_points(points_df, numeric_ids_to_purge):
         # Format
         header = ['game_id', 'player_id', 'pontuacao']
         if 'pontuacao' in final_df.columns:
-             final_df['pontuacao'] = final_df['pontuacao'].apply(robust_to_float).apply(format_br_decimal)
+             final_df['pontuacao'] = final_df['pontuacao'].apply(robust_to_float)
              
         final_df = final_df[header]
         final_values = [header] + final_df.values.tolist()

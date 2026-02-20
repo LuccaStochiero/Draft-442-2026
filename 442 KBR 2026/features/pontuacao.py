@@ -380,9 +380,9 @@ def app():
                 
                 # Helper to get score for a pid
                 def get_pid_score(pid):
-                    # Sum in case of duplicates (weird edge case), usually one entry
+                    # Max in case of duplicates (player appearing in multiple games per round)
                     row = round_pts_all[round_pts_all['player_id'] == str(pid)]
-                    return row['pontuacao'].sum() if not row.empty else 0.0
+                    return row['pontuacao'].max() if not row.empty else 0.0
 
                 mask_stats = (df_stats['game_id'].astype(str).isin(valid_gids))
                 round_stats = df_stats[mask_stats].copy()

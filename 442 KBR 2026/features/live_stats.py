@@ -701,8 +701,7 @@ def save_points_to_sheet(points_df):
         if 'pontuacao' in final_df.columns:
             # ROBUST FLOAT CONVERSION
             final_df['pontuacao'] = final_df['pontuacao'].apply(robust_to_float)
-            # FORMAT FOR BR LOCALE
-            final_df['pontuacao'] = final_df['pontuacao'].apply(format_br_decimal)
+            # REMOVED format_br_decimal
         
         # Ensure correct order
         final_df = final_df[header]
