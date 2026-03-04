@@ -294,10 +294,10 @@ def update_google_sheets(rounds_data, matches_data):
             df_rounds.at[i, 'inicio_escalacao'] = start_ts
             
             # Auction / Free Logic
-            if gap_hours > 48:
+            if gap_hours > 24:
                 # Long Gap
-                # Auction: Open at start_ts. Closes 24h before Game.
-                auc_deadline = curr_start - (24 * 3600)
+                # Auction: Open at start_ts. Closes 6h before Game.
+                auc_deadline = curr_start - (6 * 3600)
                 
                 # Verify consistency (Auction End must be > Start)
                 if auc_deadline > start_ts:
@@ -309,7 +309,7 @@ def update_google_sheets(rounds_data, matches_data):
                     df_rounds.at[i, 'inicio_free'] = auc_deadline + (10 * 60)
                     # Free Agency End is Lineup Deadline (2h before) set above
                 else:
-                    # Weird case (gap > 48, but < 24h available?), fallback to Free Only
+                    # Weird case (gap > 24, but < 6h available?), fallback to Free Only
                     df_rounds.at[i, 'inicio_leilao'] = 0
                     df_rounds.at[i, 'fim_leilao'] = 0
                     df_rounds.at[i, 'inicio_free'] = start_ts
